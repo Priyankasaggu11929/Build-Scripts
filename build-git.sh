@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Git and its dependencies from sources.
 
-GIT_TAR=v2.16.2.tar.gz
-GIT_DIR=git-2.16.2
+GIT_TAR=v2.16.3.tar.gz
+GIT_DIR=git-2.16.3
 
 # Avoid shellcheck.net warning
 CURR_DIR="$PWD"
@@ -202,10 +202,13 @@ else
     SH_PERL=perl
 fi
 
+    PERL="$SH_PERL" \
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
-    PERL="$SH_PERL" CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
-    CFLAGS="${BUILD_CFLAGS[*]}" CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
-    LDFLAGS="${BUILD_LDFLAGS[*]}" LIBS="-lssl -lcrypto -lz ${BUILD_LIBS[*]}" \
+    CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
+    CFLAGS="${BUILD_CFLAGS[*]}" \
+    CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
+    LDFLAGS="${BUILD_LDFLAGS[*]}" \
+    LIBS="-lssl -lcrypto -lz ${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --with-lib="$INSTX_LIBDIR" \
     --enable-pthreads --with-openssl="$INSTX_PREFIX" \
     --with-curl="$INSTX_PREFIX" --with-libpcre="$INSTX_PREFIX" \
