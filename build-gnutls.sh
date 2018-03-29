@@ -154,8 +154,10 @@ mv configure.fixed configure; chmod +x configure
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
-    CFLAGS="${BUILD_CFLAGS[*]}" CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
-    LDFLAGS="${BUILD_LDFLAGS[*]}" LIBS="-lhogweed -lnettle -lgmp ${BUILD_LIBS[*]}" \
+    CFLAGS="${BUILD_CFLAGS[*]}" \
+    CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
+    LDFLAGS="${BUILD_LDFLAGS[*]}" \
+    LIBS="-lhogweed -lnettle -lgmp ${BUILD_LIBS[*]}" \
 ./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --with-unbound-root-key-file --enable-seccomp-tests \
     --disable-openssl-compatibility --disable-ssl2-support --disable-ssl3-support \

@@ -78,8 +78,10 @@ mv configure.fixed configure; chmod +x configure
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
-    CFLAGS="${BUILD_CFLAGS[*]}" CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
-    LDFLAGS="${BUILD_LDFLAGS[*]}" LIBS="${BUILD_LIBS[*]}" \
+    CFLAGS="${BUILD_CFLAGS[*]}" \
+    CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
+    LDFLAGS="${BUILD_LDFLAGS[*]}" \
+    LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-shared --enable-pcregrep-libz --enable-jit --enable-pcregrep-libbz2
 
@@ -149,8 +151,10 @@ cd "$PCRE2_DIR"
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
-    CFLAGS="${BUILD_CFLAGS[*]}" CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
-    LDFLAGS="${BUILD_LDFLAGS[*]}" LIBS="${BUILD_LIBS[*]}" \
+    CFLAGS="${BUILD_CFLAGS[*]}" \
+    CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
+    LDFLAGS="${BUILD_LDFLAGS[*]}" \
+    LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-shared --enable-pcre2-8 --enable-pcre2-16 --enable-pcre2-32
 
