@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Git and its dependencies from sources.
 
-GIT_TAR=v2.16.3.tar.gz
-GIT_DIR=git-2.16.3
+GIT_TAR=v2.17.0.tar.gz
+GIT_DIR=git-2.17.0
 
 # Avoid shellcheck.net warning
 CURR_DIR="$PWD"
