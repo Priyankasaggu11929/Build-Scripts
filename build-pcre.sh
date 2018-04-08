@@ -3,12 +3,12 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds PCRE and PCRE2 from sources.
 
-PCRE_TAR=pcre-8.41.tar.gz
-PCRE_DIR=pcre-8.41
+PCRE_TAR=pcre-8.42.tar.gz
+PCRE_DIR=pcre-8.42
 PKG_NAME1=pcre
 
-PCRE2_TAR=pcre2-10.30.tar.gz
-PCRE2_DIR=pcre2-10.30
+PCRE2_TAR=pcre2-10.31.tar.gz
+PCRE2_DIR=pcre2-10.31
 PKG_NAME2=pcre2
 
 # Avoid shellcheck.net warning
