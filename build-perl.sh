@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Perl from sources.
 
-PERL_TAR=perl-5.26.1.tar.gz
-PERL_DIR=perl-5.26.1
+PERL_TAR=perl-5.26.2.tar.gz
+PERL_DIR=perl-5.26.2
 
 # Avoid shellcheck.net warning
 CURR_DIR="$PWD"
