@@ -11,7 +11,7 @@ PKG_NAME=ncurses
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -95,7 +95,7 @@ if [[ "$IS_CLANG" -ne "0" ]]; then
     done
 fi
 
-MAKE_FLAGS=("-j" "$MAKE_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build ncurses"

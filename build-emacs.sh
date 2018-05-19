@@ -10,7 +10,7 @@ EMACS_DIR=emacs-24.5
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -115,7 +115,7 @@ done
 #echo "Removing terminfo.c source file"
 #find $(PWD) -name "terminfo.c" -exec rm {} \;
 
-MAKE_FLAGS=("-j" "$MAKE_JOBS" "all")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build emacs"

@@ -11,7 +11,7 @@ B2SUM_DIR=BLAKE2-20160619
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -73,7 +73,7 @@ if [[ "$IS_IA32" -eq "0" ]]; then
 	mv makefile.fixed makefile
 fi
 
-MAKE_FLAGS=("CFLAGS=$B2CFLAGS" "-j" "$MAKE_JOBS")
+MAKE_FLAGS=("CFLAGS=$B2CFLAGS" "-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build b2sum"

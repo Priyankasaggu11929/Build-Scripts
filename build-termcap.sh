@@ -11,7 +11,7 @@ PKG_NAME=termcap
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -99,7 +99,7 @@ sed -e "s|includedir = .*|includedir = $INSTX_PREFIX/include|g" Makefile > Makef
 mv Makefile.fixed Makefile
 
 ARFLAGS="cr"
-MAKE_FLAGS=("-j" "$MAKE_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! ARFLAGS="$ARFLAGS" "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Termcap"

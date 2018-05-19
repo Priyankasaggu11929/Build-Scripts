@@ -3,14 +3,14 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Wget and its dependencies from sources.
 
-WGET_TAR=wget-1.19.4.tar.gz
-WGET_DIR=wget-1.19.4
+WGET_TAR=wget-1.19.5.tar.gz
+WGET_DIR=wget-1.19.5
 
 # Avoid shellcheck.net warning
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -166,7 +166,7 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$MAKE_JOBS" "all")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Wget"

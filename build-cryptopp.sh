@@ -10,7 +10,7 @@ CRYPTOPP_DIR=CRYPTOPP_6_1_0
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -57,7 +57,7 @@ gzip -d < "$CRYPTOPP_TAR" | tar xf -
 mv "cryptopp-$CRYPTOPP_DIR" "$CRYPTOPP_DIR"
 cd "$CRYPTOPP_DIR"
 
-MAKE_FLAGS=("-j" "$MAKE_JOBS" "all")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Crypto++"
@@ -81,7 +81,7 @@ MAKE_FLAGS=("distclean")
 "$MAKE" "${MAKE_FLAGS[@]}"
 
 # Add the data directory for install
-MAKE_FLAGS=("-j" "$MAKE_JOBS" "all")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
 if ! CXXFLAGS="-DNDEBUG -g2 -O3 -DCRYPTOPP_DATA_DIR='\"$INSTX_PREFIX/share/cryptopp/\"'" "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to rebuild Crypto++"

@@ -11,7 +11,7 @@ PKG_NAME=tinyxml
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -63,7 +63,7 @@ cd "$TXML2_DIR"
 sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
 mv configure.fixed configure; chmod +x configure
 
-MAKE_FLAGS=("-j" "$MAKE_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
 MAKE_FLAGS+=("PKG_CONFIG_PATH=${BUILD_PKGCONFIG[*]}")
 MAKE_FLAGS+=("CPPFLAGS=${BUILD_CPPFLAGS[*]}")
 MAKE_FLAGS+=("CFLAGS=${BUILD_CFLAGS[*]}")

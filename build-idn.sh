@@ -15,7 +15,7 @@ PKG_NAME2=libidn2
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -129,7 +129,7 @@ done
 
 rm -rf doc/ 2>/dev/null
 
-MAKE_FLAGS=("-j" "$MAKE_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build IDN"
@@ -219,7 +219,7 @@ mv Makefile.fixed Makefile
 
 rm -rf doc/ >/dev/null
 
-MAKE_FLAGS=("-j" "$MAKE_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build IDN2"

@@ -10,7 +10,7 @@ GIT_DIR=git-2.17.0
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -221,7 +221,7 @@ if [[ "$?" -ne "0" ]]; then
 fi
 
 # See INSTALL for the formats and the requirements
-MAKE_FLAGS=("-j" "$MAKE_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
 
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then

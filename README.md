@@ -30,10 +30,10 @@ INSTX_PREFIX="$HOME/tmp" INSTX_LIBDIR="$INSTX_PREFIX/tmp/lib" ./build-wget.sh
 INSTX_PREFIX="$HOME/tmp" INSTX_LIBDIR="$HOME/mylibs" ./build-wget.sh
 ```
 
-The last item of interest is `MAKE_JOBS`. The variable controls the number of make jobs and is set to 4 because modern hardware is the dominant use case. Four make jobs is too much for some devices like ARM dev-boards. You can reduce the number of make jobs with:
+The last item of interest is `INSTX_JOBS`. The variable controls the number of make jobs and is set to 4 because modern hardware is the dominant use case. Four make jobs is too much for some devices like ARM dev-boards. You can reduce the number of make jobs with:
 
 ```
-MAKE_JOBS=2 ./build-curl.sh
+INSTX_JOBS=2 ./build-curl.sh
 ```
 
 ## Boot strapping

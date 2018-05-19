@@ -11,7 +11,7 @@ MAWK_DIR=mawk-1.3.4-20171017
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs
-MAKE_JOBS=4
+INSTX_JOBS=4
 
 ###############################################################################
 
@@ -62,7 +62,7 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$MAKE_JOBS" "all")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build mawk"

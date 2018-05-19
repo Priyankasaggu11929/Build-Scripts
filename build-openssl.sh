@@ -12,7 +12,7 @@ PKG_NAME=openssl
 CURR_DIR="$PWD"
 
 # Sets the number of make jobs if not set in environment
-: "${MAKE_JOBS:=4}"
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 
@@ -114,19 +114,19 @@ if [[ "$IS_DARWIN" -ne "0" ]]; then
     done
 fi
 
-    MAKE_FLAGS=("-j" "$MAKE_JOBS" "depend")
+    MAKE_FLAGS=("-j" "$INSTX_JOBS" "depend")
     if [[ "$IS_OPENBSD" -ne "0" ]]; then
         MAKE_FLAGS+=("MAKEDEPPROG=gcc -M")
     fi
 
-    if ! "$MAKE" "MAKE_JOBS=$MAKE_JOBS" "${MAKE_FLAGS[@]}"
+    if ! "$MAKE" "INSTX_JOBS=$INSTX_JOBS" "${MAKE_FLAGS[@]}"
     then
         echo "Failed to update OpenSSL dependencies"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 #fi
 
-MAKE_FLAGS=("-j" "$MAKE_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build OpenSSL"
@@ -135,7 +135,7 @@ fi
 
 # Self tests are still unreliable, https://github.com/openssl/openssl/issues/4963
 # TODO: tie self-tests to SKIP_OPENSSL_TESTS
-# MAKE_FLAGS=("-j" "$MAKE_JOBS" test)
+# MAKE_FLAGS=("-j" "$INSTX_JOBS" test)
 # if ! "$MAKE" "${MAKE_FLAGS[@]}"
 # then
 #     echo "Failed to test OpenSSL"
