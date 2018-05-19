@@ -6,8 +6,8 @@
 TUNTAP_TAR=v1.3.3.tar.gz
 TUNTAP_DIR=tuntap-1.3.3
 
-OPENVPN_TAR=openvpn-2.4.4.tar.gz
-OPENVPN_DIR=openvpn-2.4.4
+OPENVPN_TAR=openvpn-2.4.6.tar.gz
+OPENVPN_DIR=openvpn-2.4.6
 
 # Avoid shellcheck.net warning
 CURR_DIR="$PWD"
