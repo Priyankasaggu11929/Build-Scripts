@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds tasn1 from sources.
 
-TASN1_TAR=libtasn1-4.12.tar.gz
-TASN1_DIR=libtasn1-4.12
+TASN1_TAR=libtasn1-4.13.tar.gz
+TASN1_DIR=libtasn1-4.13
 PKG_NAME=tasn1
 
 # Avoid shellcheck.net warning
