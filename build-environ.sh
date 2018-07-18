@@ -71,6 +71,7 @@ IS_DARWIN=$(echo -n "$THIS_SYSTEM" | grep -i -c 'darwin')
 IS_AIX=$(echo -n "$THIS_SYSTEM" | grep -i -c 'aix')
 IS_CYGWIN=$(echo -n "$THIS_SYSTEM" | grep -i -c 'cygwin')
 IS_OPENBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'openbsd')
+IS_FREEBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'freebsd')
 
 THIS_MACHINE=$(uname -m 2>&1)
 IS_IA32=$(echo -n "$THIS_MACHINE" | grep -E -i -c 'i.86|amd64|x86_64')

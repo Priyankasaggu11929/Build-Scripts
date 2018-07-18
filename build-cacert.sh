@@ -242,7 +242,7 @@ echo
 echo "********** cURL CA-Certs **********"
 echo
 
-"$WGET" -q --ca-certificate=globalsign-root-r1.pem https://curl.haxx.se/ca/cacert.pem -O cacert.pem
+wget -q --ca-certificate=globalsign-root-r1.pem https://curl.haxx.se/ca/cacert.pem -O cacert.pem
 git config --global http.sslCAInfo "$HOME/.cacert/cacert.pem"
 
 echo "Downloaded $HOME/.cacert/cacert.pem"
