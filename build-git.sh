@@ -3,7 +3,7 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Git and its dependencies from sources.
 
-GIT_TAR=v2.18.0.tar.gz
+GIT_TAR=git-2.18.0.tar.gz
 GIT_DIR=git-2.18.0
 
 # Avoid shellcheck.net warning
@@ -21,9 +21,9 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-DIGICERT_ROOT="$HOME/.cacert/digicert-root-ca.pem"
-if [[ ! -f "$DIGICERT_ROOT" ]]; then
-    echo "Git requires several CA roots. Please run build-cacert.sh."
+CA_ZOO="$HOME/.cacert/cacert.pem"
+if [[ ! -f "$CA_ZOO" ]]; then
+    echo "ClamAV requires several CA roots. Please run build-cacert.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -149,7 +149,15 @@ echo
 echo "********** Git **********"
 echo
 
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/git/git/archive/$GIT_TAR" -O "$GIT_TAR"
+"$WGET" --ca-certificate="$CA_ZOO" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
+
+# This is due to the way Wget calls OpenSSL. The OpenSSL context
+# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
+# trust in this certificate; and not a self-signed CA root."
+if [[ "$?" -ne "0" ]]; then
+    echo "Attempting download Git using insecure channel."
+    "$WGET" --no-check-certificate "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
+fi
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Git"
