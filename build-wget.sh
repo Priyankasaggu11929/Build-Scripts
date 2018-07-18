@@ -153,6 +153,14 @@ sed -e 's|$(LTLIBICONV)|$(LIBICONV)|g' fuzz/Makefile.am > fuzz/Makefile.am.fixed
 mv fuzz/Makefile.am.fixed fuzz/Makefile.am
 touch -t 197001010000 fuzz/Makefile.am
 
+sed -e "s|$(sysconfdir)/wgetrc|$INSTX_PREFIX/etc/wgetrc|g" src/Makefile.am > src/Makefile.am.fixed
+mv src/Makefile.am.fixed src/Makefile.am
+touch -t 197001010000 src/Makefile.am
+
+sed -e "s|$(sysconfdir)/wgetrc|$INSTX_PREFIX/etc/wgetrc|g" src/Makefile.in > src/Makefile.in.fixed
+mv src/Makefile.in.fixed src/Makefile.in
+touch -t 197001010000 src/Makefile.in
+
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
