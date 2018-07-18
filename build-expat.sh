@@ -47,7 +47,7 @@ echo "********** libexpat **********"
 echo
 
 # https://github.com/libexpat/libexpat/releases/download/R_2_2_5/expat-2.2.5.tar.bz2
-wget --ca-certificate="$CA_ZOO" "https://github.com/libexpat/libexpat/releases/download/R_2_2_5/$EXPAT_TAR" -O "$EXPAT_TAR"
+"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/libexpat/libexpat/releases/download/R_2_2_5/$EXPAT_TAR" -O "$EXPAT_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download libexpat"

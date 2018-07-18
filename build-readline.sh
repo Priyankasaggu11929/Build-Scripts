@@ -42,7 +42,7 @@ echo
 echo "********** Readline **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/readline/$READLN_TAR" -O "$READLN_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/readline/$READLN_TAR" -O "$READLN_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Readline"

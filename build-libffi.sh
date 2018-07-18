@@ -41,7 +41,7 @@ echo "********** libffi **********"
 echo
 
 # ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
-wget --ca-certificate="$DIGICERT_ROOT" "ftp://sourceware.org/pub/libffi/$LIBFFI_TAR" -O "$LIBFFI_TAR"
+"$WGET" --ca-certificate="$DIGICERT_ROOT" "ftp://sourceware.org/pub/libffi/$LIBFFI_TAR" -O "$LIBFFI_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download libffi"

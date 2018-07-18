@@ -40,7 +40,7 @@ echo
 echo "********** Less **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/less/$LESS_TAR" -O "$LESS_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/less/$LESS_TAR" -O "$LESS_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Less"

@@ -28,6 +28,12 @@ if [[ ! -f "$CA_ZOO" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+DIGICERT_ROOT="$HOME/.cacert/digicert-root-ca.pem"
+if [[ ! -f "$DIGICERT_ROOT" ]]; then
+    echo "Libtool requires several CA roots. Please run build-cacert.sh."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
@@ -73,12 +79,12 @@ echo
 
 # This fails when Wget < 1.14
 echo "Attempting download PSL using HTTPS."
-wget --ca-certificate="$CA_ZOO" "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
+"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
 
 # Download over insecure channel
 if [[ "$?" -ne "0" ]]; then
     echo "Attempting download PSL using insecure channel."
-    wget --no-check-certificate "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
+    "$WGET" --no-check-certificate "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
 fi
 
 if [[ "$?" -ne "0" ]]; then
@@ -124,10 +130,15 @@ fi
 # Update the PSL data file
 echo "Updating Public Suffix List (PSL) data file"
 mkdir -p list
-wget --ca-certificate="$CA_ZOO" https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat -O list/public_suffix_list.dat
+"$WGET" --ca-certificate="$CA_ZOO" https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat -O list/public_suffix_list.dat
 
 if [[ "$?" -ne "0" ]]; then
-    echo "Failed to download Public Suffix List (PSL)"
+    echo "Attempting update PSL using insecure channel."
+    "$WGET" --no-check-certificate https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat -O list/public_suffix_list.dat
+fi
+
+if [[ "$?" -ne "0" ]]; then
+    echo "Failed to update Public Suffix List (PSL)"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

@@ -45,7 +45,7 @@ echo
 echo "********** Crypto++ **********"
 echo
 
-wget --ca-certificate="$DIGICERT_ROOT" "https://github.com/weidai11/cryptopp/archive/$CRYPTOPP_TAR" -O "$CRYPTOPP_TAR"
+"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/weidai11/cryptopp/archive/$CRYPTOPP_TAR" -O "$CRYPTOPP_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Crypto++"

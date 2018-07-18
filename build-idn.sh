@@ -44,7 +44,7 @@ echo
 echo "********** IDN **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/libidn/$IDN_TAR" -O "$IDN_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/libidn/$IDN_TAR" -O "$IDN_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download IDN"
@@ -154,7 +154,7 @@ echo
 echo "********** IDN2 **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/libidn/$IDN2_TAR" -O "$IDN2_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/libidn/$IDN2_TAR" -O "$IDN2_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download IDN2"

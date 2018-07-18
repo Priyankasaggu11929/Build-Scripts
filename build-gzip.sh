@@ -40,7 +40,7 @@ echo
 echo "********** Gzip **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/gzip/$GZIP_TAR" -O "$GZIP_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/gzip/$GZIP_TAR" -O "$GZIP_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Gzip"

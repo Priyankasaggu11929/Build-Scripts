@@ -38,7 +38,7 @@ echo
 echo "********** Perl **********"
 echo
 
-wget --ca-certificate="$GLOBALSIGN_ROOT" "http://www.cpan.org/src/5.0/$PERL_TAR" -O "$PERL_TAR"
+"$WGET" --ca-certificate="$GLOBALSIGN_ROOT" "http://www.cpan.org/src/5.0/$PERL_TAR" -O "$PERL_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Perl"

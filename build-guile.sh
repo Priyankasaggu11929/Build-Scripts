@@ -72,7 +72,7 @@ echo
 echo "********** Guile **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/guile/$GUILE_TAR" -O "$GUILE_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/guile/$GUILE_TAR" -O "$GUILE_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Guile"

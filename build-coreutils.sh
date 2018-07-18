@@ -58,7 +58,7 @@ echo "********** Core Utilities **********"
 echo
 
 # coreutils-8.29.tar.xz
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/coreutils/$CORE_TAR" -O "$CORE_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/coreutils/$CORE_TAR" -O "$CORE_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Core Utilities"

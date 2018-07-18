@@ -40,7 +40,7 @@ echo
 echo "********** GMP **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/gmp/$GMP_TAR" -O "$GMP_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/gmp/$GMP_TAR" -O "$GMP_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download GMP"

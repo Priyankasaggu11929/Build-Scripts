@@ -49,7 +49,7 @@ echo
 echo "********** M4 **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/m4/$M4_TAR" -O "$M4_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/m4/$M4_TAR" -O "$M4_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download M4"
@@ -103,7 +103,7 @@ echo
 echo "********** Autoconf **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/autoconf/$AUTOCONF_TAR" -O "$AUTOCONF_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/autoconf/$AUTOCONF_TAR" -O "$AUTOCONF_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download libtool"
@@ -155,7 +155,7 @@ echo
 echo "********** Automake **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR" -O "$AUTOMAKE_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR" -O "$AUTOMAKE_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Automake"

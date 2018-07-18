@@ -71,7 +71,7 @@ echo
 echo "********** ClamAV **********"
 echo
 
-wget --ca-certificate="$CA_ZOO" "https://www.clamav.net/downloads/production/$CLAMAV_TAR" -O "$CLAMAV_TAR"
+"$WGET" --ca-certificate="$CA_ZOO" "https://www.clamav.net/downloads/production/$CLAMAV_TAR" -O "$CLAMAV_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download ClamAV"

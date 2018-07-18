@@ -174,6 +174,8 @@ kVkn8TUoE6smftX3eg==
 -----END CERTIFICATE-----" > digicert-root-ca.pem
 fi
 
+# This is "DigiCert High Assurance EV Root CA"
+# 02:AC:5C:26:6A:0B:40:9B:8F:0B:79:F2:AE:46:25:77
 echo "-----BEGIN CERTIFICATE-----
 MIIDxTCCAq2gAwIBAgIQAqxcJmoLQJuPC3nyrkYldzANBgkqhkiG9w0BAQUFADBs
 MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3
@@ -240,7 +242,7 @@ echo
 echo "********** cURL CA-Certs **********"
 echo
 
-wget -q --ca-certificate=globalsign-root-r1.pem https://curl.haxx.se/ca/cacert.pem -O cacert.pem
+"$WGET" -q --ca-certificate=globalsign-root-r1.pem https://curl.haxx.se/ca/cacert.pem -O cacert.pem
 git config --global http.sslCAInfo "$HOME/.cacert/cacert.pem"
 
 echo "Downloaded $HOME/.cacert/cacert.pem"

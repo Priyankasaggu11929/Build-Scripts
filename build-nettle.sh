@@ -48,7 +48,7 @@ echo
 echo "********** Nettle **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/nettle/$NETTLE_TAR" -O "$NETTLE_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/nettle/$NETTLE_TAR" -O "$NETTLE_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Nettle"

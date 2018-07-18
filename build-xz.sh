@@ -43,7 +43,7 @@ echo "********** xz **********"
 echo
 
 # Redirect to Sourceforge.
-wget --no-check-certificate "https://tukaani.org/xz/$XZ_TAR" -O "$XZ_TAR"
+"$WGET" --no-check-certificate "https://tukaani.org/xz/$XZ_TAR" -O "$XZ_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download xz"

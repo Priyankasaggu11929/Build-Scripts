@@ -39,7 +39,7 @@ echo
 echo "********** Wget **********"
 echo
 
-wget "http://ftp.gnu.org/pub/gnu//wget/$WGET_TAR" -O "$WGET_TAR"
+"$WGET" "http://ftp.gnu.org/pub/gnu//wget/$WGET_TAR" -O "$WGET_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Wget"
@@ -90,6 +90,25 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+# Wget does not have any CA's configured at the moment. HTTPS downloads
+# will fail with the message "... use --no-check-certifcate ...".
+# Fix it through the system's wgetrc configuration file.
+if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+	echo "Copying new-cacert.pem to $SH_CACERT_PATH"
+    echo "$SUDO_PASSWORD" | sudo cp "$HOME/.cacert/cacert.pem" "$SH_CACERT_PATH/new-cacert.pem"
+
+	echo "" >> "./doc/sample.wgetrc"
+	echo "# Default CA zoo file added by Build-Scripts" >> "./doc/sample.wgetrc"
+	echo "ca_certificate = $SH_CACERT_PATH/new-cacert.pem" >> "./doc/sample.wgetrc"
+
+	echo "$SUDO_PASSWORD" | sudo cp "./doc/sample.wgetrc" "$INSTX_PREFIX/etc/wgetrc"
+else
+	echo "" >> "./doc/sample.wgetrc"
+	echo "# Default CA zoo file added by Build-Scripts" >> "./doc/sample.wgetrc"
+	echo "ca_certificate = $HOME/.cacert/cacert.pem" >> "./doc/sample.wgetrc"
+	cp "./doc/sample.wgetrc" "$HOME/.wgetrc"
+fi
+
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
@@ -112,7 +131,7 @@ echo "**************************************************************************
 ###############################################################################
 
 # Set to false to retain artifacts
-if true; then
+if false; then
 
     ARTIFACTS=("$WGET_TAR" "$WGET_DIR")
     for artifact in "${ARTIFACTS[@]}"; do

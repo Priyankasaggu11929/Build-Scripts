@@ -133,7 +133,7 @@ echo
 echo "********** Wget **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/pub/gnu//wget/$WGET_TAR" -O "$WGET_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/pub/gnu//wget/$WGET_TAR" -O "$WGET_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Wget"

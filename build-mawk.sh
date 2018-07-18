@@ -33,7 +33,7 @@ echo
 echo "********** mawk **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "http://invisible-island.net/datafiles/release/$MAWK_TAR" -O "$MAWK_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "http://invisible-island.net/datafiles/release/$MAWK_TAR" -O "$MAWK_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download mawk"

@@ -52,6 +52,19 @@ fi
 
 ###############################################################################
 
+# Wget is special. We have to be able to bootstrap it and
+# use the latest version throughout these scripts
+
+if [[ -z "$WGET" ]]; then
+    if [[ -e "/usr/local/bin/wget" ]]; then
+        WGET="/usr/local/bin/wget"
+    else
+        WGET=wget
+    fi
+fi
+
+###############################################################################
+
 THIS_SYSTEM=$(uname -s 2>&1)
 IS_SOLARIS=$(echo -n "$THIS_SYSTEM" | grep -i -c 'sunos')
 IS_DARWIN=$(echo -n "$THIS_SYSTEM" | grep -i -c 'darwin')
@@ -344,13 +357,13 @@ if [[ -z "$PRINT_ONCE" ]]; then
     echo "     CXXFLAGS: ${BUILD_CXXFLAGS[*]}"
     echo "      LDFLAGS: ${BUILD_LDFLAGS[*]}"
     echo "       LDLIBS: ${BUILD_LIBS[*]}"
+    echo ""
 
+    echo " WGET: $WGET"
     if [[ ! -z "$SH_CACERT_PATH" ]]; then
-        echo ""
         echo " SH_CACERT_PATH: $SH_CACERT_PATH"
     fi
     if [[ ! -z "$SH_CACERT_BUNDLE" ]]; then
-        echo ""
         echo " SH_CACERT_BUNDLE: $SH_CACERT_BUNDLE"
     fi
 

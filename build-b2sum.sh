@@ -40,7 +40,7 @@ echo "********** b2sum **********"
 echo
 
 # Redirect to Sourceforge.
-wget --ca-certificate="$DIGICERT_ROOT" "https://github.com/BLAKE2/BLAKE2/archive/$B2SUM_TAR" -O "$B2SUM_TAR"
+"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/BLAKE2/BLAKE2/archive/$B2SUM_TAR" -O "$B2SUM_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download b2sum"

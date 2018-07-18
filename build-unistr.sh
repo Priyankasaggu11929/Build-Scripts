@@ -41,7 +41,7 @@ echo
 echo "********** Unistring **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/libunistring/$UNISTR_TAR" -O "$UNISTR_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/libunistring/$UNISTR_TAR" -O "$UNISTR_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Unistring"

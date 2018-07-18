@@ -41,7 +41,7 @@ echo
 echo "********** Termcap **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/termcap/$TERMCAP_TAR" -O "$TERMCAP_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/termcap/$TERMCAP_TAR" -O "$TERMCAP_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Termcap"

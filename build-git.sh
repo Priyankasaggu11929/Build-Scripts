@@ -149,7 +149,7 @@ echo
 echo "********** Git **********"
 echo
 
-wget --ca-certificate="$DIGICERT_ROOT" "https://github.com/git/git/archive/$GIT_TAR" -O "$GIT_TAR"
+"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/git/git/archive/$GIT_TAR" -O "$GIT_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Git"

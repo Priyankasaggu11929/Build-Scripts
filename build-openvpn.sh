@@ -59,7 +59,7 @@ echo
 echo "********** Solaris TUN/TAP Driver **********"
 echo
 
-wget --ca-certificate="$DIGICERT_ROOT" "https://github.com/kaizawa/tuntap/archive/$TUNTAP_TAR" -O "$TUNTAP_TAR"
+"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/kaizawa/tuntap/archive/$TUNTAP_TAR" -O "$TUNTAP_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download TUN/TAP driver"
@@ -112,7 +112,7 @@ echo
 echo "********** OpenVPN **********"
 echo
 
-wget --ca-certificate="$ADDTRUST_ROOT" "https://swupdate.openvpn.org/community/releases/$OPENVPN_TAR" -O "$OPENVPN_TAR"
+"$WGET" --ca-certificate="$ADDTRUST_ROOT" "https://swupdate.openvpn.org/community/releases/$OPENVPN_TAR" -O "$OPENVPN_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download OpenVPN"

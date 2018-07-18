@@ -39,7 +39,7 @@ echo
 echo "********** Automake **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR" -O "$AUTOMAKE_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR" -O "$AUTOMAKE_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Automake"

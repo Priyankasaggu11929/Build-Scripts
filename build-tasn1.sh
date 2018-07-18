@@ -41,7 +41,7 @@ echo
 echo "********** libtasn1 **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/libtasn1/$TASN1_TAR" -O "$TASN1_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/libtasn1/$TASN1_TAR" -O "$TASN1_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download libtasn1"

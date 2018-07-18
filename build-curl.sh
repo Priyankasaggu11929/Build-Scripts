@@ -132,12 +132,12 @@ echo "********** cURL **********"
 echo
 
 echo "Attempting download cURL using HTTPS."
-wget --ca-certificate="$GLOBALSIGN_ROOT" "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
+"$WGET" --ca-certificate="$GLOBALSIGN_ROOT" "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
 
 # Download over insecure channel
 if [[ "$?" -ne "0" ]]; then
     echo "Attempting download cURL using insecure channel."
-    wget --no-check-certificate "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
+    "$WGET" --no-check-certificate "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
 fi
 
 # Download over insecure channel

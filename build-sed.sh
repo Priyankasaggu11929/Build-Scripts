@@ -40,7 +40,7 @@ echo
 echo "********** Sed **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/sed/$SED_TAR" -O "$SED_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/sed/$SED_TAR" -O "$SED_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Sed"

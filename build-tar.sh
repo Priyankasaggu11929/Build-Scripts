@@ -32,7 +32,7 @@ echo
 echo "********** Tar **********"
 echo
 
-wget --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/tar/$TAR_TAR" -O "$TAR_TAR"
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/tar/$TAR_TAR" -O "$TAR_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Tar"
