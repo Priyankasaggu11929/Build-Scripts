@@ -40,7 +40,7 @@ INSTX_JOBS=2 ./build-curl.sh
 
 A basic order may need to be followed. Older systems like CentOS 5 are more sensitive than newer systems. You should run `build-cacerts.sh` to install several CAs in `$HOME/.cacerts`. The script installs approximately 6 CA's necessary to download other packages. You can delete the `.cacert` folder at anytime because the certifcates are only used by the scripts.
 
-Wget should be built next when working on older systems. CentOS 5 provides Wget 1.11, and it does not support SNI (SNI support did not arrive until Wget 1.14). The old Wget will fail to download cURL which Git needs for its build. The cURL download fails due to shared hosting and lack of SNI.
+Wget should be built next when working on older systems. It removes all Wget dependencies except OpenSSL. CentOS 5 provides Wget 1.11, and it does not support SNI (SNI support did not arrive until Wget 1.14). The old Wget will fail to download cURL which Git needs for its build. The cURL download fails due to shared hosting and lack of SNI. If the system is *really* then old you may have to run `build-wget-lite.sh` instead.
 
 In extreme cases you may need to download Build-Scripts in ZIP format from GitHub, and then `scp` them to the target machine. You can unzip the ZIP file with `unzip -aoq master.zip -d <some dir>`. The case may become more common since GitHub moved to require TLS v1.2 (https://githubengineering.com/crypto-removal-notice/).
 
