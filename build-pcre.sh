@@ -56,7 +56,9 @@ echo
 echo "Attempting download PCRE using HTTPS."
 "$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.pcre.org/pub/pcre/$PCRE_TAR" -O "$PCRE_TAR"
 
-# Download over insecure channel
+# This is due to the way Wget calls OpenSSL. The OpenSSL context
+# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
+# trust in this certificate; and not a self-signed CA root."
 if [[ "$?" -ne "0" ]]; then
     echo "Attempting download PCRE using insecure channel."
     "$WGET" --no-check-certificate "https://ftp.pcre.org/pub/pcre/$PCRE_TAR" -O "$PCRE_TAR"
@@ -134,7 +136,9 @@ echo
 echo "Attempting download PCRE2 using HTTPS."
 "$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.pcre.org/pub/pcre/$PCRE2_TAR" -O "$PCRE2_TAR"
 
-# Download over insecure channel
+# This is due to the way Wget calls OpenSSL. The OpenSSL context
+# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
+# trust in this certificate; and not a self-signed CA root."
 if [[ "$?" -ne "0" ]]; then
     echo "Attempting download PCRE2 using insecure channel."
     "$WGET" --no-check-certificate "https://ftp.pcre.org/pub/pcre/$PCRE2_TAR" -O "$PCRE2_TAR"

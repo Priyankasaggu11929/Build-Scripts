@@ -134,7 +134,9 @@ echo
 echo "Attempting download cURL using HTTPS."
 "$WGET" --ca-certificate="$GLOBALSIGN_ROOT" "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
 
-# Download over insecure channel
+# This is due to the way Wget calls OpenSSL. The OpenSSL context
+# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
+# trust in this certificate; and not a self-signed CA root."
 if [[ "$?" -ne "0" ]]; then
     echo "Attempting download cURL using insecure channel."
     "$WGET" --no-check-certificate "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"

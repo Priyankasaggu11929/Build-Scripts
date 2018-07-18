@@ -81,10 +81,12 @@ echo
 echo "Attempting download PSL using HTTPS."
 "$WGET" --ca-certificate="$CA_ZOO" "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
 
-# Download over insecure channel
+# This is due to the way Wget calls OpenSSL. The OpenSSL context
+# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
+# trust in this certificate; and not a self-signed CA root."
 if [[ "$?" -ne "0" ]]; then
     echo "Attempting download PSL using insecure channel."
-    "$WGET" --no-check-certificate "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
+    "$WGET" --ca-certificate="$CA_ZOO" "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
 fi
 
 if [[ "$?" -ne "0" ]]; then
@@ -132,6 +134,9 @@ echo "Updating Public Suffix List (PSL) data file"
 mkdir -p list
 "$WGET" --ca-certificate="$CA_ZOO" https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat -O list/public_suffix_list.dat
 
+# This is due to the way Wget calls OpenSSL. The OpenSSL context
+# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
+# trust in this certificate; and not a self-signed CA root."
 if [[ "$?" -ne "0" ]]; then
     echo "Attempting update PSL using insecure channel."
     "$WGET" --no-check-certificate https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat -O list/public_suffix_list.dat
