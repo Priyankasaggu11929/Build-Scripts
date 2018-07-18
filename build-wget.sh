@@ -29,33 +29,37 @@ fi
 
 ###############################################################################
 
-# May be skipped if Perl is too old
+# Wget self tests may be skipped if Perl is missing or too old
 SKIP_WGET_TESTS=0
+if [[ -z $(command -v python) ]]; then
+    SKIP_WGET_TESTS=1
+else
+    if ! perl -MHTTP::Daemon -e1 2>/dev/null
+    then
+         echo "Wget requires Perl's HTTP::Daemon. Skipping Wget self tests."
+         echo "To fix this issue, please install HTTP-Daemon."
+         SKIP_WGET_TESTS=1
+    fi
 
-# Wget self tests
-if ! perl -MHTTP::Daemon -e1 2>/dev/null
-then
-     echo "Wget requires Perl's HTTP::Daemon. Skipping Wget self tests."
-     echo "To fix this issue, please install HTTP-Daemon."
-     SKIP_WGET_TESTS=1
+    if ! perl -MHTTP::Request -e1 2>/dev/null
+    then
+         echo "Wget requires Perl's HTTP::Request.  Skipping Wget self tests."
+         echo "To fix this issue, please install HTTP-Request or HTTP-Message."
+         SKIP_WGET_TESTS=1
+    fi
 fi
 
-if ! perl -MHTTP::Request -e1 2>/dev/null
-then
-     echo "Wget requires Perl's HTTP::Request.  Skipping Wget self tests."
-     echo "To fix this issue, please install HTTP-Request or HTTP-Message."
-     SKIP_WGET_TESTS=1
-fi
 
-# May be skipped if Python is too old. libpsl requires Python 2.7
+# PSL may be skipped if Python is too old. libpsl requires Python 2.7
 # Also see https://stackoverflow.com/a/40950971/608639
-
 SKIP_LIBPSL=1
 
-if hash python; then
-    ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
-    if [ "$ver" -ge "27" ]; then
-        SKIP_LIBPSL=0
+if [[ -z $(command -v python) ]]; then
+    if hash python; then
+        ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
+        if [ "$ver" -ge "27" ]; then
+            SKIP_LIBPSL=0
+        fi
     fi
 fi
 
@@ -194,21 +198,21 @@ fi
 # will fail with the message "... use --no-check-certifcate ...". Fix it
 # through the system's wgetrc configuration file.
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
-	echo "Copying new-cacert.pem to $SH_CACERT_PATH"
+    echo "Copying new-cacert.pem to $SH_CACERT_PATH"
     echo "$SUDO_PASSWORD" | sudo -S cp "$HOME/.cacert/cacert.pem" "$SH_CACERT_PATH/new-cacert.pem"
 
-	cp "./doc/sample.wgetrc" "./wgetrc"
-	echo "" >> "./wgetrc"
-	echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
-	echo "ca_certificate = $SH_CACERT_PATH/new-cacert.pem" >> "./wgetrc"
+    cp "./doc/sample.wgetrc" "./wgetrc"
+    echo "" >> "./wgetrc"
+    echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
+    echo "ca_certificate = $SH_CACERT_PATH/new-cacert.pem" >> "./wgetrc"
 
-	echo "$SUDO_PASSWORD" | sudo -S cp "./wgetrc" "$INSTX_PREFIX/etc/wgetrc"
+    echo "$SUDO_PASSWORD" | sudo -S cp "./wgetrc" "$INSTX_PREFIX/etc/wgetrc"
 else
-	cp "./doc/sample.wgetrc" "./wgetrc"
-	echo "" >> "./wgetrc"
-	echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
-	echo "ca_certificate = $HOME/.cacert/cacert.pem" >> "./wgetrc"
-	cp "./wgetrc" "$HOME/.wgetrc"
+    cp "./doc/sample.wgetrc" "./wgetrc"
+    echo "" >> "./wgetrc"
+    echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
+    echo "ca_certificate = $HOME/.cacert/cacert.pem" >> "./wgetrc"
+    cp "./wgetrc" "$HOME/.wgetrc"
 fi
 
 MAKE_FLAGS=("install")
