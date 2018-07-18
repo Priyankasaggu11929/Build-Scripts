@@ -43,7 +43,7 @@ echo "********** libicu **********"
 echo
 
 # http://download.icu-project.org/files/icu4c/60.2/icu4c-60_2-src.tgz
-wget "http://download.icu-project.org/files/icu4c/60.2/$ICU_TAR" -O "$ICU_TAR"
+"$WGET" "http://download.icu-project.org/files/icu4c/60.2/$ICU_TAR" -O "$ICU_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download libicu"

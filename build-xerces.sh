@@ -59,7 +59,7 @@ echo
 
 # http://apache.cs.utah.edu/xerces/c/3/sources/xerces-c-3.2.0.tar.gz
 echo "Attempting Xerces download using insecure channel."
-wget "http://apache.cs.utah.edu/xerces/c/3/sources/$XERCES_TAR" -O "$XERCES_TAR"
+"$WGET" "http://apache.cs.utah.edu/xerces/c/3/sources/$XERCES_TAR" -O "$XERCES_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download xerces"

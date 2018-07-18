@@ -41,7 +41,7 @@ echo
 echo "********** Bzip **********"
 echo
 
-wget "http://www.bzip.org/1.0.6/$BZIP2_TAR" -O "$BZIP2_TAR"
+"$WGET" "http://www.bzip.org/1.0.6/$BZIP2_TAR" -O "$BZIP2_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Bzip"
