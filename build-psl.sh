@@ -86,7 +86,7 @@ echo "Attempting download PSL using HTTPS."
 # trust in this certificate; and not a self-signed CA root."
 if [[ "$?" -ne "0" ]]; then
     echo "Attempting download PSL using insecure channel."
-    "$WGET" --ca-certificate="$CA_ZOO" "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
+    "$WGET" --no-check-certificate "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
 fi
 
 if [[ "$?" -ne "0" ]]; then
