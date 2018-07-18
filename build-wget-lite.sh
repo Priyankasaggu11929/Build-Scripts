@@ -48,9 +48,11 @@ fi
 
 # Check the hash if shasum is available
 if [[ ! -z $(command -v shasum 2>/dev/null) ]]; then
-    THIS_HASH=$(shasum "$WGET_TAR" 2>/dev/null | tr '[:upper:]' '[:lower:]')
-    if [[ ! "THIS_HASH" = "$WGET_SHA1" ]]; then
+    THIS_HASH=$(shasum "$WGET_TAR" 2>/dev/null | cut -d ' ' -f 1 | tr '[:upper:]' '[:lower:]')
+    if [[ "$THIS_HASH" != "$WGET_SHA1" ]]; then
         echo "Failed to verify Wget"
+		echo "Expected: $WGET_SHA1"
+		echo "Calculated: $THIS_HASH"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 fi
