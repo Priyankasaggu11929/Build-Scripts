@@ -58,7 +58,7 @@ sed "/^NO_OPENMP/d" makefile > makefile.fixed
 mv makefile.fixed makefile
 
 # Breaks compile on some platforms
-sed "s|-Werror=declaration-after-statement||g" makefile > makefile.fixed
+sed "s|-Werror=declaration-after-statement ||g" makefile > makefile.fixed
 mv makefile.fixed makefile
 
 # Add OpenMP if available
@@ -68,9 +68,15 @@ fi
 
 if [[ "$IS_IA32" -eq "0" ]]; then
     sed "/^FILES=/d" makefile > makefile.fixed
-	mv makefile.fixed makefile
+    mv makefile.fixed makefile
     sed "s|^#FILES=|FILES=|g" makefile > makefile.fixed
-	mv makefile.fixed makefile
+    mv makefile.fixed makefile
+fi
+
+if [[ "$IS_SOLARIS" -eq "1" ]]; then
+    CC=gcc
+    sed 's|CC?=gcc|CC=gcc|g' makefile > makefile.fixed
+    mv makefile.fixed makefile
 fi
 
 MAKE_FLAGS=("CFLAGS=$B2CFLAGS" "-j" "$INSTX_JOBS")
