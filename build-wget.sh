@@ -195,14 +195,14 @@ fi
 # through the system's wgetrc configuration file.
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
 	echo "Copying new-cacert.pem to $SH_CACERT_PATH"
-    echo "$SUDO_PASSWORD" | sudo cp "$HOME/.cacert/cacert.pem" "$SH_CACERT_PATH/new-cacert.pem"
+    echo "$SUDO_PASSWORD" | sudo -S cp "$HOME/.cacert/cacert.pem" "$SH_CACERT_PATH/new-cacert.pem"
 
 	cp "./doc/sample.wgetrc" "./wgetrc"
 	echo "" >> "./wgetrc"
 	echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
 	echo "ca_certificate = $SH_CACERT_PATH/new-cacert.pem" >> "./wgetrc"
 
-	echo "$SUDO_PASSWORD" | sudo cp "./wgetrc" "$INSTX_PREFIX/etc/wgetrc"
+	echo "$SUDO_PASSWORD" | sudo -S cp "./wgetrc" "$INSTX_PREFIX/etc/wgetrc"
 else
 	cp "./doc/sample.wgetrc" "./wgetrc"
 	echo "" >> "./wgetrc"

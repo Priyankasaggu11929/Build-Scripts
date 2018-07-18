@@ -61,7 +61,7 @@ mv configure.fixed configure; chmod +x configure
 # This seems to be the only reliable way to delete the old version
 # since we can't 'configure' and then 'make uninstall'.
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
-    echo "$SUDO_PASSWORD" | sudo -S find "$INSTX_PREFIX" -name '*curse*' -exec rm -rf {} \;
+    echo "$SUDO_PASSWORD" | sudo -S find "$INSTX_PREFIX" -name '*curse*' -exec rm -rf {} 2>/dev/null \;
 else
     find "$INSTX_PREFIX" -name '*curse*' -exec rm -rf {} \;
 fi
