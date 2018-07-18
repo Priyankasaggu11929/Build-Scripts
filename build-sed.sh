@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Sed from sources.
 
-SED_TAR=sed-4.4.tar.xz
-SED_DIR=sed-4.4
+SED_TAR=sed-4.5.tar.xz
+SED_DIR=sed-4.5
 
 # Avoid shellcheck.net warning
 CURR_DIR="$PWD"
