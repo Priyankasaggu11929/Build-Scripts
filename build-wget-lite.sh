@@ -91,21 +91,24 @@ then
 fi
 
 # Wget does not have any CA's configured at the moment. HTTPS downloads
-# will fail with the message "... use --no-check-certifcate ...".
-# Fix it through the system's wgetrc configuration file.
+# will fail with the message "... use --no-check-certifcate ...". Fix it
+# through the system's wgetrc configuration file.
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
 	echo "Copying new-cacert.pem to $SH_CACERT_PATH"
     echo "$SUDO_PASSWORD" | sudo cp "$HOME/.cacert/cacert.pem" "$SH_CACERT_PATH/new-cacert.pem"
 
-	echo "" >> "./doc/sample.wgetrc"
-	echo "# Default CA zoo file added by Build-Scripts" >> "./doc/sample.wgetrc"
-	echo "ca_certificate = $SH_CACERT_PATH/new-cacert.pem" >> "./doc/sample.wgetrc"
-	echo "$SUDO_PASSWORD" | sudo cp "./doc/sample.wgetrc" "$INSTX_PREFIX/etc/wgetrc"
+	cp "./doc/sample.wgetrc" "./wgetrc"
+	echo "" >> "./wgetrc"
+	echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
+	echo "ca_certificate = $SH_CACERT_PATH/new-cacert.pem" >> "./wgetrc"
+
+	echo "$SUDO_PASSWORD" | sudo cp "./wgetrc" "$INSTX_PREFIX/etc/wgetrc"
 else
-	echo "" >> "./doc/sample.wgetrc"
-	echo "# Default CA zoo file added by Build-Scripts" >> "./doc/sample.wgetrc"
-	echo "ca_certificate = $HOME/.cacert/cacert.pem" >> "./doc/sample.wgetrc"
-	cp "./doc/sample.wgetrc" "$HOME/.wgetrc"
+	cp "./doc/sample.wgetrc" "./wgetrc"
+	echo "" >> "./wgetrc"
+	echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
+	echo "ca_certificate = $HOME/.cacert/cacert.pem" >> "./wgetrc"
+	cp "./wgetrc" "$HOME/.wgetrc"
 fi
 
 MAKE_FLAGS=("install")
