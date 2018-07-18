@@ -181,6 +181,8 @@ do
     sed -e 's|-lrt|-lrt -lpthread|g' "$file.orig" > "$file"
     cp "$file" "$file.orig"
     sed -e 's|rGIT-PERL-HEADER|r GIT-PERL-HEADER|g' "$file.orig" > "$file"
+    cp "$file" "$file.orig"
+    sed -e 's|$(LIB_FILE) |$(LIB_FILE) -lpthread |g' "$file.orig" > "$file"
     rm "$file.orig"
 done
 
