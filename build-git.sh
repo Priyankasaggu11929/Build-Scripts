@@ -23,7 +23,7 @@ fi
 
 CA_ZOO="$HOME/.cacert/cacert.pem"
 if [[ ! -f "$CA_ZOO" ]]; then
-    echo "ClamAV requires several CA roots. Please run build-cacert.sh."
+    echo "Git requires several CA roots. Please run build-cacert.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -40,14 +40,6 @@ fi
 # subshell goes out of scope.
 if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./build-password.sh
-fi
-
-###############################################################################
-
-# https://marc.info/?l=git&m=153191482506937
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
-    GIT_TAR=git-2.17.1.tar.gz
-    GIT_DIR=git-2.17.1
 fi
 
 ###############################################################################
@@ -187,6 +179,8 @@ for file in $(find "$PWD" -name 'Makefile*')
 do
     cp "$file" "$file.orig"
     sed -e 's|-lrt|-lrt -lpthread|g' "$file.orig" > "$file"
+    cp "$file" "$file.orig"
+    sed -e 's|rGIT-PERL-HEADER|r GIT-PERL-HEADER|g' "$file.orig" > "$file"
     rm "$file.orig"
 done
 
