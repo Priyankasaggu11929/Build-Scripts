@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds TinyXML from sources.
 
-TXML2_TAR=6.0.0.tar.gz
-TXML2_DIR=tinyxml2-6.0.0
+TXML2_TAR=6.2.0.tar.gz
+TXML2_DIR=tinyxml2-6.2.0
 PKG_NAME=tinyxml
 
 # Avoid shellcheck.net warning
