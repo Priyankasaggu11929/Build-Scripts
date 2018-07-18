@@ -104,18 +104,18 @@ fi
 
 ###############################################################################
 
-# For libint.h, https://stackoverflow.com/q/11370684/608639
-if ! ./build-gettext.sh
+if ! ./build-ncurses.sh
 then
-    echo "Failed to build GetText"
+    echo "Failed to build ncurses"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 ###############################################################################
 
-if ! ./build-ncurses.sh
+# For libint.h, https://stackoverflow.com/q/11370684/608639
+if ! ./build-gettext.sh
 then
-    echo "Failed to build ncurses"
+    echo "Failed to build GetText"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
