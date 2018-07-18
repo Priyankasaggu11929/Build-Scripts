@@ -100,7 +100,6 @@ if [[ ! (-z "$SUDO_PASSWORD") ]]; then
 	echo "" >> "./doc/sample.wgetrc"
 	echo "# Default CA zoo file added by Build-Scripts" >> "./doc/sample.wgetrc"
 	echo "ca_certificate = $SH_CACERT_PATH/new-cacert.pem" >> "./doc/sample.wgetrc"
-
 	echo "$SUDO_PASSWORD" | sudo cp "./doc/sample.wgetrc" "$INSTX_PREFIX/etc/wgetrc"
 else
 	echo "" >> "./doc/sample.wgetrc"

@@ -260,8 +260,10 @@ rm -f "$outfile" 2>/dev/null
 
 # CA cert path? Also see http://gagravarr.org/writing/openssl-certs/others.shtml
 if [[ -e "/etc/ssl/certs/ca-certificates.crt" ]]; then
+    SH_CACERT_PATH="/etc/ssl/certs"
     SH_CACERT_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
 elif [[ -e "/etc/ssl/certs/ca-bundle.crt" ]]; then
+    SH_CACERT_PATH="/etc/ssl/certs"
     SH_CACERT_BUNDLE="/etc/ssl/certs/ca-bundle.crt"
 elif [[ -d "/etc/ssl/certs" ]]; then
     SH_CACERT_PATH="/etc/ssl/certs"
