@@ -49,17 +49,14 @@ else
     fi
 fi
 
-
 # PSL may be skipped if Python is too old. libpsl requires Python 2.7
 # Also see https://stackoverflow.com/a/40950971/608639
-SKIP_LIBPSL=1
+INCLUDE_LIBPSL=0
 
-if [[ -z $(command -v python) ]]; then
-    if hash python; then
-        ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
-        if [ "$ver" -ge "27" ]; then
-            SKIP_LIBPSL=0
-        fi
+if [[ ! -z $(command -v python) ]]; then
+    ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
+    if [ "$ver" -ge "27" ]; then
+        INCLUDE_LIBPSL=1
     fi
 fi
 
@@ -121,7 +118,7 @@ fi
 
 ###############################################################################
 
-if [[ "$SKIP_LIBPSL" -eq "0" ]]; then
+if [[ "$INCLUDE_LIBPSL" -eq "1" ]]; then
 
 if ! ./build-psl.sh
 then
@@ -129,7 +126,7 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-fi  # SKIP_LIBPSL
+fi  # INCLUDE_LIBPSL
 
 ###############################################################################
 

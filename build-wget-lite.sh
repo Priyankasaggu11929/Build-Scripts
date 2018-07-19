@@ -39,6 +39,9 @@ echo
 echo "********** Wget **********"
 echo
 
+# HTTP is probably the only way to bootstrap if the existing Wget is
+# too old. We check the tarball hash for this case. Once we bootstrap
+# Wget with OpenSSL we can use digital signatures.
 "$WGET" "http://ftp.gnu.org/pub/gnu//wget/$WGET_TAR" -O "$WGET_TAR"
 
 if [[ "$?" -ne "0" ]]; then
@@ -46,15 +49,17 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Check the hash if shasum is available
-if [[ ! -z $(command -v shasum 2>/dev/null) ]]; then
+# Verify the hash if shasum is available
+if [[ ! -z $(command -v shasum) ]]; then
     THIS_HASH=$(shasum "$WGET_TAR" 2>/dev/null | cut -d ' ' -f 1 | tr '[:upper:]' '[:lower:]')
     if [[ "$THIS_HASH" != "$WGET_SHA1" ]]; then
-        echo "Failed to verify Wget"
-		echo "Expected: $WGET_SHA1"
-		echo "Calculated: $THIS_HASH"
+        echo "Failed to verify Wget download"
+        echo "Expected: $WGET_SHA1"
+        echo "Calculated: $THIS_HASH"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
+else
+    echo "Failed to verify Wget download. Please install shasum"
 fi
 
 rm -rf "$WGET_DIR" &>/dev/null
@@ -101,21 +106,21 @@ fi
 # will fail with the message "... use --no-check-certifcate ...". Fix it
 # through the system's wgetrc configuration file.
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
-	echo "Copying new-cacert.pem to $SH_CACERT_PATH"
+    echo "Copying new-cacert.pem to $SH_CACERT_PATH"
     echo "$SUDO_PASSWORD" | sudo -S cp "$HOME/.cacert/cacert.pem" "$SH_CACERT_PATH/new-cacert.pem"
 
-	cp "./doc/sample.wgetrc" "./wgetrc"
-	echo "" >> "./wgetrc"
-	echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
-	echo "ca_certificate = $SH_CACERT_PATH/new-cacert.pem" >> "./wgetrc"
+    cp "./doc/sample.wgetrc" "./wgetrc"
+    echo "" >> "./wgetrc"
+    echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
+    echo "ca_certificate = $SH_CACERT_PATH/new-cacert.pem" >> "./wgetrc"
 
-	echo "$SUDO_PASSWORD" | sudo -S cp "./wgetrc" "$INSTX_PREFIX/etc/wgetrc"
+    echo "$SUDO_PASSWORD" | sudo -S cp "./wgetrc" "$INSTX_PREFIX/etc/wgetrc"
 else
-	cp "./doc/sample.wgetrc" "./wgetrc"
-	echo "" >> "./wgetrc"
-	echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
-	echo "ca_certificate = $HOME/.cacert/cacert.pem" >> "./wgetrc"
-	cp "./wgetrc" "$HOME/.wgetrc"
+    cp "./doc/sample.wgetrc" "./wgetrc"
+    echo "" >> "./wgetrc"
+    echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
+    echo "ca_certificate = $HOME/.cacert/cacert.pem" >> "./wgetrc"
+    cp "./wgetrc" "$HOME/.wgetrc"
 fi
 
 MAKE_FLAGS=("install")
@@ -132,6 +137,11 @@ cd "$CURR_DIR"
 
 ###############################################################################
 
+echo ""
+echo "*****************************************************************************"
+echo "A compact version of Wget was installed to allow downloading dependencies."
+echo "You should run build-wget.sh next to build a full version with dependencies."
+echo "*****************************************************************************"
 echo ""
 echo "*****************************************************************************"
 echo "Please run Bash's 'hash -r' to update program cache in the current shell"
