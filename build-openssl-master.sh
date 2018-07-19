@@ -4,7 +4,6 @@
 # This script builds OpenSSL from sources.
 
 # OpenSSH and a few other key programs can only use OpenSSL 1.0.2 at the moment
-OPENSSL_TAR=openssl-1.0.2o.tar.gz
 OPENSSL_DIR=openssl-1.0.2o
 PKG_NAME=openssl
 
@@ -68,16 +67,8 @@ echo
 echo "********** OpenSSL **********"
 echo
 
-# wget on Ubuntu 16 cannot validate against Let's Encrypt certificate
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://www.openssl.org/source/$OPENSSL_TAR" -O "$OPENSSL_TAR"
-
-if [[ "$?" -ne "0" ]]; then
-    echo "Failed to download OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-rm -rf "$OPENSSL_DIR" &>/dev/null
-gzip -d < "$OPENSSL_TAR" | tar xf -
+# Requires Git 1.7.10 or higher. May be a problem on older clients.
+git clone git://github.com/openssl/openssl --branch OpenSSL_1_0_2-stable --single-branch "$OPENSSL_DIR"
 cd "$OPENSSL_DIR"
 
 CONFIG_FLAGS=("no-ssl2" "no-ssl3" "no-comp" "shared" "-DNDEBUG" "$SH_SYM" "$SH_OPT")
@@ -165,7 +156,7 @@ touch "$INSTX_CACHE/$PKG_NAME"
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$OPENSSL_TAR" "$OPENSSL_DIR")
+    ARTIFACTS=("$OPENSSL_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
