@@ -72,6 +72,8 @@ IS_AIX=$(echo -n "$THIS_SYSTEM" | grep -i -c 'aix')
 IS_CYGWIN=$(echo -n "$THIS_SYSTEM" | grep -i -c 'cygwin')
 IS_OPENBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'openbsd')
 IS_FREEBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'freebsd')
+IS_NETBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'netbsd')
+IS_BSD=$(echo -n "$THIS_SYSTEM" | grep -i -c -E 'freebsd|netbsd|openbsd')
 
 THIS_MACHINE=$(uname -m 2>&1)
 IS_IA32=$(echo -n "$THIS_MACHINE" | grep -E -i -c 'i.86|amd64|x86_64')

@@ -121,7 +121,7 @@ if [[ "$IS_DARWIN" -ne "0" ]]; then
 fi
 
     MAKE_FLAGS=("-j" "$INSTX_JOBS" "depend")
-    if [[ "$IS_OPENBSD" -ne "0" ]]; then
+    if [[ "$IS_BSD" -ne "0" ]]; then
         MAKE_FLAGS+=("MAKEDEPPROG=gcc -M")
     fi
 
