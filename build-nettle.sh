@@ -65,6 +65,9 @@ if [[ "$IS_DARWIN" -ne "0" ]]; then
     mv examples/Makefile.in.fixed examples/Makefile.in
     sed -e 's|LD_LIBRARY_PATH|DYLD_LIBRARY_PATH|g' testsuite/Makefile.in > testsuite/Makefile.in.fixed
     mv testsuite/Makefile.in.fixed testsuite/Makefile.in
+
+    touch -t 197001010000 examples/Makefile.in
+    touch -t 197001010000 testsuite/Makefile.in
 fi
 
 # http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
