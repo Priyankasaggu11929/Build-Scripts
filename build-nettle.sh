@@ -59,8 +59,6 @@ rm -rf "$NETTLE_DIR" &>/dev/null
 gzip -d < "$NETTLE_TAR" | tar xf -
 cd "$NETTLE_DIR"
 
-echo "Patching Nettle..."
-
 # This works for all versions of Nettle on all Apple platforms
 if [[ "$IS_DARWIN" -ne "0" ]]; then
     sed -e 's|LD_LIBRARY_PATH|DYLD_LIBRARY_PATH|g' examples/Makefile.in > examples/Makefile.in.fixed
@@ -79,42 +77,30 @@ mv configure.ac.fixed configure.ac;
 chmod +x configure.ac
 touch -t 197001010000 configure.ac
 
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure;
-chmod +x configure
-touch -t 197001010000 configure
-
-# Awful Solaris 64-bit hack. Rewrite some values properly
+# Awful Solaris 64-bit hack. Rewrite some values
 if [[ "$IS_SOLARIS" -eq "1" ]]; then
-    if [[ "$BUILD_BITS" -eq "64" ]]; then
-        # Fix configure.ac first.
-        sed '321i    ABI=64' configure.ac > configure.ac.fixed
-        mv configure.ac.fixed configure.ac;
-        sed '322i    host_os=solaris' configure.ac > configure.ac.fixed
-        mv configure.ac.fixed configure.ac;
-        sed '323i    host_cpu=x86_64' configure.ac > configure.ac.fixed
-        mv configure.ac.fixed configure.ac;
-        sed 's| -G -h| -shared -h|g' configure.ac > configure.ac.fixed
-        mv configure.ac.fixed configure.ac;
-        chmod +x configure.ac
-        touch -t 197001010000 configure.ac
 
-        # And configure next.
-        sed '321i    ABI=64' configure > configure.fixed
-        mv configure.fixed configure;
-        sed '322i    host_os=solaris' configure > configure.fixed
-        mv configure.fixed configure;
-        sed '323i    host_cpu=x86_64' configure > configure.fixed
-        mv configure.fixed configure;
-        sed 's| -G -h| -shared -h|g' configure > configure.fixed
-        mv configure.fixed configure;
-        chmod +x configure
-        touch -t 197001010000 configure
-
-        sed -e 's| -G -h| -shared -h|g' testsuite/Makefile.in > testsuite/Makefile.in.fixed
-        mv testsuite/Makefile.in.fixed testsuite/Makefile.in
-        touch -t 197001010000 testsuite/Makefile.in
+    # Autotools uses the i386-pc-solaris2.11, which results in 32-bit binaries
+    if [[ "$IS_X86_64" -eq "1" ]]; then
+        SH_CONFIG_GUESS=x86_64-pc-solaris2.11
     fi
+
+    sed 's| -G -h| -shared -h|g' configure.ac > configure.ac.fixed
+    mv configure.ac.fixed configure.ac;
+    chmod +x configure.ac
+    touch -t 197001010000 configure.ac
+fi
+
+if [[ -z "$SH_CONFIG_GUESS" ]]; then
+    SH_CONFIG_GUESS=$(config.guess)
+fi
+
+# This scares me, but it is necessary...
+autoreconf
+
+if [[ "$?" -ne "0" ]]; then
+    echo "Failed to reconfigure Nettle"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 CONFIG_OPTS=("--prefix=$INSTX_PREFIX")
@@ -122,9 +108,7 @@ CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR")
 CONFIG_OPTS+=("--enable-shared")
 CONFIG_OPTS+=("--disable-documentation")
 
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
-    CONFIG_OPTS+=("--disable-assembler")
-elif [[ "$IS_IA32" -ne "0" ]]; then
+if [[ "$IS_IA32" -ne "0" ]]; then
     CONFIG_OPTS+=("--enable-fat")
 fi
 
@@ -134,7 +118,7 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure ${CONFIG_OPTS[*]}
+./configure --host="$SH_CONFIG_GUESS" ${CONFIG_OPTS[*]}
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Nettle"
