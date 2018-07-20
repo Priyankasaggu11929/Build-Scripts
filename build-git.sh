@@ -21,8 +21,8 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-CA_ZOO="$HOME/.cacert/cacert.pem"
-if [[ ! -f "$CA_ZOO" ]]; then
+COMODO_ROOT="$HOME/.cacert/comodo-rsa-root.pem"
+if [[ ! -f "$COMODO_ROOT" ]]; then
     echo "Git requires several CA roots. Please run build-cacert.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -149,17 +149,8 @@ echo
 echo "********** Git **********"
 echo
 
-# https://marc.info/?l=git&m=153205063515040
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
-    GIT_TAR=git-2.17.1.tar.gz
-    GIT_DIR=git-2.17.1
-fi
+"$WGET" --ca-certificate="$COMODO_ROOT" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
 
-"$WGET" --ca-certificate="$CA_ZOO" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
-
-# This is due to the way Wget calls OpenSSL. The OpenSSL context
-# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
-# trust in this certificate; and not a self-signed CA root."
 if [[ "$?" -ne "0" ]]; then
     echo "Attempting download Git using insecure channel."
     "$WGET" --no-check-certificate "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
@@ -180,35 +171,30 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# "Instruct Git to use pthread library?", http://stackoverflow.com/q/43080417/
-for file in $(find "$PWD" -name 'Makefile*')
+for file in $(find "$PWD" -iname 'Makefile*')
 do
-    cp "$file" "$file.orig"
-    sed -e 's|-lrt|-lrt -lpthread|g' "$file.orig" > "$file"
-    cp "$file" "$file.orig"
-    sed -e 's|rGIT-PERL-HEADER|r GIT-PERL-HEADER|g' "$file.orig" > "$file"
-    cp "$file" "$file.orig"
-    sed -e 's|$(LIB_FILE) |$(LIB_FILE) -lpthread |g' "$file.orig" > "$file"
-    rm "$file.orig"
+    sed -e 's|-lrt|-lrt -lpthread|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    sed -e 's|rGIT-PERL-HEADER|r GIT-PERL-HEADER|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
 done
 
 # Various Solaris 11 workarounds
 if [[ "$IS_SOLARIS" -eq "1" ]]; then
-    for file in $(find "$PWD" -name 'Makefile*')
+    for file in $(find "$PWD" -iname 'Makefile*')
     do
-        cp "$file" "$file.orig"
-        sed -e 's|-lsocket|-lnsl -lsocket|g' "$file.orig" > "$file"
-        cp "$file" "$file.orig"
-        sed -e 's|/usr/ucb/install|install|g' "$file.orig" > "$file"
-        rm "$file.orig"
+        sed -e 's|-lsocket|-lnsl -lsocket|g' "$file" > "$file.fixed"
+        mv "$file.fixed" "$file"
+        sed -e 's|/usr/ucb/install|install|g' "$file" > "$file.fixed"
+        mv "$file.fixed" "$file"
     done
     for file in $(find "$PWD" -name 'config*')
     do
-        cp "$file" "$file.orig"
-        sed -e 's|-lsocket|-lnsl -lsocket|g' "$file.orig" > "$file"
-        cp "$file" "$file.orig"
-        sed -e 's|/usr/ucb/install|install|g' "$file.orig" > "$file"
-        rm "$file.orig"
+        sed -e 's|-lsocket|-lnsl -lsocket|g' "$file" > "$file.fixed"
+        mv "$file.fixed" "$file"
+        sed -e 's|/usr/ucb/install|install|g' "$file" > "$file.fixed"
+        mv "$file.fixed" "$file"
+        chmod +x "$file"
     done
 fi
 
