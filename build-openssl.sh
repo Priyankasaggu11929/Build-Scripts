@@ -80,6 +80,15 @@ rm -rf "$OPENSSL_DIR" &>/dev/null
 gzip -d < "$OPENSSL_TAR" | tar xf -
 cd "$OPENSSL_DIR"
 
+# Fix the twisted library paths used by OpenSSL
+for file in $(find . -iname '*makefile*')
+do
+    sed 's|$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)|$(LIBDIR)|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    sed 's|libdir=$${exec_prefix}/$(LIBDIR)|libdir=$(LIBDIR)|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+done
+
 CONFIG_FLAGS=("no-ssl2" "no-ssl3" "no-comp" "shared" "-DNDEBUG" "$SH_SYM" "$SH_OPT")
 
 if [[ "$IS_X86_64" -eq "1" ]]; then
@@ -96,17 +105,9 @@ if [[ ! -z "$SH_DTAGS" ]]; then
     CONFIG_FLAGS+=("$SH_DTAGS")
 fi
 
-# OpenSSL does not allow installing like Autotools and --libdir.
-# The OpenSSL libdir must be below --prefix. As far as I know
-# OpenSSL is the only software that has this requirement.
-CONFIG_LIBDIR=$(basename "$INSTX_LIBDIR")
-CONFIG_FLAGS+=("--prefix=$INSTX_PREFIX" "--libdir=$CONFIG_LIBDIR")
-
-echo "Configuring OpenSSL with ${CONFIG_FLAGS[*]}"
-echo "BUILD_BITS: $BUILD_BITS"
-
-    KERNEL_BITS="$BUILD_BITS" \
-./config ${CONFIG_FLAGS[*]}
+# Configure the library
+CONFIG_FLAGS+=("--prefix=$INSTX_PREFIX" "--libdir=$INSTX_LIBDIR")
+KERNEL_BITS="$BUILD_BITS" ./config ${CONFIG_FLAGS[*]}
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure OpenSSL"
@@ -120,18 +121,19 @@ if [[ "$IS_DARWIN" -ne "0" ]]; then
     done
 fi
 
-    MAKE_FLAGS=("-j" "$INSTX_JOBS" "depend")
-    if [[ "$IS_BSD" -ne "0" ]]; then
-        MAKE_FLAGS+=("MAKEDEPPROG=gcc -M")
-    fi
+# Make dependencies
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "depend")
+if [[ "$IS_BSD" -ne "0" ]]; then
+    MAKE_FLAGS+=("MAKEDEPPROG=gcc -M")
+fi
 
-    if ! "$MAKE" "INSTX_JOBS=$INSTX_JOBS" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to update OpenSSL dependencies"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-#fi
+if ! "$MAKE" "INSTX_JOBS=$INSTX_JOBS" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to update OpenSSL dependencies"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
+# Build the library
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
@@ -148,6 +150,7 @@ fi
 #     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 # fi
 
+# Install the software only
 MAKE_FLAGS=(install_sw)
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
