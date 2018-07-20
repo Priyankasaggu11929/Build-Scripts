@@ -248,6 +248,27 @@ cd "$CURR_DIR"
 
 ###############################################################################
 
+if [[ -e "$SH_CACERT_PATH/new-cacert.pem" ]]; then
+
+    echo ""
+    echo "*****************************************************************************"
+    echo "Configuring Git to use CA store at $SH_CACERT_PATH/new-cacert.pem"
+    echo "*****************************************************************************"
+
+    git config --global http.sslCAInfo "$SH_CACERT_PATH/new-cacert.pem"
+
+elif [[ -e "$HOME/cacert.pem" ]]; then
+
+    echo ""
+    echo "*****************************************************************************"
+    echo "Configuring Git to use CA store at $SH_CACERT_PATH/new-cacert.pem"
+    echo "*****************************************************************************"
+
+    git config --global http.sslCAInfo "$HOME/cacert.pem"
+fi
+
+###############################################################################
+
 echo ""
 echo "*****************************************************************************"
 echo "Please run Bash's 'hash -r' to update program cache in the current shell"
