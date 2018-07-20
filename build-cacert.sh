@@ -243,11 +243,30 @@ echo "********** cURL CA-Certs **********"
 echo
 
 wget -q --ca-certificate=globalsign-root-r1.pem https://curl.haxx.se/ca/cacert.pem -O cacert.pem
-git config --global http.sslCAInfo "$HOME/.cacert/cacert.pem"
 
 echo "Downloaded $HOME/.cacert/cacert.pem"
-echo ""
 
 ###############################################################################
+
+if [[ "$EUID" -eq "0" ]]; then
+	if [[ -d "/etc/ssl/certs" ]]; then
+		SH_CACERT_PATH="/etc/ssl/certs"
+	elif [[ -d "/etc/openssl/certs" ]]; then
+		SH_CACERT_PATH="/etc/openssl/certs"
+	elif [[ -d "/etc/pki/tls/" ]]; then
+		SH_CACERT_PATH="/etc/pki/tls"
+	elif [[ -d "/etc/ssl/certs/" ]]; then
+		SH_CACERT_PATH="/etc/ssl/certs"
+	elif [[ -d "/etc/pki/ca-trust/extracted/pem/" ]]; then
+		SH_CACERT_PATH="/etc/pki/ca-trust/extracted/pem/certs"
+	fi
+
+	cp "cacert.pem" "$SH_CACERT_PATH/new-cacert.pem"
+	echo "Copied $SH_CACERT_PATH/new-cacert.pem"
+fi
+
+###############################################################################
+
+echo ""
 
 cd "$CURR_DIR"

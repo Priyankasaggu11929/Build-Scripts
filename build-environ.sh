@@ -92,12 +92,21 @@ fi
 # Needed for OpenSSL and make jobs
 IS_GMAKE=$($MAKE -v 2>&1 | grep -i -c 'gnu make')
 
-# Try to determine 32 vs 64-bit, /usr/local/lib, /usr/local/lib32 and /usr/local/lib64
-# The Autoconf programs misdetect Solaris as x86 even though its x64. OpenBSD has
+# Try to determine 32 vs 64-bit, /usr/local/lib, /usr/local/lib32,
+# /usr/local/lib64 and /usr/local/lib/64. The Autoconf programs
+# misdetect Solaris as x86 even though its x64. OpenBSD has
 # getconf, but it does not have LONG_BIT.
 IS_64BIT=$(getconf LONG_BIT 2>&1 | grep -i -c 64)
 if [[ "$IS_64BIT" -eq "0" ]]; then
     IS_64BIT=$(file /bin/ls 2>&1 | grep -i -c '64-bit')
+fi
+
+if [[ "$IS_64BIT" -ne "0" ]]; then
+    BUILD_BITS=64
+    SH_MARCH="64"
+else
+    BUILD_BITS=32
+    SH_MARCH="32"
 fi
 
 # Don't override a user choice of INSTX_PREFIX
@@ -107,10 +116,10 @@ fi
 
 # Don't override a user choice of INSTX_LIBDIR
 if [[ -z "$INSTX_LIBDIR" ]]; then
-    if [[ "$IS_SOLARIS" -ne "0" ]]; then
-        INSTX_LIBDIR="$INSTX_PREFIX/lib64"
-    elif [[ "$IS_64BIT" -ne "0" ]]; then
-        if [[ (-d /usr/lib) && (-d /usr/lib32) ]]; then
+    if [[ "$IS_64BIT" -ne "0" ]]; then
+        if [[ "$IS_SOLARIS" -ne "0" ]]; then
+            INSTX_LIBDIR="$INSTX_PREFIX/lib/64"
+        elif [[ (-d /usr/lib) && (-d /usr/lib32) ]]; then
             INSTX_LIBDIR="$INSTX_PREFIX/lib"
         elif [[ (-d /usr/lib) && (-d /usr/lib64) ]]; then
             INSTX_LIBDIR="$INSTX_PREFIX/lib64"
@@ -122,21 +131,9 @@ if [[ -z "$INSTX_LIBDIR" ]]; then
     fi
 fi
 
-if [[ "$IS_SOLARIS" -ne "0" ]]; then
-    BUILD_BITS=64
-    SH_MARCH="64"
-elif [[ "$IS_64BIT" -ne "0" ]]; then
-    BUILD_BITS=64
-    if [[ (-d /usr/lib) && (-d /usr/lib32) ]]; then
-        SH_MARCH="64"
-    elif [[ (-d /usr/lib) && (-d /usr/lib64) ]]; then
-        SH_MARCH="64"
-    else
-        SH_MARCH="64"
-    fi
-else
-    BUILD_BITS=32
-    SH_MARCH="32"
+# Solaris Fixup
+if [[ "$IS_IA32" -eq 1 ]] && [[ "$BUILD_BITS" -eq 64 ]]; then
+    IS_X86_64=1
 fi
 
 # If CC and CXX is not set, then use default or assume GCC
