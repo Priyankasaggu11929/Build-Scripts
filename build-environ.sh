@@ -76,7 +76,7 @@ IS_NETBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'netbsd')
 IS_BSD=$(echo -n "$THIS_SYSTEM" | grep -i -c -E 'freebsd|netbsd|openbsd')
 
 THIS_MACHINE=$(uname -m 2>&1)
-IS_IA32=$(echo -n "$THIS_MACHINE" | grep -E -i -c 'i.86|amd64|x86_64')
+IS_IA32=$(echo -n "$THIS_MACHINE" | grep -E -i -c 'i86pc|i.86|amd64|x86_64')
 IS_X86_64=$(echo -n "$THIS_MACHINE" | grep -E -i -c 'amd64|x86_64')
 IS_MIPS=$(echo -n "$THIS_MACHINE" | grep -E -i -c 'mips')
 

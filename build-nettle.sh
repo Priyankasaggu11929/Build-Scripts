@@ -73,8 +73,7 @@ fi
 # http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
 # AIX needs the execute bit reset on the file.
 sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure.ac > configure.ac.fixed
-mv configure.ac.fixed configure.ac;
-chmod +x configure.ac
+mv configure.ac.fixed configure.ac; chmod +x configure.ac
 touch -t 197001010000 configure.ac
 
 # Awful Solaris 64-bit hack. Rewrite some values
@@ -82,17 +81,13 @@ if [[ "$IS_SOLARIS" -eq "1" ]]; then
 
     # Autotools uses the i386-pc-solaris2.11, which results in 32-bit binaries
     if [[ "$IS_X86_64" -eq "1" ]]; then
-        SH_CONFIG_GUESS=x86_64-pc-solaris2.11
+        # Fix Autotools mis-detection on Solaris
+        SH_CONFIG_BUILD="--build=x86_64-pc-solaris2.11"
     fi
 
     sed 's| -G -h| -shared -h|g' configure.ac > configure.ac.fixed
-    mv configure.ac.fixed configure.ac;
-    chmod +x configure.ac
+    mv configure.ac.fixed configure.ac; chmod +x configure.ac
     touch -t 197001010000 configure.ac
-fi
-
-if [[ -z "$SH_CONFIG_GUESS" ]]; then
-    SH_CONFIG_GUESS=$(config.guess)
 fi
 
 # This scares me, but it is necessary...
@@ -112,13 +107,18 @@ if [[ "$IS_IA32" -ne "0" ]]; then
     CONFIG_OPTS+=("--enable-fat")
 fi
 
+# Pickup Solaris workaround
+if [[ ! -z "$SH_CONFIG_BUILD" ]]; then
+    CONFIG_OPTS+=("$SH_CONFIG_BUILD")
+fi
+
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --host="$SH_CONFIG_GUESS" ${CONFIG_OPTS[*]}
+./configure ${CONFIG_OPTS[*]}
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Nettle"
