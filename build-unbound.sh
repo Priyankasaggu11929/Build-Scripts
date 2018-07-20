@@ -52,10 +52,22 @@ rm -rf "$UNBOUND_DIR" &>/dev/null
 gzip -d < "$UNBOUND_TAR" | tar xf -
 cd "$UNBOUND_DIR"
 
+cp configure configure.bu
+
+# https://nlnetlabs.nl/bugs-script/show_bug.cgi?id=4131
+"$WGET" --ca-certificate="$IDENTRUST_ROOT" www.nlnetlabs.nl/svn/unbound/trunk/configure -O configure
+touch -t 197001010000 configure
+
+if [[ "$?" -ne "0" ]]; then
+    echo "Failed to update configure file"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 # http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
 # AIX needs the execute bit reset on the file.
 sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
 mv configure.fixed configure; chmod +x configure
+touch -t 197001010000 configure
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
