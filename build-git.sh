@@ -149,6 +149,12 @@ echo
 echo "********** Git **********"
 echo
 
+# https://marc.info/?l=git&m=153205063515040
+if [[ "$IS_SOLARIS" -eq "1" ]]; then
+    GIT_TAR=git-2.17.1.tar.gz
+    GIT_DIR=git-2.17.1
+fi
+
 "$WGET" --ca-certificate="$CA_ZOO" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
 
 # This is due to the way Wget calls OpenSSL. The OpenSSL context
