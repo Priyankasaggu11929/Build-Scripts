@@ -5,6 +5,7 @@
 
 MAKE_TAR=make-4.2.1.tar.gz
 MAKE_DIR=make-4.2.1
+PKG_NAME=make
 
 # Avoid shellcheck.net warning
 CURR_DIR="$PWD"
@@ -51,9 +52,6 @@ rm -rf "$MAKE_DIR" &>/dev/null
 gzip -d < "$MAKE_TAR" | tar xf -
 cd "$MAKE_DIR"
 
-# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
-../fix-config.sh
-
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
@@ -92,6 +90,9 @@ else
 fi
 
 cd "$CURR_DIR"
+
+# Set package status to installed. Delete the file to rebuild the package.
+touch "$INSTX_CACHE/$PKG_NAME"
 
 ###############################################################################
 
