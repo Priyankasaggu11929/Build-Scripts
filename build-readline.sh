@@ -53,10 +53,8 @@ rm -rf "$READLN_DIR" &>/dev/null
 gzip -d < "$READLN_TAR" | tar xf -
 cd "$READLN_DIR"
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
 if [[ "$IS_DARWIN" -ne "0" ]]; then
     BUILD_CPPFLAGS+=("-DNEED_EXTERN_PC")

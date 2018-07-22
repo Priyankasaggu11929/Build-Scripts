@@ -86,10 +86,8 @@ cd "$GUILE_DIR"
 # Rebuild libtool, http://stackoverflow.com/q/35589427/608639
 autoconf
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
 # --with-bdw-gc="${BUILD_PKGCONFIG[*]}/"
 # --disable-posix --disable-networking

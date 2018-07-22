@@ -43,10 +43,8 @@ rm -rf "$LIBTOOL_DIR" &>/dev/null
 gzip -d < "$LIBTOOL_TAR" | tar xf -
 cd "$LIBTOOL_DIR"
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \

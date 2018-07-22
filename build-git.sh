@@ -165,6 +165,9 @@ rm -rf "$GIT_DIR" &>/dev/null
 gzip -d < "$GIT_TAR" | tar xf -
 cd "$GIT_DIR"
 
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
+
 if ! "$MAKE" configure
 then
     echo "Failed to make configure Git"
@@ -177,6 +180,7 @@ do
     mv "$file.fixed" "$file"
     sed -e 's|rGIT-PERL-HEADER|r GIT-PERL-HEADER|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
+    touch -t 197001010000 "$file"
 done
 
 # Various Solaris 11 workarounds
@@ -187,6 +191,7 @@ if [[ "$IS_SOLARIS" -eq "1" ]]; then
         mv "$file.fixed" "$file"
         sed -e 's|/usr/ucb/install|install|g' "$file" > "$file.fixed"
         mv "$file.fixed" "$file"
+        touch -t 197001010000 "$file"
     done
     for file in $(find "$PWD" -name 'config*')
     do
@@ -195,6 +200,7 @@ if [[ "$IS_SOLARIS" -eq "1" ]]; then
         sed -e 's|/usr/ucb/install|install|g' "$file" > "$file.fixed"
         mv "$file.fixed" "$file"
         chmod +x "$file"
+        touch -t 197001010000 "$file"
     done
 fi
 

@@ -57,15 +57,13 @@ rm -rf "$FLEX_DIR" &>/dev/null
 gzip -d < "$FLEX_TAR" | tar xf -
 cd "$FLEX_DIR"
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure.ac > configure.ac.fixed
-mv configure.ac.fixed configure.ac; chmod +x configure.ac
-
 sed -e 's|1\.11\.3|1\.11\.2|g' configure.ac > configure.ac.fixed
 mv configure.ac.fixed configure.ac; chmod +x configure.ac
 sed -e 's|dist-lzip | |g' configure.ac > configure.ac.fixed
 mv configure.ac.fixed configure.ac; chmod +x configure.ac
+
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
 ./autogen.sh
 

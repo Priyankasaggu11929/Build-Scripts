@@ -70,11 +70,8 @@ if [[ "$IS_DARWIN" -ne "0" ]]; then
     touch -t 197001010000 testsuite/Makefile.in
 fi
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure.ac > configure.ac.fixed
-mv configure.ac.fixed configure.ac; chmod +x configure.ac
-touch -t 197001010000 configure.ac
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
 # Awful Solaris 64-bit hack. Rewrite some values
 if [[ "$IS_SOLARIS" -eq "1" ]]; then

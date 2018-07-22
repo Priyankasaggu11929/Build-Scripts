@@ -36,6 +36,7 @@ if [[ -z $(command -v python) ]]; then
 else
     if ! perl -MHTTP::Daemon -e1 2>/dev/null
     then
+         echo ""
          echo "Wget requires Perl's HTTP::Daemon. Skipping Wget self tests."
          echo "To fix this issue, please install HTTP-Daemon."
          SKIP_WGET_TESTS=1
@@ -43,6 +44,7 @@ else
 
     if ! perl -MHTTP::Request -e1 2>/dev/null
     then
+         echo ""
          echo "Wget requires Perl's HTTP::Request.  Skipping Wget self tests."
          echo "To fix this issue, please install HTTP-Request or HTTP-Message."
          SKIP_WGET_TESTS=1
@@ -145,10 +147,8 @@ rm -rf "$WGET_DIR" &>/dev/null
 gzip -d < "$WGET_TAR" | tar xf -
 cd "$WGET_DIR"
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
 sed -e 's|$(LTLIBICONV)|$(LIBICONV)|g' fuzz/Makefile.am > fuzz/Makefile.am.fixed
 mv fuzz/Makefile.am.fixed fuzz/Makefile.am

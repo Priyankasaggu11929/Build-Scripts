@@ -75,10 +75,8 @@ rm -rf "$EMACS_DIR" &>/dev/null
 gzip -d < "$EMACS_TAR" | tar xf -
 cd "$EMACS_DIR"
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
 EMACS_OPTS=('--with-xml2' '--without-x' '--without-sound' '--without-xpm'
     '--without-jpeg' '--without-tiff' '--without-gif' '--without-png'
