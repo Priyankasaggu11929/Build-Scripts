@@ -3,12 +3,12 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds IDN and IDN2 from sources.
 
-IDN_TAR=libidn-1.33.tar.gz
-IDN_DIR=libidn-1.33
+IDN_TAR=libidn-1.35.tar.gz
+IDN_DIR=libidn-1.35
 PKG_NAME1=libidn
 
-IDN2_TAR=libidn2-2.0.4.tar.gz
-IDN2_DIR=libidn2-2.0.4
+IDN2_TAR=libidn2-2.0.5.tar.gz
+IDN2_DIR=libidn2-2.0.5
 PKG_NAME2=libidn2
 
 # Avoid shellcheck.net warning
@@ -64,22 +64,8 @@ if [[ ! -e "configure" ]]; then
     fi
 fi
 
-# Fix AM_INIT_AUTOMAKE
-sed -e 's/^AM_INIT_AUTOMAKE.*/AM_INIT_AUTOMAKE/g' configure.ac > configure.ac.fixed
-mv configure.ac.fixed configure.ac
-# Remove useless directive
-sed -e '/AM_SILENT_RULES/d' configure.ac > configure.ac.fixed
-mv configure.ac.fixed configure.ac
-# Get rid of all docs Makefiles
-sed -e '/^  doc\//d' configure.ac > configure.ac.fixed
-mv configure.ac.fixed configure.ac
-# Set time in the past to avoid re-configuration
-touch -t 197001010000 configure.ac
-
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
 if [[ "$IS_SOLARIS" -eq "1" ]]; then
   if [[ (-f src/idn2.c) ]]; then
@@ -113,21 +99,12 @@ fi
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-shared \
-    --disable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf
+    --disable-doc
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure IDN"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
-
-for mfile in $(find "$PWD" -name Makefile);
-do
-    # Get rid of all doc/ directories
-    sed -e 's| doc | |g' "$mfile" > "$mfile.fixed"
-    mv "$mfile.fixed" "$mfile"
-done
-
-rm -rf doc/ 2>/dev/null
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
@@ -174,22 +151,8 @@ if [[ ! -e "configure" ]]; then
     fi
 fi
 
-# Fix AM_INIT_AUTOMAKE
-sed -e 's/^AM_INIT_AUTOMAKE.*/AM_INIT_AUTOMAKE/g' configure.ac > configure.ac.fixed
-mv configure.ac.fixed configure.ac
-# Remove useless directive
-sed -e '/AM_SILENT_RULES/d' configure.ac > configure.ac.fixed
-mv configure.ac.fixed configure.ac
-# Get rid of all docs Makefiles
-sed -e '/^  doc\//d' configure.ac > configure.ac.fixed
-mv configure.ac.fixed configure.ac
-# Set time in the past to avoid re-configuration
-touch -t 197001010000 configure.ac
-
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
@@ -199,25 +162,12 @@ mv configure.fixed configure; chmod +x configure
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-shared \
-    --disable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf
+    --disable-doc
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
-
-for mfile in $(find "$PWD" -name Makefile);
-do
-    # Get rid of most doc/ directories
-    sed -e 's| doc | |g' "$mfile" > "$mfile.fixed"
-    mv "$mfile.fixed" "$mfile"
-done
-
-# And the last vestige of doc/
-sed -e 's|^am__append_2.*|am__append_2 =| g' Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
-
-rm -rf doc/ >/dev/null
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
