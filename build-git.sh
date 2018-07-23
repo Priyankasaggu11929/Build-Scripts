@@ -68,54 +68,9 @@ fi
 
 ###############################################################################
 
-if [[ "$IS_CYGWIN" -eq "1" ]]; then
-
-if ! ./build-termcap.sh
-then
-    echo "Failed to build Termcap"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-fi  # IS_CYGWIN
-
-###############################################################################
-
-if ! ./build-readline.sh
-then
-    echo "Failed to build Readline"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
 if ! ./build-iconv.sh
 then
     echo "Failed to build iConv"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if ! ./build-ncurses.sh
-then
-    echo "Failed to build ncurses"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-# For libint.h, https://stackoverflow.com/q/11370684/608639
-if ! ./build-gettext.sh
-then
-    echo "Failed to build GetText"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if ! ./build-idn.sh
-then
-    echo "Failed to build IDN and IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

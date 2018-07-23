@@ -59,37 +59,9 @@ fi
 
 ###############################################################################
 
-if [[ "$IS_CYGWIN" -eq "1" ]]; then
-
-if ! ./build-termcap.sh
+if ! ./build-unistr.sh
 then
-    echo "Failed to build Termcap"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-fi  # IS_CYGWIN
-
-###############################################################################
-
-if ! ./build-gettext.sh
-then
-    echo "Failed to build GetText"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if ! ./build-ncurses.sh
-then
-    echo "Failed to build Ncurses"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if ! ./build-readline.sh
-then
-    echo "Failed to build Readline"
+    echo "Failed to build Unistring"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
