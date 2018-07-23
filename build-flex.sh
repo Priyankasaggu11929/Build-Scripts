@@ -3,7 +3,7 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Flex from sources.
 
-FLEX_TAR=v2.6.4.tar.gz
+FLEX_TAR=flex-2.6.4.tar.gz
 FLEX_DIR=flex-2.6.4
 
 # Avoid shellcheck.net warning
@@ -21,9 +21,9 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-DIGICERT_ROOT="$HOME/.cacert/digicert-root-ca.pem"
-if [[ ! -f "$DIGICERT_ROOT" ]]; then
-    echo "Libtool requires several CA roots. Please run build-cacert.sh."
+CA_ZOO="$HOME/.cacert/cacert.pem"
+if [[ ! -f "$CA_ZOO" ]]; then
+    echo "ClamAV requires several CA roots. Please run build-cacert.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -46,7 +46,8 @@ echo
 echo "********** Flex **********"
 echo
 
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/westes/flex/archive/$FLEX_TAR" -O "$FLEX_TAR"
+# https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
+"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/westes/flex/releases/download/v2.6.4//$FLEX_TAR" -O "$FLEX_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Flex"
@@ -64,8 +65,6 @@ mv configure.ac.fixed configure.ac; chmod +x configure.ac
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
-
-./autogen.sh
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to autogen Flex"
