@@ -84,7 +84,6 @@ touch -t 197001010000 fuzz/Makefile.am
     --with-ssl=openssl \
     --without-zlib \
     --without-libpsl \
-    --without-libintl \
     --without-libuuid \
     --without-libidn
 
