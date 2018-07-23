@@ -353,7 +353,7 @@ if [[ -z "$PRINT_ONCE" ]]; then
     echo " INSTX_PREFIX: $INSTX_PREFIX"
     echo " INSTX_LIBDIR: $INSTX_LIBDIR"
     echo ""
-    echo "    PKGCONFIG: ${BUILD_PKGCONFIG[*]}"
+    echo "  PKGCONFPATH: ${BUILD_PKGCONFIG[*]}"
     echo "     CPPFLAGS: ${BUILD_CPPFLAGS[*]}"
     echo "       CFLAGS: ${BUILD_CFLAGS[*]}"
     echo "     CXXFLAGS: ${BUILD_CXXFLAGS[*]}"
