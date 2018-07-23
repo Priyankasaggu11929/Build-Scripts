@@ -27,15 +27,6 @@ if [[ ! -f "$COMODO_ROOT" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Required
-if ! perl -MExtUtils::MakeMaker -e1 2>/dev/null
-then
-    echo ""
-    echo "Git requires Perl's ExtUtils::MakeMaker."
-    echo "To fix this issue, please install ExtUtils-MakeMaker."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
 # Get a sudo password as needed. The password should die when this
 # subshell goes out of scope.
 if [[ -z "$SUDO_PASSWORD" ]]; then
@@ -95,6 +86,17 @@ fi
 if ! ./build-curl.sh
 then
     echo "Failed to build cURL"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+# Required
+if ! perl -MExtUtils::MakeMaker -e1 2>/dev/null
+then
+    echo ""
+    echo "Git requires Perl's ExtUtils::MakeMaker."
+    echo "To fix this issue, please install ExtUtils-MakeMaker."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
