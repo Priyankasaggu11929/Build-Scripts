@@ -152,7 +152,7 @@ outfile="out.$RANDOM$RANDOM"
 echo 'int main(int argc, char* argv[]) {return 0;}' > "$infile"
 echo "" >> "$infile"
 
-BAD_MSG="fatal|error|unknown|unrecognized|not found|not exist|cannot find"
+BAD_MSG="fatal|error|unknown|unrecognized|illegal|not found|not exist|cannot find"
 
 # Try to determine -m64, -X64, -m32, -X32, etc
 if [[ "$SH_MARCH" = "32" ]]; then
