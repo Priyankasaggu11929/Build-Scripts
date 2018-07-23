@@ -60,6 +60,17 @@ fi
 
 ###############################################################################
 
+# Solaris is missing the Boehm GC. We have to build it. Ugh...
+if [[ "$IS_SOLARIS" -eq "1" ]]; then
+    if ! ./build-boehm-gc.sh
+    then
+        echo "Failed to build Boehm GC"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
+fi
+
+###############################################################################
+
 if ! ./build-libffi.sh
 then
     echo "Failed to build libffi"
@@ -108,11 +119,31 @@ rm -rf "$GUILE_DIR" &>/dev/null
 tar xJf "$GUILE_TAR"
 cd "$GUILE_DIR"
 
-# Rebuild libtool, http://stackoverflow.com/q/35589427/608639
-autoconf
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
+
+CONFIG_OPTS=()
+CONFIG_OPTS+=(--prefix="$INSTX_PREFIX")
+CONFIG_OPTS+=(--libdir="$INSTX_LIBDIR")
+CONFIG_OPTS+=(--enable-shared)
+CONFIG_OPTS+=(--enable-static)
+CONFIG_OPTS+=(--with-pic)
+CONFIG_OPTS+=(--disable-deprecated)
+CONFIG_OPTS+=(--with-libgmp-prefix="$INSTX_PREFIX")
+CONFIG_OPTS+=(--with-libunistring-prefix="$INSTX_PREFIX")
+CONFIG_OPTS+=(--with-libiconv-prefix="$INSTX_PREFIX")
+CONFIG_OPTS+=(--with-libltdl-prefix="$INSTX_PREFIX")
+CONFIG_OPTS+=(--with-libintl-prefix="$INSTX_PREFIX")
+
+# Awful Solaris 64-bit hack. Rewrite some values
+if [[ "$IS_SOLARIS" -eq "1" ]]; then
+    # Autotools uses the i386-pc-solaris2.11, which results in 32-bit binaries
+    if [[ "$IS_X86_64" -eq "1" ]]; then
+        # Fix Autotools mis-detection on Solaris
+        CONFIG_OPTS+=("--build=x86_64-pc-solaris2.11")
+        CONFIG_OPTS+=("--host=x86_64-pc-solaris2.11")
+    fi
+fi
 
 # --with-bdw-gc="${BUILD_PKGCONFIG[*]}/"
 # --disable-posix --disable-networking
@@ -123,14 +154,7 @@ autoconf
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --enable-shared --enable-static --with-pic \
-    --disable-deprecated \
-    --with-libgmp-prefix="$INSTX_PREFIX" \
-    --with-libunistring-prefix="$INSTX_PREFIX" \
-    --with-libiconv-prefix="$INSTX_PREFIX" \
-    --with-libltdl-prefix="$INSTX_PREFIX" \
-    --with-libintl-prefix="$INSTX_PREFIX"
+./configure "${CONFIG_OPTS[*]}"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Guile"

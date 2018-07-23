@@ -75,13 +75,7 @@ fi
 
 # Awful Solaris 64-bit hack. Rewrite some values
 if [[ "$IS_SOLARIS" -eq "1" ]]; then
-
-    # Autotools uses the i386-pc-solaris2.11, which results in 32-bit binaries
-    if [[ "$IS_X86_64" -eq "1" ]]; then
-        # Fix Autotools mis-detection on Solaris
-        SH_CONFIG_BUILD="--build=x86_64-pc-solaris2.11"
-    fi
-
+    # Solaris requires -shared for shared object
     sed 's| -G -h| -shared -h|g' configure.ac > configure.ac.fixed
     mv configure.ac.fixed configure.ac; chmod +x configure.ac
     touch -t 197001010000 configure.ac
@@ -95,7 +89,8 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-CONFIG_OPTS=("--prefix=$INSTX_PREFIX")
+CONFIG_OPTS=()
+CONFIG_OPTS+=("--prefix=$INSTX_PREFIX")
 CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR")
 CONFIG_OPTS+=("--enable-shared")
 CONFIG_OPTS+=("--disable-documentation")
@@ -104,9 +99,14 @@ if [[ "$IS_IA32" -ne "0" ]]; then
     CONFIG_OPTS+=("--enable-fat")
 fi
 
-# Pickup Solaris workaround
-if [[ ! -z "$SH_CONFIG_BUILD" ]]; then
-    CONFIG_OPTS+=("$SH_CONFIG_BUILD")
+# Awful Solaris 64-bit hack. Rewrite some values
+if [[ "$IS_SOLARIS" -eq "1" ]]; then
+    # Autotools uses the i386-pc-solaris2.11, which results in 32-bit binaries
+    if [[ "$IS_X86_64" -eq "1" ]]; then
+        # Fix Autotools mis-detection on Solaris
+        CONFIG_OPTS+=("--build=x86_64-pc-solaris2.11")
+        CONFIG_OPTS+=("--host=x86_64-pc-solaris2.11")
+    fi
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
@@ -115,7 +115,7 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure ${CONFIG_OPTS[*]}
+./configure "${CONFIG_OPTS[*]}"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Nettle"

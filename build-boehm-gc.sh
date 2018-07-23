@@ -63,9 +63,19 @@ cd "$GC_DIR"
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
-if [[ "$?" -ne "0" ]]; then
-    echo "Failed to autogen Boehm GC"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+CONFIG_OPTS=()
+CONFIG_OPTS+=(--prefix="$INSTX_PREFIX")
+CONFIG_OPTS+=(--libdir="$INSTX_LIBDIR")
+CONFIG_OPTS+=(--enable-shared)
+
+# Awful Solaris 64-bit hack. Rewrite some values
+if [[ "$IS_SOLARIS" -eq "1" ]]; then
+    # Autotools uses the i386-pc-solaris2.11, which results in 32-bit binaries
+    if [[ "$IS_X86_64" -eq "1" ]]; then
+        # Fix Autotools mis-detection on Solaris
+        CONFIG_OPTS+=("--build=x86_64-pc-solaris2.11")
+        CONFIG_OPTS+=("--host=x86_64-pc-solaris2.11")
+    fi
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
@@ -74,7 +84,7 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
+./configure "${CONFIG_OPTS[*]}"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Boehm GC"
