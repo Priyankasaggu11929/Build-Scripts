@@ -68,6 +68,31 @@ fi
 
 ###############################################################################
 
+if ! ./build-unistr.sh
+then
+    echo "Failed to build Unistring"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-iconv.sh
+then
+    echo "Failed to build iconv"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+# Need gnulib for intl.h
+#if ! ./build-libintl.sh
+#then
+#    echo "Failed to build libintl"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
+
+###############################################################################
+
 echo
 echo "********** Guile **********"
 echo
@@ -105,7 +130,6 @@ autoconf
     --with-libunistring-prefix="$INSTX_PREFIX" \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libltdl-prefix="$INSTX_PREFIX" \
-    --with-readline-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX"
 
 if [[ "$?" -ne "0" ]]; then
