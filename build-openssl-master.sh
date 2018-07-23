@@ -37,11 +37,11 @@ fi
 
 ###############################################################################
 
-# This is kind of interesting in a morbid sort of way.
-# OpenSSL requires a 'make depend'. Some versions of make are too
-# old and can't make the dependencies correctly. And some of those
-# old systems have an old GCC that's can't make them either. So we
-# update make on those systems...
+# This is kind of interesting in a morbid sort of way. OpenSSL requires a
+# 'make depend'. Some versions of make are too old and can't handle the
+# Makefile.new template. Some of those old systems have an old makedepend
+# that can't make the dependencies. So we update make on those systems
+# and use MAKEDEPPROG="gcc -M" on those systems ...
 
 if ! ./build-make.sh
 then
