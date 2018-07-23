@@ -6,8 +6,8 @@
 #
 # Requires libtool-ltdl-devel on Fedora.
 
-GUILE_TAR=guile-2.2.3.tar.xz
-GUILE_DIR=guile-2.2.3
+GUILE_TAR=guile-2.2.4.tar.xz
+GUILE_DIR=guile-2.2.4
 PKG_NAME=guile
 
 # Avoid shellcheck.net warning
