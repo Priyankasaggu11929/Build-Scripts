@@ -37,12 +37,29 @@ fi
 
 ###############################################################################
 
+# This is kind of interesting in a morbid sort of way.
+# OpenSSL requires a 'make depend'. Some versions of make are too
+# old and can't make the dependencies correctly. And some of those
+# old systems have an old GCC that's can't make them either. So we
+# update make on those systems...
+
+if ! ./build-make.sh
+then
+    echo "Failed to build iConv"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+else
+	export MAKE="$INSTX_PREFIX/bin/make"
+fi
+
+###############################################################################
+
 # May be skipped if Perl is too old
 SKIP_OPENSSL_TESTS=0
 
 # Wget self tests
 if ! perl -MTest::More -e1 2>/dev/null
 then
+    echo ""
     echo "OpenSSL requires Perl's Test::More. Skipping OpenSSL self tests."
     echo "To fix this issue, please install Test-More."
     SKIP_OPENSSL_TESTS=1
@@ -51,14 +68,10 @@ fi
 # Wget self tests
 if ! perl -MText::Template -e1 2>/dev/null
 then
+    echo ""
     echo "OpenSSL requires Perl's Text::Template. Skipping OpenSSL self tests."
     echo "To fix this issue, please install Text-Template."
     SKIP_OPENSSL_TESTS=1
-fi
-
-# OpenSSL and enable-ec_nistp_64_gcc_128 option
-if [[ "$BUILD_BITS" -eq "32" ]]; then
-    IS_X86_64=0;
 fi
 
 ###############################################################################
@@ -66,6 +79,8 @@ fi
 echo
 echo "********** OpenSSL **********"
 echo
+
+rm -rf "$OPENSSL_DIR" 2>/dev/null
 
 # Requires Git 1.7.10 or higher. May be a problem on older clients.
 git clone git://github.com/openssl/openssl --branch OpenSSL_1_0_2-stable --single-branch "$OPENSSL_DIR"
@@ -112,16 +127,12 @@ if [[ "$IS_DARWIN" -ne "0" ]]; then
     done
 fi
 
-# Make dependencies
-MAKE_FLAGS=("-j" "$INSTX_JOBS" "depend")
-if [[ "$IS_BSD" -ne "0" ]]; then
-    MAKE_FLAGS+=("MAKEDEPPROG=gcc -M")
-fi
-
-if ! "$MAKE" "INSTX_JOBS=$INSTX_JOBS" "${MAKE_FLAGS[@]}"
-then
-    echo "Failed to update OpenSSL dependencies"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+# Try to make depend...
+IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
+if [[ "$IS_OLD_DARWIN" ]]; then
+    "$MAKE" MAKEDEPPROG="gcc -M" depend
+else
+    "$MAKE" depend
 fi
 
 # Build the library
