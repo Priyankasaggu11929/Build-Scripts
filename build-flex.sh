@@ -23,7 +23,7 @@ fi
 
 CA_ZOO="$HOME/.cacert/cacert.pem"
 if [[ ! -f "$CA_ZOO" ]]; then
-    echo "ClamAV requires several CA roots. Please run build-cacert.sh."
+    echo "Flex requires several CA roots. Please run build-cacert.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -47,7 +47,7 @@ echo "********** Flex **********"
 echo
 
 # https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
-"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/westes/flex/releases/download/v2.6.4//$FLEX_TAR" -O "$FLEX_TAR"
+"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/westes/flex/releases/download/v2.6.4/$FLEX_TAR" -O "$FLEX_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Flex"
