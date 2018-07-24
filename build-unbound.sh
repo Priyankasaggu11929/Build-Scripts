@@ -113,6 +113,18 @@ touch root.key
 # https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=4134
 "$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
 
+# Use https://www.icann.org/dns-resolvers-checking-current-trust-anchors
+COUNT=$(grep -i -c -E 'id = 20326|id = 19036' root.key)
+if [[ "$COUNT" -ne "2" ]]; then
+    echo "Failed to create root.key"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+COUNT=$(grep -i -c 'state=2 \[  VALID  \]' root.key)
+if [[ "$COUNT" -ne "2" ]]; then
+    echo "Failed to create root.key"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"

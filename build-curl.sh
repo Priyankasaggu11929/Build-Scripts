@@ -150,7 +150,9 @@ CURL_CONFIG_OPTIONS=("--enable-shared" "--enable-static" "--enable-optimize" "--
                      "--without-polarssl" "--without-mbedtls" "--without-cyassl" "--without-nss"
                      "--without-libssh2" "--with-libidn2=$INSTX_PREFIX" "--with-nghttp2")
 
-if [[ ! -z "$SH_CACERT_BUNDLE" ]]; then
+if [[ -e "$SH_CACERT_PATH/new-cacert.pem" ]]; then
+    CURL_CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_PATH/new-cacert.pem")
+elif [[ ! -z "$SH_CACERT_BUNDLE" ]]; then
     CURL_CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_BUNDLE")
 elif [[ ! -z "$SH_CACERT_PATH" ]]; then
     CURL_CONFIG_OPTIONS+=("--with-ca-path=$SH_CACERT_PATH")
