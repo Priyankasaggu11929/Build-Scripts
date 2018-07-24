@@ -141,23 +141,49 @@ fi
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
-CURL_CONFIG_OPTIONS=("--enable-shared" "--enable-static" "--enable-optimize" "--enable-symbol-hiding"
-                     "--enable-http" "--enable-ftp" "--enable-file" "--enable-ldap" "--enable-ldaps"
-                     "--enable-rtsp" "--enable-proxy" "--enable-dict" "--enable-telnet" "--enable-tftp"
-                     "--enable-pop3" "--enable-imap" "--enable-smb" "--enable-smtp" "--enable-gopher"
-                     "--enable-cookies" "--enable-ipv6"
-                     "--with-zlib=$INSTX_PREFIX" "--with-ssl=$INSTX_PREFIX" "--without-gnutls"
-                     "--without-polarssl" "--without-mbedtls" "--without-cyassl" "--without-nss"
-                     "--without-libssh2" "--with-libidn2=$INSTX_PREFIX" "--with-nghttp2")
+CONFIG_OPTIONS=()
+CONFIG_OPTIONS+=("--prefix=$INSTX_PREFIX")
+CONFIG_OPTIONS+=("--libdir=$INSTX_LIBDIR")
+CONFIG_OPTIONS+=("--enable-shared")
+CONFIG_OPTIONS+=("--enable-static")
+CONFIG_OPTIONS+=("--enable-optimize")
+CONFIG_OPTIONS+=("--enable-symbol-hiding")
+CONFIG_OPTIONS+=("--enable-http")
+CONFIG_OPTIONS+=("--enable-ftp")
+CONFIG_OPTIONS+=("--enable-file")
+CONFIG_OPTIONS+=("--enable-ldap")
+CONFIG_OPTIONS+=("--enable-ldaps")
+CONFIG_OPTIONS+=("--enable-rtsp")
+CONFIG_OPTIONS+=("--enable-proxy")
+CONFIG_OPTIONS+=("--enable-dict")
+CONFIG_OPTIONS+=("--enable-telnet")
+CONFIG_OPTIONS+=("--enable-tftp")
+CONFIG_OPTIONS+=("--enable-pop3")
+CONFIG_OPTIONS+=("--enable-imap")
+CONFIG_OPTIONS+=("--enable-smb")
+CONFIG_OPTIONS+=("--enable-smtp")
+CONFIG_OPTIONS+=("--enable-gopher")
+CONFIG_OPTIONS+=("--enable-cookies")
+CONFIG_OPTIONS+=("--enable-ipv6")
+CONFIG_OPTIONS+=("--with-nghttp2")
+CONFIG_OPTIONS+=("--with-zlib=$INSTX_PREFIX")
+CONFIG_OPTIONS+=("--with-ssl=$INSTX_PREFIX")
+CONFIG_OPTIONS+=("--with-libidn2=$INSTX_PREFIX")
+CONFIG_OPTIONS+=("--without-gnutls")
+CONFIG_OPTIONS+=("--without-polarssl")
+CONFIG_OPTIONS+=("--without-mbedtls")
+CONFIG_OPTIONS+=("--without-cyassl")
+CONFIG_OPTIONS+=("--without-nss")
+CONFIG_OPTIONS+=("--without-libssh2")
 
 if [[ -e "$SH_CACERT_PATH/new-cacert.pem" ]]; then
-    CURL_CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_PATH/new-cacert.pem")
+    CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_PATH/new-cacert.pem")
 elif [[ ! -z "$SH_CACERT_BUNDLE" ]]; then
-    CURL_CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_BUNDLE")
+    CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_BUNDLE")
 elif [[ ! -z "$SH_CACERT_PATH" ]]; then
-    CURL_CONFIG_OPTIONS+=("--with-ca-path=$SH_CACERT_PATH")
+    CONFIG_OPTIONS+=("--with-ca-path=$SH_CACERT_PATH")
 else
-    CURL_CONFIG_OPTIONS+=("--without-ca-path" "--without-ca-bundle")
+    CONFIG_OPTIONS+=("--without-ca-path" "--without-ca-bundle")
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
@@ -166,8 +192,7 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="-lidn2 -lssl -lcrypto -lz ${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    "${CURL_CONFIG_OPTIONS[@]}"
+./configure "${CONFIG_OPTIONS[@]}"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure cURL"
@@ -181,12 +206,13 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# MAKE_FLAGS=("check")
-# if ! "$MAKE" "${MAKE_FLAGS[@]}"
-# then
-#     echo "Failed to test cURL"
-#     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-# fi
+# Too many Valgrind findings
+#MAKE_FLAGS=("check")
+#if ! "$MAKE" "${MAKE_FLAGS[@]}"
+#then
+#    echo "Failed to test cURL"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
