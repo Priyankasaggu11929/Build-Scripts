@@ -116,12 +116,12 @@ touch root.key
 # Use https://www.icann.org/dns-resolvers-checking-current-trust-anchors
 COUNT=$(grep -i -c -E 'id = 20326|id = 19036' root.key)
 if [[ "$COUNT" -ne "2" ]]; then
-    echo "Failed to create root.key"
+    echo "Failed to verify root.key"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 COUNT=$(grep -i -c 'state=2 \[  VALID  \]' root.key)
 if [[ "$COUNT" -ne "2" ]]; then
-    echo "Failed to create root.key"
+    echo "Failed to verify root.key"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
