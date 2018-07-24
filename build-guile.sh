@@ -123,17 +123,20 @@ cd "$GUILE_DIR"
 ../fix-config.sh
 
 CONFIG_OPTS=()
-CONFIG_OPTS+=(--prefix="$INSTX_PREFIX")
-CONFIG_OPTS+=(--libdir="$INSTX_LIBDIR")
-CONFIG_OPTS+=(--enable-shared)
-CONFIG_OPTS+=(--enable-static)
-CONFIG_OPTS+=(--with-pic)
-CONFIG_OPTS+=(--disable-deprecated)
-CONFIG_OPTS+=(--with-libgmp-prefix="$INSTX_PREFIX")
-CONFIG_OPTS+=(--with-libunistring-prefix="$INSTX_PREFIX")
-CONFIG_OPTS+=(--with-libiconv-prefix="$INSTX_PREFIX")
-CONFIG_OPTS+=(--with-libltdl-prefix="$INSTX_PREFIX")
-CONFIG_OPTS+=(--with-libintl-prefix="$INSTX_PREFIX")
+CONFIG_OPTS+=("--prefix=$INSTX_PREFIX")
+CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR")
+CONFIG_OPTS+=("--enable-shared")
+CONFIG_OPTS+=("--enable-static")
+CONFIG_OPTS+=("--with-pic")
+CONFIG_OPTS+=("--disable-deprecated")
+CONFIG_OPTS+=("--with-libgmp-prefix=$INSTX_PREFIX")
+CONFIG_OPTS+=("--with-libunistring-prefix=$INSTX_PREFIX")
+CONFIG_OPTS+=("--with-libiconv-prefix=$INSTX_PREFIX")
+CONFIG_OPTS+=("--with-libltdl-prefix=$INSTX_PREFIX")
+CONFIG_OPTS+=("--with-libintl-prefix=$INSTX_PREFIX")
+
+# --with-bdw-gc="${BUILD_PKGCONFIG[*]}/"
+# --disable-posix --disable-networking
 
 # Awful Solaris 64-bit hack. Rewrite some values
 if [[ "$IS_SOLARIS" -eq "1" ]]; then
@@ -145,16 +148,13 @@ if [[ "$IS_SOLARIS" -eq "1" ]]; then
     fi
 fi
 
-# --with-bdw-gc="${BUILD_PKGCONFIG[*]}/"
-# --disable-posix --disable-networking
-
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure "${CONFIG_OPTS[*]}"
+./configure "${CONFIG_OPTS[@]}"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Guile"

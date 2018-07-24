@@ -115,7 +115,7 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure "${CONFIG_OPTS[*]}"
+./configure "${CONFIG_OPTS[@]}"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Nettle"
