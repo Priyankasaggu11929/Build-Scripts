@@ -93,17 +93,47 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+rm -f root.key 2>/dev/null
+UNBOUND_ANCHOR_PROG=$(find "$PWD" -name unbound-anchor | head -n 1)
+if [[ -z "$UNBOUND_ANCHOR_PROG" ]]; then
+    echo "Failed to locate unbound-anchor tool"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "Creating root key from data.iana.org"
+touch root.key
+
+#if ! "$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
+#then
+#    echo "Failed to create root.key"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
+
+# Can't check error codes because they are ambiguous.
+# https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=4134
+"$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
+
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
+    echo "$SUDO_PASSWORD" | sudo -S cp "root.key" "$INSTX_PREFIX/etc/unbound/root.key"
 else
     "$MAKE" "${MAKE_FLAGS[@]}"
+    cp "root.key" "$INSTX_PREFIX/etc/unbound/root.key"
 fi
 
 cd "$CURR_DIR"
 
 # Set package status to installed. Delete the file to rebuild the package.
 touch "$INSTX_CACHE/$PKG_NAME"
+
+###############################################################################
+
+echo ""
+echo "*****************************************************************************"
+echo "You should create a cron job that runs unbound-anchor on a"
+echo "regular basis to update $INSTX_PREFIX/etc/unbound/root.key"
+echo "*****************************************************************************"
 
 ###############################################################################
 
