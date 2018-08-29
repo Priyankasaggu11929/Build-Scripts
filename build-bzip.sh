@@ -3,6 +3,9 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Bzip2 from sources.
 
+# Bzip lost its website. The wayback machine has the latest download archived at
+# https://web.archive.org/web/20180624184835/http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz
+
 BZIP2_TAR=bzip2-1.0.6.tar.gz
 BZIP2_DIR=bzip2-1.0.6
 PKG_NAME=bzip2
@@ -41,7 +44,7 @@ echo
 echo "********** Bzip **********"
 echo
 
-"$WGET" "http://www.bzip.org/1.0.6/$BZIP2_TAR" -O "$BZIP2_TAR"
+"$WGET" "http://web.archive.org/web/20180624184835/http://www.bzip.org/1.0.6/$BZIP2_TAR" -O "$BZIP2_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Bzip"
