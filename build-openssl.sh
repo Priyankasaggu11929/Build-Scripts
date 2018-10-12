@@ -44,13 +44,13 @@ fi
 # that can't make the dependencies. So we update make on those systems
 # and use MAKEDEPPROG="gcc -M" on those systems ...
 
-if ! ./build-make.sh
-then
-    echo "Failed to build iConv"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-else
-	export MAKE="$INSTX_PREFIX/bin/make"
-fi
+#if ! ./build-make.sh
+#then
+#    echo "Failed to build iConv"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#else
+#	export MAKE="$INSTX_PREFIX/bin/make"
+#fi
 
 ###############################################################################
 
