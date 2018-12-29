@@ -22,13 +22,6 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
-    # Already installed, return success
-    echo ""
-    echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
-fi
-
 # The password should die when this subshell goes out of scope
 if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./build-password.sh
@@ -36,11 +29,36 @@ fi
 
 ###############################################################################
 
-if ! ./build-gpgerror.sh
+if ! ./build-zlib.sh
 then
-    echo "Failed to build Libgerror"
+    echo "Failed to build zLib"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+###############################################################################
+
+if ! ./build-bzip.sh
+then
+    echo "Failed to build Bzip2"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-iconv.sh
+then
+    echo "Failed to build iConv"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+# Need gnulib for intl.h
+#if ! ./build-libintl.sh
+#then
+#    echo "Failed to build libintl"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
 
 ###############################################################################
 
@@ -114,7 +132,21 @@ cd "$GNUPG_DIR"
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
+./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+    --disable-scdaemon \
+    --disable-dirmngr \
+    --disable-wks-tools \
+    --disable-doc \
+	--with-libgpg-error-prefix="$INSTX_PREFIX" \
+    --with-libgcrypt-prefix="$INSTX_PREFIX" \
+    --with-libassuan-prefix="$INSTX_PREFIX" \
+    --with-ksba-prefix=PFX="$INSTX_PREFIX" \
+    --with-npth-prefix=PFX="$INSTX_PREFIX" \
+    --with-ntbtls-prefix="$INSTX_PREFIX" \
+    --with-libiconv-prefix="$INSTX_PREFIX" \
+    --with-libintl-prefix="$INSTX_PREFIX" \
+    --with-zlib="$INSTX_PREFIX" \
+    --with-bzip2="$INSTX_PREFIX"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure GnuPG"
@@ -148,9 +180,6 @@ else
 fi
 
 cd "$CURR_DIR"
-
-# Set package status to installed. Delete the file to rebuild the package.
-touch "$INSTX_CACHE/$PKG_NAME"
 
 ###############################################################################
 
