@@ -60,7 +60,7 @@ if [[ -f "$PREFIX/etc/wgetrc" ]]; then
     rm "$PREFIX/etc/wgetrc"
 fi
 
-cp wget.patch "$WGET_DIR/src"
+cp ../wget.patch "$WGET_DIR/src"
 cd "$WGET_DIR/src"
 patch < wget.patch
 
