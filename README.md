@@ -66,6 +66,10 @@ WGET="$HOME/bootstrap/bin/wget" ./build-wget.sh
 
 You can delete `$HOME/bootstrap` at any time, but be sure you have an updated Wget that can download the source code for the remaining tools.
 
+## Runtime Paths
+
+The build scripts attempt to set runtime paths in everything it builds. For example, on Fedora x86_64 the  options include `-L/usr/local/lib64 -m64 -Wl,-R,/usr/local/lib64 -Wl,--enable-new-dtags`. If all goes well you will not suffer the stupid Linux path problems that have existed for the last 25 years or so.
+
 ## Dependencies
 
 Dependent libraries are minimally tracked. Once a library is built a file with the library name is `touch`'d in `$HOME/.build-scripts`. If the file is older than 7 days then the library is automatically rebuilt. Automatic rebuilding ensures newer versions of a library are used when available and sidesteps problems with trying to track version numbers.
@@ -91,10 +95,6 @@ Second, the documentation wastes processing time. Low-end devices like ARM dev-b
 Fourth, and most importantly, the documentation complicates package building. `libidn` and `libidn2` were especially difficult to build because the packages assumed a maintainer building for a desktop system with repos full of everything needed for a build. Configuring with `--no-gtk-doc` required a `bootstrap` or `autoreconf` which required additional steps and additional dependencies.
 
 Some documentation is built and installed. You can run `clean-docs` to remove most of it. Use `sudo` if you installed into a privileged location.
-
-## Runtime Paths
-
-The build scripts attempt to set runtime paths in everything it builds. For example, on Fedora x86_64 the  options include `-L/usr/local/lib64 -m64 -Wl,-R,/usr/local/lib64 -Wl,--enable-new-dtags`. If all goes well you will not suffer the stupid Linux path problems that have existed for the last 30 years or so.
 
 ## Autotools
 
