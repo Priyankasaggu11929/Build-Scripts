@@ -48,7 +48,7 @@ echo
 echo "********** Make **********"
 echo
 
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/make/$MAKE_TAR" -O "$MAKE_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/make/$MAKE_TAR" -O "$MAKE_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Make"

@@ -40,7 +40,7 @@ echo
 echo "********** ncurses **********"
 echo
 
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/pub/gnu/ncurses/$NCURSES_TAR" -O "$NCURSES_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/pub/gnu/ncurses/$NCURSES_TAR" -O "$NCURSES_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Ncurses"

@@ -64,7 +64,7 @@ echo
 echo "********** Emacs **********"
 echo
 
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/emacs/$EMACS_TAR" -O "$EMACS_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/emacs/$EMACS_TAR" -O "$EMACS_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Emacs"

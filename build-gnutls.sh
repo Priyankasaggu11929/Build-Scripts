@@ -136,7 +136,7 @@ echo
 echo "********** GnuTLS **********"
 echo
 
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.5/$GNUTLS_TAR" -O "$GNUTLS_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.5/$GNUTLS_TAR" -O "$GNUTLS_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download GnuTLS"

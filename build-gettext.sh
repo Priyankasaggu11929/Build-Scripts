@@ -40,7 +40,7 @@ echo
 echo "********** GetText **********"
 echo
 
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/pub/gnu/gettext/$GETTEXT_TAR" -O "$GETTEXT_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/pub/gnu/gettext/$GETTEXT_TAR" -O "$GETTEXT_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download GetText"

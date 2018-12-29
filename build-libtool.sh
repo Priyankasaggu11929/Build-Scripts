@@ -32,7 +32,7 @@ echo
 echo "********** libtool and libltdl **********"
 echo
 
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.gnu.org/gnu/libtool/$LIBTOOL_TAR" -O "$LIBTOOL_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/libtool/$LIBTOOL_TAR" -O "$LIBTOOL_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download libtool and libltdl"
