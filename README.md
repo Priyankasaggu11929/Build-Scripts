@@ -38,20 +38,33 @@ INSTX_JOBS=2 ./build-curl.sh
 
 ## Boot strapping
 
-A basic order may need to be followed. Older systems like CentOS 5 are more sensitive than newer systems. If your system is old or ancient, then bootstrap Wget like shown below. The bootstrap directory has OpenSSL 1.0.2q, Wget 1.20.1 and cURL's cacert.pem from December, 2018.
+A basic order may need to be followed. Generally speaking you need a modern Wget and a modern Bash. Older systems like CentOS 5 are more sensitive than newer systems. If your system is old or ancient, then bootstrap Wget like shown below. The bootstrap directory has OpenSSL 1.0.2q, Wget 1.20.1 and cURL's cacert.pem from December, 2018.
 
 ```
 cd bootstrap
 ./wget.sh
 ```
 
-The bootstrapped programs are located in `$HOME/bootstrap`. Wget is located at `$HOME/bootstrap/bin/wget`, and it uses static linking to avoid Linux path problems. You can export the WGET variable to build the rest of the tools:
+The bootstrapped programs are located in `$HOME/bootstrap`. Wget is located at `$HOME/bootstrap/bin/wget`. Te bootstrap version of Wget uses static linking to avoid Linux path problems. You can export the WGET variable to build the rest of the tools with `export WGET="$HOME/bootstrap/bin/wget"`.
+
+If you are working on an antique system, like Fedora 1, then your next step is build Bash. Fedora 1 provides Bash 2.05b and it can't handle the scripts. The pain point is `[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1`. The command to build and use Bash in the current session is:
 
 ```
-export WGET="$HOME/bootstrap/bin/wget"
+WGET="$HOME/bootstrap/bin/wget" ./build-bash.sh
+...
+
+# Use the new Bash in the current session
+$ /usr/local/bin/bash
+$
 ```
 
-The bootstrapped Wget is anemic and you should build the full version next by running `./build-wget.sh`. You can delete `$HOME/bootstrap` at any time, but be sure you have an updated Wget that can download the rest of the tools.
+The bootstrapped Wget is anemic and you should build the full version next by running `./build-wget.sh`:
+
+```
+WGET="$HOME/bootstrap/bin/wget" ./build-wget.sh
+```
+
+You can delete `$HOME/bootstrap` at any time, but be sure you have an updated Wget that can download the rest of the tools.
 
 ## Dependencies
 
