@@ -36,17 +36,17 @@ cd "$SSL_DIR"
 
 if ! make depend; then
     echo "OpenSSL update failed"
-	exit 1
+    exit 1
 fi
 
 if ! make -j 2; then
     echo "OpenSSL build failed"
-	exit 1
+    exit 1
 fi
 
 if ! make install_sw; then
     echo "OpenSSL install failed"
-	exit 1
+    exit 1
 fi
 
 # Build Wget
@@ -84,12 +84,12 @@ cd ".."
 
 if ! make -j 2; then
     echo "Wget build failed"
-	exit 1
+    exit 1
 fi
 
 if ! make install; then
     echo "Wget install failed"
-	exit 1
+    exit 1
 fi
 
 echo "" >> "$PREFIX/etc/wgetrc"
@@ -99,7 +99,10 @@ echo "ca_certificate = $PREFIX/cacert/cacert.pem" >> "$PREFIX/etc/wgetrc"
 echo "" >> "$PREFIX/etc/wgetrc"
 
 # Cleanup
-rm -rf "$WGET_DIR" &>/dev/null
-rm -rf "$SSL_DIR" &>/dev/null
+if true; then
+    cd "$THIS_DIR"
+    rm -rf "$WGET_DIR" &>/dev/null
+    rm -rf "$SSL_DIR" &>/dev/null
+fi
 
 exit 0
