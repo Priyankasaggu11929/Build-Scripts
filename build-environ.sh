@@ -6,11 +6,14 @@
 
 ###############################################################################
 
+# Can't apply the fixup reliably. Ancient Bash causes build scripts
+# to die after setting the environment. TODO... figure it out.
+
 # Fixup ancient Bash
 # https://unix.stackexchange.com/q/468579/56041
-if [[ -z "$BASH_SOURCE" ]]; then
-	BASH_SOURCE="$0"
-fi
+#if [[ -z "$BASH_SOURCE" ]]; then
+#	BASH_SOURCE="$0"
+#fi
 
 ###############################################################################
 
