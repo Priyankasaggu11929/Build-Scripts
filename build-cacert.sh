@@ -285,6 +285,19 @@ echo
 echo "********** cURL CA-Certs **********"
 echo
 
+# Wget is special. We have to be able to bootstrap it and
+# use the latest version throughout these scripts
+
+if [[ -z "$WGET" ]]; then
+    if [[ -e "$HOME/bootstrap/bin/wget" ]]; then
+        WGET="$HOME/bootstrap/bin/wget"
+    elif [[ -e "/usr/local/bin/wget" ]]; then
+        WGET="/usr/local/bin/wget"
+    else
+        WGET=wget
+    fi
+fi
+
 wget -q --ca-certificate=globalsign-root-r1.pem https://curl.haxx.se/ca/cacert.pem -O cacert.pem
 
 echo "Downloaded $HOME/.cacert/cacert.pem"

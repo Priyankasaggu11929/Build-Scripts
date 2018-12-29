@@ -56,7 +56,9 @@ fi
 # use the latest version throughout these scripts
 
 if [[ -z "$WGET" ]]; then
-    if [[ -e "/usr/local/bin/wget" ]]; then
+    if [[ -e "$HOME/bootstrap/bin/wget" ]]; then
+        WGET="$HOME/bootstrap/bin/wget"
+    elif [[ -e "/usr/local/bin/wget" ]]; then
         WGET="/usr/local/bin/wget"
     else
         WGET=wget
