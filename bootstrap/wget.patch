@@ -8,9 +8,9 @@
 +
 +  /*
 +   * Don't include CA directory if user specified a particular CA file
-+   * using --ca-certificate. Including the CA directory adds attack
-+   * surface when it includes a typical cacerts.pem. A modern cacerts
-+   * will inlude 130 or so CA roots and intermediates. Note that this
++   * via --ca-certificate. The CA directory adds attack surface when
++   * it includes a typical unpacked cacerts.pem. An unpacked cacerts
++   * will include 130 or so CA roots and intermediates. Note that this
 +   * may cause a fetch to fail if the server responds with a redirect
 +   * and the target site uses a different CA than the original site.
 +   */
