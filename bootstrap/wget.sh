@@ -73,7 +73,14 @@ cd ".."
     --without-zlib \
     --without-libpsl \
     --without-libuuid \
-    --without-libidn
+    --without-libidn \
+    --without-cares \
+    --disable-pcre \
+    --disable-pcre2 \
+    --disable-nls \
+    --disable-iri \
+    --without-libiconv-prefix \
+    --without-libunistring-prefix
 
 if ! make -j 2; then
     echo "Wget build failed"
