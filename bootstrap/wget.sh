@@ -15,22 +15,27 @@ WGET_TAR=wget-1.20.1.tar.gz
 SSL_TAR=openssl-1.0.2q.tar.gz
 
 # Directories
+BOOTSTRAP_DIR=$(pwd)
 WGET_DIR=wget-1.20.1
 SSL_DIR=openssl-1.0.2q
 
 # Install location
 PREFIX="$HOME/bootstrap"
 
+############################## CA Certs ##############################
+
 # Copy cacerts to bootstrap
 mkdir -p "$PREFIX/cacert/"
 cp cacert.pem "$PREFIX/cacert/"
 
+############################## OpenSSL ##############################
+
 # Build OpenSSL
-cd "$THIS_DIR"
+cd "$BOOTSTRAP_DIR"
 
 rm -rf "$SSL_DIR" &>/dev/null
 gzip -d < "$SSL_TAR" | tar xf -
-cd "$SSL_DIR"
+cd "$BOOTSTRAP_DIR/$SSL_DIR"
 
 ./config no-asm no-shared no-dso no-engine -fPIC \
     --prefix="$PREFIX"
@@ -50,8 +55,10 @@ if ! make install_sw; then
     exit 1
 fi
 
+############################## Wget ##############################
+
 # Build Wget
-cd "$THIS_DIR"
+cd "$BOOTSTRAP_DIR"
 
 rm -rf "$WGET_DIR" &>/dev/null
 gzip -d < "$WGET_TAR" | tar xf -
@@ -61,11 +68,15 @@ if [[ -f "$PREFIX/etc/wgetrc" ]]; then
     rm "$PREFIX/etc/wgetrc"
 fi
 
-cp ../wget.patch "$WGET_DIR/src"
-cd "$WGET_DIR/src"
-patch < wget.patch
+cp "$BOOTSTRAP_DIR/wget.patch" "$BOOTSTRAP_DIR/$WGET_DIR/src"
+cd "$BOOTSTRAP_DIR/$WGET_DIR/src"
 
-cd "../"
+if ! patch < wget.patch; then
+    echo "Wget patch failed"
+    exit 1
+fi
+
+cd "$BOOTSTRAP_DIR/$WGET_DIR"
 
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
 ./configure \
