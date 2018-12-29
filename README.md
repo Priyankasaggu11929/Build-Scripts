@@ -1,8 +1,8 @@
 # Build-Scripts
 
-This GitHub is a collection of build scripts useful when building and testing programs and libraries on downlevel clients and clients where program updates are not freely available. It should result in working SSH, Wget, cURL and Git clients on systems like PowerMac G5, Fedora 10, CentOS 5 and Solaris 11. The scripts should mostly work on AIX, Android, BSDs, Cygwin, iOS, Linux, OS X and Solaris.
+This GitHub is a collection of build scripts useful when building and testing programs and libraries on downlevel clients and clients where program updates are not freely available. It should result in working SSH, Wget, cURL and Git clients on systems like PowerMac G5, Fedora 3, CentOS 5 and Solaris 11. The scripts should mostly work on AIX, Android, BSDs, Cygwin, iOS, Linux, OS X and Solaris.
 
-The general idea of the scripts are, you run `./build-wget.sh`, `./build-ssh.sh`, `./build-git.sh` or some other program build script to get a fresh tool. The build script for the program will download and build the dependent libraries for the program. When the script completes you have a working tool in `/usr/local`.
+The general idea of the scripts are, you run `./build-wget.sh`, `./build-ssh.sh`, `./build-git.sh` or some other program build script to get a fresh tool. The script for the program will download and build the dependent libraries for the program. When the script completes you have a working tool in `/usr/local`.
 
 Adding a new library script is mostly copy and paste. Start with `build-gzip.sh`, copy/paste it to a new file, and then add the necessary pieces for the library. Program scripts are copy and paste too, but they are also more involved because you have to include dependent libraries. See `build-ssh.sh` as an example because it is small. Be sure to run `./configure --help` to look for interesting options.
 
@@ -38,15 +38,20 @@ INSTX_JOBS=2 ./build-curl.sh
 
 ## Boot strapping
 
-A basic order may need to be followed. Older systems like CentOS 5 are more sensitive than newer systems. You should run `build-cacerts.sh` to install several CAs in `$HOME/.cacerts`. The script installs approximately 6 CA's necessary to download other packages. You can delete the `.cacert` folder at anytime because the certifcates are only used by the scripts.
+A basic order may need to be followed. Older systems like CentOS 5 are more sensitive than newer systems. If your system is old or ancient, then bootstrap Wget like shown below. The bootstrap directory has OpenSSL 1.0.2q, Wget 1.20.1 and cURL's cacert.pem from December, 2018.
 
-Wget should be built next when working on older systems. CentOS 5 provides Wget 1.11, and it does not support SNI (SNI support did not arrive until Wget 1.14). The old Wget will fail to download cURL which Git needs for its build. The cURL download fails due to shared hosting and lack of SNI.
+```
+cd bootstrap
+./wget.sh
+```
 
-If the system is *really* old then you may have to run `build-wget-lite.sh` instead. It removes all Wget dependencies except OpenSSL. 
+The bootstrapped programs are located in `$HOME/bootstrap`. Wget is located at `$HOME/bootstrap/bin/wget`, and it uses static linking to avoid Linux path problems. You can export the WGET variable to build the rest of the tools:
 
-In extreme cases you may need to download Build-Scripts in ZIP format from GitHub, and then `scp` them to the target machine. You can unzip the ZIP file with `unzip -aoq master.zip -d <some dir>`. The case may become more common since GitHub moved to require TLS v1.2 (https://githubengineering.com/crypto-removal-notice/).
+```
+export WGET="$HOME/bootstrap/bin/wget"
+```
 
-Be sure to run `hash -r` after installing new programs to invalidate the Bash program cache. Otherwise old programs may be used.
+The bootstrapped Wget is anemic and you should build the full version next by running `./build-wget.sh`. You can delete `$HOME/bootstrap` at any time, but be sure you have an updated Wget that can download the rest of the tools.
 
 ## Dependencies
 
