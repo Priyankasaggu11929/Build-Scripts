@@ -9,6 +9,15 @@ function finish {
 }
 trap finish EXIT
 
+# Binaries
+WGET_TAR=wget-1.20.1.tar.gz
+SSL_TAR=openssl-1.0.2q.tar.gz
+
+# Directories
+WGET_DIR=wget-1.20.1
+SSL_DIR=openssl-1.0.2q
+
+# Install location
 PREFIX="$HOME/bootstrap"
 
 # Copy cacerts to bootstrap
@@ -17,9 +26,12 @@ cp cacert.pem "$PREFIX/cacert/"
 
 # Build OpenSSL
 cd "$THIS_DIR"
-cd openssl-1.0.2q
 
-./config no-asm no-shared -fPIC \
+rm -rf "$SSL_DIR" &>/dev/null
+gzip -d < "$SSL_TAR" | tar xf -
+cd "$SSL_DIR"
+
+./config no-asm no-shared no-dso no-engine -fPIC \
     --prefix="$PREFIX"
 
 if ! make depend; then
@@ -39,18 +51,38 @@ fi
 
 # Build Wget
 cd "$THIS_DIR"
-cd wget-1.20.1
 
-    CFLAGS="-I $PREFIX/include" \
-    CXXFLAGS="-I $PREFIX/include" \
-    LDFLAGS="-L $PREFIX/libs" \
-    LDLIBS="-lssl -lcrypto -ldl" \
+rm -rf "$WGET_DIR" &>/dev/null
+gzip -d < "$WGET_TAR" | tar xf -
+cd "$WGET_DIR"
+
+    PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
 ./configure \
+    --sysconfdir="$PREFIX/etc" \
     --prefix="$PREFIX" \
     --with-ssl=openssl \
     --without-zlib \
     --without-libpsl \
     --without-libuuid \
     --without-libidn
+
+if ! make -j 2; then
+    echo "Wget build failed"
+	exit 1
+fi
+
+if ! make install; then
+    echo "Wget install failed"
+	exit 1
+fi
+
+echo "" >> "$PREFIX/etc/wgetrc"
+echo "# cacert.pem location"
+echo "ca_directory = $PREFIX/cacert/" >> "$PREFIX/etc/wgetrc"
+echo "" >> "$PREFIX/etc/wgetrc"
+
+# Cleanup
+rm -rf "$WGET_DIR" &>/dev/null
+rm -rf "$SSL_DIR" &>/dev/null
 
 exit 0
