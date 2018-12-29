@@ -292,48 +292,48 @@ if [[ ! -z "$SH_MARCH" ]]; then
     #BUILD_CFLAGS+=("$SH_MARCH")
     #BUILD_CXXFLAGS+=("$SH_MARCH")
     #BUILD_LDFLAGS+=("$SH_MARCH")
-    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}] = "$SH_MARCH"
-    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}] = "$SH_MARCH"
-    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}] = "$SH_MARCH"
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_MARCH"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_MARCH"
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_MARCH"
 fi
 
 if [[ ! -z "$SH_NATIVE" ]]; then
     #BUILD_CFLAGS+=("$SH_NATIVE")
     #BUILD_CXXFLAGS+=("$SH_NATIVE")
-    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}] = "$SH_NATIVE"
-    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}] = "$SH_NATIVE"
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_NATIVE"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_NATIVE"
 fi
 
 if [[ ! -z "$SH_PIC" ]]; then
     #BUILD_CFLAGS+=("$SH_PIC")
     #BUILD_CXXFLAGS+=("$SH_PIC")
-    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}] = "$SH_PIC"
-    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}] = "$SH_PIC"
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_PIC"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_PIC"
 fi
 
 if [[ ! -z "$SH_RPATH" ]]; then
     #BUILD_LDFLAGS+=("$SH_RPATH")
-    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}] = "$SH_RPATH"
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_RPATH"
 fi
 
 if [[ ! -z "$SH_DTAGS" ]]; then
     #BUILD_LDFLAGS+=("$SH_DTAGS")
-    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}] = "$SH_DTAGS"
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_DTAGS"
 fi
 
 if [[ ! -z "$SH_DL" ]]; then
     #BUILD_LIBS+=("$SH_DL")
-    BUILD_LIBS[${#BUILD_LIBS[@]}] = "$SH_DL"
+    BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_DL"
 fi
 
 if [[ ! -z "$SH_PTHREAD" ]]; then
     #BUILD_LIBS+=("$SH_PTHREAD")
-    BUILD_LIBS[${#BUILD_LIBS[@]}] = "$SH_PTHREAD"
+    BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_PTHREAD"
 fi
 
 #if [[ "$IS_DARWIN" -ne "0" ]] && [[ ! -z "$SH_INSTNAME" ]]; then
 #    BUILD_LDFLAGS+=("$SH_INSTNAME")
-#    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}] = "$SH_INSTNAME"
+#    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_INSTNAME"
 #fi
 
 # Used to track packages that have been built by these scripts.
