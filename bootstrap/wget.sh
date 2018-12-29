@@ -79,6 +79,7 @@ fi
 echo "" >> "$PREFIX/etc/wgetrc"
 echo "# cacert.pem location" >> "$PREFIX/etc/wgetrc"
 echo "ca_directory = $PREFIX/cacert/" >> "$PREFIX/etc/wgetrc"
+echo "ca_cert = $PREFIX/cacert/cacert.pem" >> "$PREFIX/etc/wgetrc"
 echo "" >> "$PREFIX/etc/wgetrc"
 
 # Cleanup
