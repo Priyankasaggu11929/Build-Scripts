@@ -1,5 +1,5 @@
 --- openssl.c	2018-12-28 21:12:54.657678200 -0500
-+++ openssl.c.new	2018-12-28 21:41:13.967211700 -0500
++++ /dev/null	2018-12-28 21:41:13.967211700 -0500
 @@ -327,6 +327,29 @@
    SSL_CTX_set_default_verify_paths (ssl_ctx);
    SSL_CTX_load_verify_locations (ssl_ctx, opt.ca_cert, opt.ca_directory);
