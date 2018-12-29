@@ -54,7 +54,16 @@ cd "$THIS_DIR"
 
 rm -rf "$WGET_DIR" &>/dev/null
 gzip -d < "$WGET_TAR" | tar xf -
-cd "$WGET_DIR"
+
+if [[ -f "$PREFIX/etc/wgetrc" ]]; then
+    rm "$PREFIX/etc/wgetrc"
+fi
+
+cp wget.patch "$WGET_DIR/src"
+cd "$WGET_DIR/src"
+patch < wget.patch
+
+cd ".."
 
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
 ./configure \
@@ -79,7 +88,7 @@ fi
 echo "" >> "$PREFIX/etc/wgetrc"
 echo "# cacert.pem location" >> "$PREFIX/etc/wgetrc"
 echo "ca_directory = $PREFIX/cacert/" >> "$PREFIX/etc/wgetrc"
-echo "ca_cert = $PREFIX/cacert/cacert.pem" >> "$PREFIX/etc/wgetrc"
+echo "ca_certificate = $PREFIX/cacert/cacert.pem" >> "$PREFIX/etc/wgetrc"
 echo "" >> "$PREFIX/etc/wgetrc"
 
 # Cleanup
