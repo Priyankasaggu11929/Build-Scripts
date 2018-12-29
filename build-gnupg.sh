@@ -62,6 +62,14 @@ fi
 
 ###############################################################################
 
+if ! ./build-gpgerror.sh
+then
+    echo "Failed to build Libgcrypt"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 if ! ./build-libgcrypt.sh
 then
     echo "Failed to build Libgcrypt"
