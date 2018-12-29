@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
-# This script builds Wget and its dependencies from sources.
+# This script builds Wget and OpenSSL from sources. It
+# is useful for bootstrapping a full Wget build.
 
 THIS_DIR=$(pwd)
 function finish {
