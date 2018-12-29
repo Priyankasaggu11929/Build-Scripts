@@ -6,6 +6,14 @@
 
 ###############################################################################
 
+# Fixup ancient Bash
+# https://unix.stackexchange.com/q/468579/56041
+if [[ -z "$BASH_SOURCE" ]]; then
+	BASH_SOURCE="$0"
+fi
+
+###############################################################################
+
 # Prerequisites needed for nearly all packages
 
 LETS_ENCRYPT_ROOT="$HOME/.cacert/lets-encrypt-root-x3.pem"
