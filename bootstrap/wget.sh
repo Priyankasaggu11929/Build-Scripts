@@ -56,6 +56,7 @@ cd "$THIS_DIR"
 rm -rf "$WGET_DIR" &>/dev/null
 gzip -d < "$WGET_TAR" | tar xf -
 
+# Install recipe does not overwrite a config, if present.
 if [[ -f "$PREFIX/etc/wgetrc" ]]; then
     rm "$PREFIX/etc/wgetrc"
 fi
@@ -64,7 +65,7 @@ cp ../wget.patch "$WGET_DIR/src"
 cd "$WGET_DIR/src"
 patch < wget.patch
 
-cd ".."
+cd "../"
 
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
 ./configure \

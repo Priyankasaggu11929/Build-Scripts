@@ -145,7 +145,12 @@ fi
 
 rm -rf "$WGET_DIR" &>/dev/null
 gzip -d < "$WGET_TAR" | tar xf -
-cd "$WGET_DIR"
+
+cp wget.patch "$WGET_DIR/src"
+cd "$WGET_DIR/src"
+patch < wget.patch
+
+cd "../"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
