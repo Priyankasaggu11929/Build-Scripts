@@ -145,4 +145,8 @@ Third, you can open the `build-prog.sh` script, comment the portion that runs `m
 
 ## Bugs
 
+GnuPG builds and installs OK, but it breaks Git and code signing.
+
+GnuTLS may (or may not) build and install correctly. It is a big recipe and Guile causes a fair amount of trouble on many systems.
+
 If you find a bug then submit a patch or raise a bug report.
