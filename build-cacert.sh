@@ -298,7 +298,7 @@ if [[ -z "$WGET" ]]; then
     fi
 fi
 
-wget -q --ca-certificate=globalsign-root-r1.pem https://curl.haxx.se/ca/cacert.pem -O cacert.pem
+"$WGET" -q --ca-certificate=globalsign-root-r1.pem https://curl.haxx.se/ca/cacert.pem -O cacert.pem
 
 echo "Downloaded $HOME/.cacert/cacert.pem"
 
