@@ -7,8 +7,13 @@ ICONV_TAR=libiconv-1.15.tar.gz
 ICONV_DIR=libiconv-1.15
 PKG_NAME=iconv
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

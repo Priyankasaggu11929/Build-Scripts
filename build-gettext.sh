@@ -7,8 +7,13 @@ GETTEXT_TAR=gettext-0.19.8.1.tar.gz
 GETTEXT_DIR=gettext-0.19.8.1
 PKG_NAME=gettext
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

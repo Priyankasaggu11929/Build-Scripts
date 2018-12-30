@@ -7,8 +7,13 @@ P11KIT_TAR=p11-kit-0.23.12.tar.gz
 P11KIT_DIR=p11-kit-0.23.12
 PKG_NAME=p11-kit
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

@@ -8,8 +8,13 @@ XZ_TAR=xz-5.2.4.tar.gz
 XZ_DIR=xz-5.2.4
 PKG_NAME=xz
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

@@ -7,8 +7,13 @@ ZLIB_TAR=zlib-1.2.11.tar.gz
 ZLIB_DIR=zlib-1.2.11
 PKG_NAME=zlib
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

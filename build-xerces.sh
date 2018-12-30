@@ -7,8 +7,13 @@ XERCES_TAR=xerces-c-3.2.0.tar.gz
 XERCES_DIR=xerces-c-3.2.0
 PKG_NAME=xerces
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

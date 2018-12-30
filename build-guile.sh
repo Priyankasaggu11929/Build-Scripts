@@ -10,8 +10,13 @@ GUILE_TAR=guile-2.2.4.tar.xz
 GUILE_DIR=guile-2.2.4
 PKG_NAME=guile
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

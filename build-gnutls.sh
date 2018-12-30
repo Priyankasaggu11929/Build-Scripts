@@ -7,8 +7,13 @@ GNUTLS_TAR=gnutls-3.6.5.tar.xz
 GNUTLS_DIR=gnutls-3.6.5
 PKG_NAME=gnutls
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

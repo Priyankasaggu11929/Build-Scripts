@@ -11,8 +11,13 @@ IDN2_TAR=libidn2-2.0.5.tar.gz
 IDN2_DIR=libidn2-2.0.5
 PKG_NAME2=libidn2
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

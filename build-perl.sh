@@ -6,8 +6,13 @@
 PERL_TAR=perl-5.26.2.tar.gz
 PERL_DIR=perl-5.26.2
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

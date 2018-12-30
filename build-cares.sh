@@ -7,8 +7,13 @@ CARES_TAR=c-ares-1.15.0.tar.gz
 CARES_DIR=c-ares-1.15.0
 PKG_NAME=c-ares
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

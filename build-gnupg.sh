@@ -7,8 +7,13 @@ GNUPG_TAR=gnupg-2.2.12.tar.bz2
 GNUPG_DIR=gnupg-2.2.12
 PKG_NAME=gnupg
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

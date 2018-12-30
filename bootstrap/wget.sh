@@ -4,12 +4,6 @@
 # This script builds Wget and OpenSSL from sources. It
 # is useful for bootstrapping a full Wget build.
 
-THIS_DIR=$(pwd)
-function finish {
-  cd "$THIS_DIR"
-}
-trap finish EXIT
-
 # Binaries
 WGET_TAR=wget-1.20.1.tar.gz
 SSL_TAR=openssl-1.0.2q.tar.gz
@@ -22,11 +16,30 @@ SSL_DIR=openssl-1.0.2q
 # Install location
 PREFIX="$HOME/bootstrap"
 
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
+
+# Sets the number of make jobs if not set in environment
+: "${INSTX_JOBS:=2}"
+
 ############################## CA Certs ##############################
 
-# Copy cacerts to bootstrap
+# Copy our copy of cacerts to bootstrap
 mkdir -p "$PREFIX/cacert/"
 cp cacert.pem "$PREFIX/cacert/"
+
+############################## Bitness ##############################
+
+: "${CC:=cc}"
+INSTX_BITNESS=64
+if ! "$CC" "$CFLAGS" bitness.c -o /dev/null; then
+    INSTX_BITNESS=32
+fi
 
 ############################## OpenSSL ##############################
 
@@ -37,15 +50,16 @@ rm -rf "$SSL_DIR" &>/dev/null
 gzip -d < "$SSL_TAR" | tar xf -
 cd "$BOOTSTRAP_DIR/$SSL_DIR"
 
-./config no-asm no-shared no-dso no-engine -fPIC \
+KERNEL_BITS="$INSTX_BITNESS" ./config \
     --prefix="$PREFIX"
+    no-asm no-shared no-dso no-engine -fPIC
 
 if ! make depend; then
     echo "Failed to update OpenSSL"
     exit 1
 fi
 
-if ! make -j 2; then
+if ! make -j "$INSTX_JOBS"; then
     echo "Failed to build OpenSSL"
     exit 1
 fi
@@ -98,7 +112,7 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if ! make -j 2; then
+if ! make -j "$INSTX_JOBS"; then
     echo "Failed to build Wget"
     exit 1
 fi
@@ -116,7 +130,7 @@ echo "" >> "$PREFIX/etc/wgetrc"
 
 # Cleanup
 if true; then
-    cd "$THIS_DIR"
+    cd "$CURR_DIR"
     rm -rf "$WGET_DIR" &>/dev/null
     rm -rf "$SSL_DIR" &>/dev/null
 fi

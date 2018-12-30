@@ -7,8 +7,13 @@ GCRYPT_TAR=libgcrypt-1.8.4.tar.bz2
 GCRYPT_DIR=libgcrypt-1.8.4
 PKG_NAME=libgcrypt
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

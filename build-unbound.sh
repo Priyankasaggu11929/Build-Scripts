@@ -7,8 +7,13 @@ UNBOUND_TAR=unbound-1.8.3.tar.gz
 UNBOUND_DIR=unbound-1.8.3
 PKG_NAME=unbound
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

@@ -4,8 +4,13 @@
 # This script writes several Root CA certifcates needed
 # for other scripts and wget downloads over HTTPS.
 
-CURR_DIR="$PWD"
-cd "$HOME"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 mkdir -p "$HOME/.cacert"
 cd "$HOME/.cacert/"
@@ -324,5 +329,3 @@ fi
 ###############################################################################
 
 echo ""
-
-cd "$CURR_DIR"

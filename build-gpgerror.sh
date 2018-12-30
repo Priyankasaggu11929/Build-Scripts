@@ -7,8 +7,13 @@ LIBERR_TAR=libgpg-error-1.33.tar.bz2
 LIBERR_DIR=libgpg-error-1.33
 PKG_NAME=gpgerror
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

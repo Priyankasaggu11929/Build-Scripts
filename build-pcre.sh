@@ -11,8 +11,13 @@ PCRE2_TAR=pcre2-10.32.tar.gz
 PCRE2_DIR=pcre2-10.32
 PKG_NAME2=pcre2
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

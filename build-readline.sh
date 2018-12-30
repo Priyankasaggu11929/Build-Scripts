@@ -8,8 +8,13 @@ READLN_TAR=readline-7.0.tar.gz
 READLN_DIR=readline-7.0
 PKG_NAME=readline
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

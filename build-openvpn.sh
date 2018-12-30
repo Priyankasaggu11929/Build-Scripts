@@ -9,8 +9,13 @@ TUNTAP_DIR=tuntap-1.3.3
 OPENVPN_TAR=openvpn-2.4.6.tar.gz
 OPENVPN_DIR=openvpn-2.4.6
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

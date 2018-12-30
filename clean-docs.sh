@@ -7,6 +7,14 @@
 #
 #    sudo ./clean-docs.sh
 
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
+
 PACKAGES=(
 	automake b2sum bzip cacert clamav
 	cryptopp curl emacs environ expat

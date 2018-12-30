@@ -7,8 +7,13 @@ LIBASSUAN_TAR=libassuan-2.5.2.tar.bz2
 LIBASSUAN_DIR=libassuan-2.5.2
 PKG_NAME=libassuan
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

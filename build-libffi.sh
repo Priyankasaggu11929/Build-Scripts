@@ -7,8 +7,13 @@ LIBFFI_TAR=libffi-3.2.1.tar.gz
 LIBFFI_DIR=libffi-3.2.1
 PKG_NAME=libffi
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

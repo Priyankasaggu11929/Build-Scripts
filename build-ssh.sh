@@ -6,8 +6,13 @@
 OPENSSH_TAR=openssh-7.9p1.tar.gz
 OPENSSH_DIR=openssh-7.9p1
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

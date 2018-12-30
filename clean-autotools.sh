@@ -8,6 +8,16 @@
 #
 #    sudo ./clean-autotools.sh
 
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
+
+###############################################################################
+
 # The extra gyrations around Perl files are due to Perl's
 # Autom4te::ChannelDefs getting whacked along with the
 # Autotools files. Its non-trivial to reinstall the missing

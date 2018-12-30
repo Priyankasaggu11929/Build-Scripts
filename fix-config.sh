@@ -5,6 +5,14 @@
 
 ###############################################################################
 
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
+
+###############################################################################
+
 for file in $(find "$PWD" -iname 'configure')
 do
 	# Autoconf lib paths are wrong for Fedora and Solaris. Thanks NM.

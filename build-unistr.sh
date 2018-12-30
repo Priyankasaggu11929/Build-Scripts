@@ -7,8 +7,13 @@ UNISTR_TAR=libunistring-0.9.9.tar.gz
 UNISTR_DIR=libunistring-0.9.9
 PKG_NAME=unistring
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

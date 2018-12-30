@@ -7,8 +7,13 @@ LIBKBSA_TAR=libksba-1.3.5.tar.bz2
 LIBKBSA_DIR=libksba-1.3.5
 PKG_NAME=libkbsa
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

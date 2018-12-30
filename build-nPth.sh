@@ -7,8 +7,13 @@ NPTH_TAR=npth-1.6.tar.bz2
 NPTH_DIR=npth-1.6
 PKG_NAME=npth
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

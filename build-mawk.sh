@@ -7,11 +7,16 @@
 MAWK_TAR=mawk.tar.gz
 MAWK_DIR=mawk-1.3.4-20171017
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
 
-# Sets the number of make jobs
-INSTX_JOBS=4
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
+
+# Sets the number of make jobs if not set in environment
+: "${INSTX_JOBS:=4}"
 
 ###############################################################################
 

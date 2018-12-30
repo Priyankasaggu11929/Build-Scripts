@@ -7,8 +7,13 @@ GZIP_TAR=gzip-1.9.tar.gz
 GZIP_DIR=gzip-1.9
 PKG_NAME=gzip
 
-# Avoid shellcheck.net warning
-CURR_DIR="$PWD"
+###############################################################################
+
+CURR_DIR=$(pwd)
+function finish {
+  cd "$CURR_DIR"
+}
+trap finish EXIT
 
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=4}"

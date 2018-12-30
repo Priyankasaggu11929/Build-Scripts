@@ -3,9 +3,9 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Wget and OpenSSL from sources.
 
-THIS_DIR=$(pwd)
+CURR_DIR=$(pwd)
 function finish {
-  cd "$THIS_DIR"
+  cd "$CURR_DIR"
 }
 trap finish EXIT
 
