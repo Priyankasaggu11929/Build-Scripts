@@ -46,7 +46,7 @@ Generally speaking you need some CA certificates, a modern Wget and a modern Bas
 ./setup-wget.sh
 ```
 
-The CA certificates are written to `$HOME/.cacerts`. The CAs are public/commercial, and there are about six of them. They are used to connect to sites like `gnu.org` and `github.com`. All the script invocations that call Wget use a `--ca-certificate=<exact-ca-for-site>` option.
+The CA certificates are written to `$HOME/.cacerts`. The CAs are public/commercial issuers, and there are about six of them. They are used to connect to sites like `gnu.org` and `github.com`. All the script that call Wget use a `--ca-certificate=<exact-ca-for-site>` option. 
 
 The bootstrapped Wget is located in `$HOME/bootstrap`. The bootstrapped version of Wget uses static linking to avoid Linux path problems. You can export the WGET variable to build the rest of the tools with `export WGET="$HOME/bootstrap/bin/wget"`.
 
@@ -61,7 +61,7 @@ $ /usr/local/bin/bash
 $
 ```
 
-The bootstrapped Wget is anemic and you should build the full version next by running `./build-wget.sh`:
+The bootstrapped Wget is anemic and you should build the full version next by running `./build-wget.sh`. After you build the full Wget you can move onto other goodies, like Git and SSH.
 
 ```
 WGET="$HOME/bootstrap/bin/wget" ./build-wget.sh
