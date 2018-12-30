@@ -61,7 +61,7 @@ gzip -d < "$NETTLE_TAR" | tar xf -
 cp nettle.patch "$NETTLE_DIR"
 cd "$NETTLE_DIR"
 
-patch < nettle.patch
+patch -u -p0 < nettle.patch
 
 # This works for all versions of Nettle on all Apple platforms
 if [[ "$IS_DARWIN" -ne "0" ]]; then
