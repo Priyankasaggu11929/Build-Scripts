@@ -26,7 +26,7 @@ fi
 
 ADDTRUST_ROOT="$HOME/.cacert/addtrust-root-ca.pem"
 if [[ ! -f "$ADDTRUST_ROOT" ]]; then
-    echo "OpenVPN requires several CA roots. Please run build-cacert.sh."
+    echo "OpenVPN requires several CA roots. Please run setup-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

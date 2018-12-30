@@ -26,7 +26,7 @@ fi
 
 CA_ZOO="$HOME/.cacert/cacert.pem"
 if [[ ! -f "$CA_ZOO" ]]; then
-    echo "Boehm GC requires several CA roots. Please run build-cacert.sh."
+    echo "Boehm GC requires several CA roots. Please run setup-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

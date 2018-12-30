@@ -23,7 +23,7 @@ LETS_ENCRYPT_ROOT="$HOME/.cacert/lets-encrypt-root-x3.pem"
 IDENTRUST_ROOT="$HOME/.cacert/identrust-root-x3.pem"
 
 if [[ ! -f "$IDENTRUST_ROOT" ]]; then
-    echo "Some packages require several CA roots. Please run build-cacert.sh."
+    echo "Some packages require several CA roots. Please run setup-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
