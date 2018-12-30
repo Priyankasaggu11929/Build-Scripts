@@ -116,7 +116,7 @@ if [[ "$?" -ne "0" ]]; then
 fi
 
 rm -rf "$GUILE_DIR" &>/dev/null
-tar xJf "$GUILE_TAR"
+xz -d < "$GUILE_TAR" | tar xf -
 cd "$GUILE_DIR"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
