@@ -104,6 +104,14 @@ fi
 
 ###############################################################################
 
+if ! ./build-cares.sh
+then
+    echo "Failed to build c-ares"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 if ! ./build-pcre.sh
 then
     echo "Failed to build PCRE and PCRE2"
@@ -170,7 +178,8 @@ touch -t 197001010000 fuzz/Makefile.am
     --with-ssl=openssl --with-libssl-prefix="$INSTX_PREFIX" \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libunistring-prefix="$INSTX_PREFIX" \
-    --with-libidn="$INSTX_PREFIX"
+    --with-libidn="$INSTX_PREFIX" \
+    --with-cares
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Wget"
