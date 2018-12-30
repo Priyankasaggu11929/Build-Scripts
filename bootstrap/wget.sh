@@ -37,7 +37,7 @@ cp cacert.pem "$PREFIX/cacert/"
 
 : "${CC:=cc}"
 INSTX_BITNESS=64
-if ! "$CC" "$CFLAGS" bitness.c -o /dev/null; then
+if ! $CC $CFLAGS bitness.c -o /dev/null &>/dev/null; then
     INSTX_BITNESS=32
 fi
 
