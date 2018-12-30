@@ -105,21 +105,29 @@ fi
 # Needed for OpenSSL and make jobs
 IS_GMAKE=$($MAKE -v 2>&1 | grep -i -c 'gnu make')
 
+# If CC and CXX is not set, then use default or assume GCC
+if [[ (-z "$CC" && $(command -v cc 2>/dev/null) ) ]]; then CC=$(command -v cc); fi
+if [[ (-z "$CC" && $(command -v gcc 2>/dev/null) ) ]]; then CC=$(command -v gcc); fi
+if [[ (-z "$CXX" && $(command -v CC 2>/dev/null) ) ]]; then CXX=$(command -v CC); fi
+if [[ (-z "$CXX" && $(command -v g++ 2>/dev/null) ) ]]; then CXX=$(command -v g++); fi
+
+IS_GCC=$("$CC" --version 2>&1 | grep -i -c -E 'gcc')
+IS_CLANG=$("$CC" --version 2>&1 | grep -i -c -E 'clang|llvm')
+
+###############################################################################
+
 # Try to determine 32 vs 64-bit, /usr/local/lib, /usr/local/lib32,
 # /usr/local/lib64 and /usr/local/lib/64. The Autoconf programs
 # misdetect Solaris as x86 even though its x64. OpenBSD has
 # getconf, but it does not have LONG_BIT.
-IS_64BIT=$(getconf LONG_BIT 2>&1 | grep -i -c 64)
-if [[ "$IS_64BIT" -eq "0" ]]; then
-    IS_64BIT=$(file /bin/ls 2>&1 | grep -i -c '64-bit')
-fi
-
-if [[ "$IS_64BIT" -ne "0" ]]; then
+if $CC $CFLAGS bootstrap/bitness.c -o /dev/null &>/dev/null; then
+    IS_64BIT=1
+    IS_32BIT=0
     BUILD_BITS=64
-    SH_MARCH="64"
 else
+    IS_64BIT=0
+    IS_32BIT=1
     BUILD_BITS=32
-    SH_MARCH="32"
 fi
 
 # Don't override a user choice of INSTX_PREFIX
@@ -149,14 +157,7 @@ if [[ "$IS_IA32" -eq 1 ]] && [[ "$BUILD_BITS" -eq 64 ]]; then
     IS_X86_64=1
 fi
 
-# If CC and CXX is not set, then use default or assume GCC
-if [[ (-z "$CC" && $(command -v cc 2>/dev/null) ) ]]; then CC=$(command -v cc); fi
-if [[ (-z "$CC" && $(command -v gcc 2>/dev/null) ) ]]; then CC=$(command -v gcc); fi
-if [[ (-z "$CXX" && $(command -v CC 2>/dev/null) ) ]]; then CXX=$(command -v CC); fi
-if [[ (-z "$CXX" && $(command -v g++ 2>/dev/null) ) ]]; then CXX=$(command -v g++); fi
-
-IS_GCC=$("$CC" --version 2>&1 | grep -i -c -E 'gcc')
-IS_CLANG=$("$CC" --version 2>&1 | grep -i -c -E 'clang|llvm')
+###############################################################################
 
 # `gcc ... -o /dev/null` does not work on Solaris due to LD bug.
 # `mktemp` is not available on AIX or Git Windows shell...
@@ -165,75 +166,47 @@ outfile="out.$RANDOM$RANDOM"
 echo 'int main(int argc, char* argv[]) {return 0;}' > "$infile"
 echo "" >> "$infile"
 
-BAD_MSG="fatal|error|unknown|unrecognized|illegal|not found|not exist|cannot find"
-
-# Try to determine -m64, -X64, -m32, -X32, etc
-if [[ "$SH_MARCH" = "32" ]]; then
-    SH_MARCH=
-    MARCH_ERROR=$($CC -m32 -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
-    if [[ "$MARCH_ERROR" -eq "0" ]]; then
-        SH_MARCH="-m32"
-    fi
-    # IBM XL C/C++ on AIX uses -X32 and -X64
-    MARCH_ERROR=$($CC -X32 -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
-    if [[ "$MARCH_ERROR" -eq "0" ]] && [[ "$IS_AIX" -ne "0" ]]; then
-        SH_MARCH="-X32"
-    fi
-fi
-if [[ "$SH_MARCH" = "64" ]]; then
-    SH_MARCH=
-    MARCH_ERROR=$($CC -m64 -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
-    if [[ "$MARCH_ERROR" -eq "0" ]]; then
-        SH_MARCH="-m64"
-    fi
-    # IBM XL C/C++ on AIX uses -X32 and -X64
-    MARCH_ERROR=$($CC -X64 -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
-    if [[ "$MARCH_ERROR" -eq "0" ]] && [[ "$IS_AIX" -ne "0" ]]; then
-        SH_MARCH="-X64"
-    fi
-fi
-
-PIC_ERROR=$($CC -fPIC -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
+PIC_ERROR=$($CC -fPIC -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$PIC_ERROR" -eq "0" ]]; then
     SH_PIC="-fPIC"
 fi
 
 # For the benefit of the programs and libraries. Make them run faster.
-NATIVE_ERROR=$($CC -march=native -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
+NATIVE_ERROR=$($CC -march=native -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$NATIVE_ERROR" -eq "0" ]]; then
     SH_NATIVE="-march=native"
 fi
 
-RPATH_ERROR=$($CC -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
+RPATH_ERROR=$($CC -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$RPATH_ERROR" -eq "0" ]]; then
     SH_RPATH="-Wl,-rpath,$INSTX_LIBDIR"
 fi
 
 # AIX ld uses -R for runpath when -bsvr4
-RPATH_ERROR=$($CC -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
+RPATH_ERROR=$($CC -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$RPATH_ERROR" -eq "0" ]]; then
     SH_RPATH="-Wl,-R,$INSTX_LIBDIR"
 fi
 
-OPENMP_ERROR=$($CC -fopenmp -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
+OPENMP_ERROR=$($CC -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq "0" ]]; then
     SH_OPENMP="-fopenmp"
 fi
 
-SH_ERROR=$($CC -Wl,--enable-new-dtags -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
+SH_ERROR=$($CC -Wl,--enable-new-dtags -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq "0" ]]; then
     SH_DTAGS="-Wl,--enable-new-dtags"
 fi
 
 # OS X linker and install names
-SH_ERROR=$($CC -headerpad_max_install_names -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
+SH_ERROR=$($CC -headerpad_max_install_names -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq "0" ]]; then
     SH_INSTNAME="-headerpad_max_install_names"
 fi
 
 # Debug symbols
 if [[ -z "$SH_SYM" ]]; then
-    SH_ERROR=$($CC -g2 -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
+    SH_ERROR=$($CC -g2 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq "0" ]]; then
         SH_SYM="-g2"
     else
@@ -243,7 +216,7 @@ fi
 
 # Optimizations symbols
 if [[ -z "$SH_OPT" ]]; then
-    SH_ERROR=$($CC -O2 -o "$outfile" "$infile" 2>&1 | grep -i -c -E "$BAD_MSG")
+    SH_ERROR=$($CC -O2 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq "0" ]]; then
         SH_OPT="-O2"
     else
@@ -253,14 +226,14 @@ fi
 
 # OpenBSD does not have -ldl
 if [[ -z "$SH_DL" ]]; then
-    SH_ERROR=$($CC -o "$outfile" "$infile" -ldl 2>&1 | grep -i -c -E "$BAD_MSG")
+    SH_ERROR=$($CC -o "$outfile" "$infile" -ldl 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq "0" ]]; then
         SH_DL="-ldl"
     fi
 fi
 
 if [[ -z "$SH_PTHREAD" ]]; then
-    SH_ERROR=$($CC -o "$outfile" "$infile" -lpthread 2>&1 | grep -i -c -E "$BAD_MSG")
+    SH_ERROR=$($CC -o "$outfile" "$infile" -lpthread 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq "0" ]]; then
         SH_PTHREAD="-lpthread"
     fi
@@ -299,41 +272,25 @@ BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT")
 BUILD_LDFLAGS=("-L$INSTX_LIBDIR")
 BUILD_LIBS=()
 
-if [[ ! -z "$SH_MARCH" ]]; then
-    #BUILD_CFLAGS+=("$SH_MARCH")
-    #BUILD_CXXFLAGS+=("$SH_MARCH")
-    #BUILD_LDFLAGS+=("$SH_MARCH")
-    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_MARCH"
-    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_MARCH"
-    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_MARCH"
-fi
-
 if [[ ! -z "$SH_NATIVE" ]]; then
-    #BUILD_CFLAGS+=("$SH_NATIVE")
-    #BUILD_CXXFLAGS+=("$SH_NATIVE")
     BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_NATIVE"
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_NATIVE"
 fi
 
 if [[ ! -z "$SH_PIC" ]]; then
-    #BUILD_CFLAGS+=("$SH_PIC")
-    #BUILD_CXXFLAGS+=("$SH_PIC")
     BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_PIC"
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_PIC"
 fi
 
 if [[ ! -z "$SH_RPATH" ]]; then
-    #BUILD_LDFLAGS+=("$SH_RPATH")
     BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_RPATH"
 fi
 
 if [[ ! -z "$SH_DTAGS" ]]; then
-    #BUILD_LDFLAGS+=("$SH_DTAGS")
     BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_DTAGS"
 fi
 
 if [[ ! -z "$SH_DL" ]]; then
-    #BUILD_LIBS+=("$SH_DL")
     BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_DL"
 fi
 
@@ -375,8 +332,10 @@ if [[ -z "$PRINT_ONCE" ]]; then
     echo ""
     echo "Common flags and options:"
     echo ""
+    echo "   BUILD_BITS: $BUILD_BITS-bits"
     echo " INSTX_PREFIX: $INSTX_PREFIX"
     echo " INSTX_LIBDIR: $INSTX_LIBDIR"
+
     echo ""
     echo "  PKGCONFPATH: ${BUILD_PKGCONFIG[*]}"
     echo "     CPPFLAGS: ${BUILD_CPPFLAGS[*]}"

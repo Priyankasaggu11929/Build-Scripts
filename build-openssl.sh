@@ -43,22 +43,6 @@ fi
 
 ###############################################################################
 
-# This is kind of interesting in a morbid sort of way. OpenSSL requires a
-# 'make depend'. Some versions of make are too old and can't handle the
-# Makefile.new template. Some of those old systems have an old makedepend
-# that can't make the dependencies. So we update make on those systems
-# and use MAKEDEPPROG="gcc -M" on those systems ...
-
-#if ! ./build-make.sh
-#then
-#    echo "Failed to build iConv"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#else
-#	export MAKE="$INSTX_PREFIX/bin/make"
-#fi
-
-###############################################################################
-
 # May be skipped if Perl is too old
 SKIP_OPENSSL_TESTS=0
 
@@ -86,8 +70,7 @@ echo
 echo "********** OpenSSL **********"
 echo
 
-# wget on Ubuntu 16 cannot validate against Let's Encrypt certificate
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://www.openssl.org/source/$OPENSSL_TAR" -O "$OPENSSL_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.openssl.org/source/$OPENSSL_TAR" -O "$OPENSSL_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download OpenSSL"
