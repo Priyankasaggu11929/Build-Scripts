@@ -1,5 +1,5 @@
 --- rsa-sign-tr.c	2018-12-04 15:56:05.000000000 -0500
-+++ /dev/null	2018-12-29 20:46:06.994996898 -0500
++++ rsa-sign-tr.c	2018-12-29 20:46:06.000000000 -0500
 @@ -239,8 +239,9 @@
  sec_equal(const mp_limb_t *a, const mp_limb_t *b, size_t limbs)
  {
@@ -11,3 +11,24 @@
      {
        z |= (a[i] ^ b[i]);
      }
+--- testsuite/rsa-sec-decrypt-test.c    2018-12-04 15:56:06.000000000 -0500
++++ testsuite/rsa-sec-decrypt-test.c    2018-12-29 20:56:55.000000000 -0500
+@@ -68,7 +68,8 @@
+   unsigned n_size = 1024;
+   mpz_t gibberish;
+   mpz_t garbage;
+-
++  size_t size;
++
+   rsa_private_key_init(&key);
+   rsa_public_key_init(&pub);
+   mpz_init(gibberish);
+@@ -78,7 +79,7 @@
+
+   memset(verifybad, 'A', PAYLOAD_SIZE);
+
+-  for (size_t size = 1; size < 51; size++)
++  for (size = 1; size < 51; size++)
+     {
+       ASSERT (rsa_generate_keypair(&pub, &key, &random_ctx,
+                                   (nettle_random_func *) knuth_lfib_random,
