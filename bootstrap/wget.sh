@@ -68,15 +68,13 @@ if [[ -f "$PREFIX/etc/wgetrc" ]]; then
     rm "$PREFIX/etc/wgetrc"
 fi
 
-cp "$BOOTSTRAP_DIR/wget.patch" "$BOOTSTRAP_DIR/$WGET_DIR/src"
-cd "$BOOTSTRAP_DIR/$WGET_DIR/src"
+cp wget.patch "$WGET_DIR"
+cd "$WGET_DIR"
 
-if ! patch < wget.patch; then
+if ! patch -u -p0 < wget.patch; then
     echo "Wget patch failed"
     exit 1
 fi
-
-cd "$BOOTSTRAP_DIR/$WGET_DIR"
 
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
 ./configure \

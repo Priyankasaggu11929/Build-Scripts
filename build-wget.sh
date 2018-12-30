@@ -154,11 +154,13 @@ fi
 rm -rf "$WGET_DIR" &>/dev/null
 gzip -d < "$WGET_TAR" | tar xf -
 
-cp wget.patch "$WGET_DIR/src"
-cd "$WGET_DIR/src"
-patch < wget.patch
+cp wget.patch "$WGET_DIR"
+cd "$WGET_DIR"
 
-cd "../"
+if ! patch -u -p0 < wget.patch; then
+    echo "Wget patch failed"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
