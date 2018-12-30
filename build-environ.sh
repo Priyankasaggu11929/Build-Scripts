@@ -12,7 +12,7 @@
 # Fixup ancient Bash
 # https://unix.stackexchange.com/q/468579/56041
 #if [[ -z "$BASH_SOURCE" ]]; then
-#	BASH_SOURCE="$0"
+#    BASH_SOURCE="$0"
 #fi
 
 ###############################################################################
@@ -247,10 +247,10 @@ rm -f "$outfile" 2>/dev/null
 # CA cert path? Also see http://gagravarr.org/writing/openssl-certs/others.shtml
 if [[ -e "/etc/ssl/certs/ca-certificates.crt" ]]; then
     SH_CACERT_PATH="/etc/ssl/certs"
-    SH_CACERT_BUNDLE="/etc/ssl/certs/ca-certificates.crt"
+    SH_CACERT_FILE="/etc/ssl/certs/ca-certificates.crt"
 elif [[ -e "/etc/ssl/certs/ca-bundle.crt" ]]; then
     SH_CACERT_PATH="/etc/ssl/certs"
-    SH_CACERT_BUNDLE="/etc/ssl/certs/ca-bundle.crt"
+    SH_CACERT_FILE="/etc/ssl/certs/ca-bundle.crt"
 elif [[ -d "/etc/ssl/certs" ]]; then
     SH_CACERT_PATH="/etc/ssl/certs"
 elif [[ -d "/etc/openssl/certs" ]]; then
@@ -261,6 +261,8 @@ elif [[ -d "/etc/ssl/certs/" ]]; then
     SH_CACERT_PATH="/etc/ssl/certs/"
 elif [[ -d "/etc/pki/ca-trust/extracted/pem/" ]]; then
     SH_CACERT_PATH="/etc/pki/ca-trust/extracted/pem/certs"
+elif [[ -d "/etc/pki/" ]]; then
+    SH_CACERT_PATH="/etc/pki/"
 fi
 
 ###############################################################################
@@ -349,8 +351,8 @@ if [[ -z "$PRINT_ONCE" ]]; then
     if [[ ! -z "$SH_CACERT_PATH" ]]; then
         echo " SH_CACERT_PATH: $SH_CACERT_PATH"
     fi
-    if [[ ! -z "$SH_CACERT_BUNDLE" ]]; then
-        echo " SH_CACERT_BUNDLE: $SH_CACERT_BUNDLE"
+    if [[ ! -z "$SH_CACERT_FILE" ]]; then
+        echo " SH_CACERT_FILE: $SH_CACERT_FILE"
     fi
 
     export PRINT_ONCE="TRUE"

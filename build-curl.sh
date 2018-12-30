@@ -184,8 +184,8 @@ CONFIG_OPTIONS+=("--without-libssh2")
 
 if [[ -e "$SH_CACERT_PATH/new-cacert.pem" ]]; then
     CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_PATH/new-cacert.pem")
-elif [[ ! -z "$SH_CACERT_BUNDLE" ]]; then
-    CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_BUNDLE")
+elif [[ ! -z "$SH_CACERT_FILE" ]]; then
+    CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_FILE")
 elif [[ ! -z "$SH_CACERT_PATH" ]]; then
     CONFIG_OPTIONS+=("--with-ca-path=$SH_CACERT_PATH")
 else
