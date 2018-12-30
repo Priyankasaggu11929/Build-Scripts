@@ -76,7 +76,6 @@ if ! patch -u -p0 < wget.patch; then
     exit 1
 fi
 
-    LDFLAGS="-Wl,-Bstatic" \
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
 ./configure \
     --sysconfdir="$PREFIX/etc" \
