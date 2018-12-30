@@ -41,17 +41,17 @@ cd "$BOOTSTRAP_DIR/$SSL_DIR"
     --prefix="$PREFIX"
 
 if ! make depend; then
-    echo "OpenSSL update failed"
+    echo "Failed to update OpenSSL"
     exit 1
 fi
 
 if ! make -j 2; then
-    echo "OpenSSL build failed"
+    echo "Failed to build OpenSSL"
     exit 1
 fi
 
 if ! make install_sw; then
-    echo "OpenSSL install failed"
+    echo "Failed to install OpenSSL"
     exit 1
 fi
 
@@ -94,13 +94,18 @@ fi
     --without-libiconv-prefix \
     --without-libunistring-prefix
 
+if [[ "$?" -ne "0" ]]; then
+    echo "Failed to configure Wget"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 if ! make -j 2; then
-    echo "Wget build failed"
+    echo "Failed to build Wget"
     exit 1
 fi
 
 if ! make install; then
-    echo "Wget install failed"
+    echo "Failed to install Wget"
     exit 1
 fi
 
