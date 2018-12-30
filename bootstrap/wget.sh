@@ -51,7 +51,7 @@ gzip -d < "$SSL_TAR" | tar xf -
 cd "$BOOTSTRAP_DIR/$SSL_DIR"
 
 KERNEL_BITS="$INSTX_BITNESS" ./config \
-    --prefix="$PREFIX"
+    --prefix="$PREFIX" \
     no-asm no-shared no-dso no-engine -fPIC
 
 if ! make depend; then
