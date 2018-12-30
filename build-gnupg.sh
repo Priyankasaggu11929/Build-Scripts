@@ -161,10 +161,8 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-cd "tests/gpgscm"
-cp ../../../gnupg.patch .
-patch < gnupg.patch
-cd "../.."
+cp ../gnupg.patch .
+patch -u -p0 < gnupg.patch
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
