@@ -117,9 +117,8 @@ IS_CLANG=$("$CC" --version 2>&1 | grep -i -c -E 'clang|llvm')
 ###############################################################################
 
 # Try to determine 32 vs 64-bit, /usr/local/lib, /usr/local/lib32,
-# /usr/local/lib64 and /usr/local/lib/64. The Autoconf programs
-# misdetect Solaris as x86 even though its x64. OpenBSD has
-# getconf, but it does not have LONG_BIT.
+# /usr/local/lib64 and /usr/local/lib/64. We drive a test compile
+# using the supplied compiler and flags.
 if $CC $CFLAGS bootstrap/bitness.c -o /dev/null &>/dev/null; then
     IS_64BIT=1
     IS_32BIT=0
@@ -210,7 +209,10 @@ if [[ -z "$SH_SYM" ]]; then
     if [[ "$SH_ERROR" -eq "0" ]]; then
         SH_SYM="-g2"
     else
-        SH_SYM="-g"
+        SH_ERROR=$($CC -g -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+        if [[ "$SH_ERROR" -eq "0" ]]; then
+            SH_SYM="-g"
+        fi
     fi
 fi
 
@@ -220,7 +222,10 @@ if [[ -z "$SH_OPT" ]]; then
     if [[ "$SH_ERROR" -eq "0" ]]; then
         SH_OPT="-O2"
     else
-        SH_OPT="-O"
+        SH_ERROR=$($CC -O -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+        if [[ "$SH_ERROR" -eq "0" ]]; then
+            SH_OPT="-O"
+        fi
     fi
 fi
 
