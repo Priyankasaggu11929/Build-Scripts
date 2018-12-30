@@ -38,14 +38,17 @@ INSTX_JOBS=2 ./build-curl.sh
 
 ## Boot strapping
 
-A basic order may need to be followed. Generally speaking you need a modern Wget and a modern Bash. Older systems like Fedora 1 and CentOS 5 are more sensitive than newer systems. If your system is old or ancient, then bootstrap Wget like shown below. The bootstrap directory has OpenSSL 1.0.2q, Wget 1.20.1 and cURL's cacert.pem from December, 2018.
+Generally speaking you need some CA certificates, a modern Wget and a modern Bash. Older systems like Fedora 3 and CentOS 5 are more sensitive than newer systems, but it is OK to bootstrap a modern system  too. To install the CA certificates and modern Wget perform the following.
 
 ```
-cd bootstrap
-./wget.sh
+./setup-cacerts.sh
+
+./setup-wget.sh
 ```
 
-The bootstrapped programs are located in `$HOME/bootstrap`. Wget is located at `$HOME/bootstrap/bin/wget`. The bootstrap version of Wget uses static linking to avoid Linux path problems. You can export the WGET variable to build the rest of the tools with `export WGET="$HOME/bootstrap/bin/wget"`.
+The CA certificates are written to `$HOME/.cacerts`. The CAs are public/commercial, and there are about six of them. They are used to connect to sites like `gnu.org` and `github.com`. All the script invocations that call Wget use a `--ca-certificate=<exact-ca-for-site>` option.
+
+The bootstrapped Wget is located in `$HOME/bootstrap`. The bootstrapped version of Wget uses static linking to avoid Linux path problems. You can export the WGET variable to build the rest of the tools with `export WGET="$HOME/bootstrap/bin/wget"`.
 
 If you are working on an antique system, like Fedora 1, then your next step is build Bash. Fedora 1 provides Bash 2.05b and it can't handle the scripts. The pain point is `[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1`. The command to build and use Bash in the current session is:
 
