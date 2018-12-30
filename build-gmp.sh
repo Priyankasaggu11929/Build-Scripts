@@ -65,7 +65,9 @@ cd "$GMP_DIR"
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
+./configure --enable-shared \
+    --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+    ABI="$BUILD_BITS"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure GMP"
