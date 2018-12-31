@@ -115,11 +115,6 @@ echo
 "$WGET" --ca-certificate="$COMODO_ROOT" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
 
 if [[ "$?" -ne "0" ]]; then
-    echo "Attempting download Git using insecure channel."
-    "$WGET" --no-check-certificate "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
-fi
-
-if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Git"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -217,24 +212,12 @@ cd "$CURR_DIR"
 
 ###############################################################################
 
-if [[ -e "$SH_CACERT_PATH/new-cacert.pem" ]]; then
+echo ""
+echo "*****************************************************************************"
+echo "Configuring Git to use CA store at $SH_CACERT_PATH/cacert.pem"
+echo "*****************************************************************************"
 
-    echo ""
-    echo "*****************************************************************************"
-    echo "Configuring Git to use CA store at $SH_CACERT_PATH/new-cacert.pem"
-    echo "*****************************************************************************"
-
-    git config --global http.sslCAInfo "$SH_CACERT_PATH/new-cacert.pem"
-
-elif [[ -e "$HOME/cacert.pem" ]]; then
-
-    echo ""
-    echo "*****************************************************************************"
-    echo "Configuring Git to use CA store at $SH_CACERT_PATH/new-cacert.pem"
-    echo "*****************************************************************************"
-
-    git config --global http.sslCAInfo "$HOME/cacert.pem"
-fi
+git config --global http.sslCAInfo "$SH_CACERT_FILE"
 
 ###############################################################################
 

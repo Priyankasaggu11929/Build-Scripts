@@ -105,26 +105,20 @@ fi
 
 ###############################################################################
 
+if ! ./build-cacert.sh
+then
+    echo "Failed to install cacerts.pem"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 echo
 echo "********** cURL **********"
 echo
 
 echo "Attempting download cURL using HTTPS."
 "$WGET" --ca-certificate="$GLOBALSIGN_ROOT" "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
-
-# This is due to the way Wget calls OpenSSL. The OpenSSL context
-# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
-# trust in this certificate; and not a self-signed CA root."
-if [[ "$?" -ne "0" ]]; then
-    echo "Attempting download cURL using insecure channel."
-    "$WGET" --no-check-certificate "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
-fi
-
-# Download over insecure channel
-if [[ "$?" -ne "0" ]]; then
-    echo "Attempting download cURL using insecure channel."
-    curl --insecure --tlsv1 "https://curl.haxx.se/download/$CURL_TAR" --output "$CURL_TAR"
-fi
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download cURL"
@@ -181,16 +175,7 @@ CONFIG_OPTIONS+=("--without-mbedtls")
 CONFIG_OPTIONS+=("--without-cyassl")
 CONFIG_OPTIONS+=("--without-nss")
 CONFIG_OPTIONS+=("--without-libssh2")
-
-if [[ -e "$SH_CACERT_PATH/new-cacert.pem" ]]; then
-    CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_PATH/new-cacert.pem")
-elif [[ ! -z "$SH_CACERT_FILE" ]]; then
-    CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_FILE")
-elif [[ ! -z "$SH_CACERT_PATH" ]]; then
-    CONFIG_OPTIONS+=("--with-ca-path=$SH_CACERT_PATH")
-else
-    CONFIG_OPTIONS+=("--without-ca-path" "--without-ca-bundle")
-fi
+CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_FILE")
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \

@@ -23,6 +23,12 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+GLOBALSIGN_ROOT="$HOME/.cacert/globalsign-root-r1.pem"
+if [[ ! -f "$GLOBALSIGN_ROOT" ]]; then
+    echo "cURL requires several CA roots. Please run setup-cacerts.sh."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
@@ -38,7 +44,6 @@ fi
 
 ###############################################################################
 
-GLOBALSIGN_ROOT="$HOME/.cacert/globalsign-root-r1.pem"
 "$WGET" -q --ca-certificate="$GLOBALSIGN_ROOT" https://curl.haxx.se/ca/cacert.pem -O cacert.pem
 
 if [[ "$?" -ne "0" ]]; then
@@ -58,5 +63,7 @@ fi
 
 # Set package status to installed. Delete the file to rebuild the package.
 touch "$INSTX_CACHE/$PKG_NAME"
+
+rm cacert.pem
 
 [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
