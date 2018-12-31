@@ -227,7 +227,6 @@ else
     "$MAKE" "${MAKE_FLAGS[@]}"
 fi
 
-
 # Wget does not have any CA's configured at the moment. HTTPS downloads
 # will fail with the message "... use --no-check-certifcate ...". Fix it
 # through the system's wgetrc configuration file.
@@ -239,7 +238,7 @@ echo "ca_certificate = $SH_CACERT_FILE" >> "./wgetrc"
 
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$INSTX_PREFIX/etc"
-    echo "$SUDO_PASSWORD" | sudo -S install -m 644 -t "$INSTX_PREFIX/etc/wgetrc" "./wgetrc"
+    echo "$SUDO_PASSWORD" | sudo -S install -m 644 -t "$INSTX_PREFIX/etc/" "./wgetrc"
 else
     mkdir -p "$INSTX_PREFIX/etc"
     install -m 644 -t "$INSTX_PREFIX/etc/wgetrc" "./wgetrc"
@@ -259,7 +258,7 @@ echo "**************************************************************************
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$WGET_TAR" "$WGET_DIR" "./wgetrc")
+    ARTIFACTS=("$WGET_TAR" "$WGET_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
