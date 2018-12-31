@@ -122,11 +122,11 @@ IS_CLANG=$("$CC" --version 2>&1 | grep -i -c -E 'clang|llvm')
 if $CC $CFLAGS bootstrap/bitness.c -o /dev/null &>/dev/null; then
     IS_64BIT=1
     IS_32BIT=0
-    BUILD_BITS=64
+    INSTX_BITNESS=64
 else
     IS_64BIT=0
     IS_32BIT=1
-    BUILD_BITS=32
+    INSTX_BITNESS=32
 fi
 
 # Don't override a user choice of INSTX_PREFIX
@@ -152,7 +152,7 @@ if [[ -z "$INSTX_LIBDIR" ]]; then
 fi
 
 # Solaris Fixup
-if [[ "$IS_IA32" -eq 1 ]] && [[ "$BUILD_BITS" -eq 64 ]]; then
+if [[ "$IS_IA32" -eq 1 ]] && [[ "$INSTX_BITNESS" -eq 64 ]]; then
     IS_X86_64=1
 fi
 
@@ -250,25 +250,10 @@ rm -f "$outfile" 2>/dev/null
 ###############################################################################
 
 # CA cert path? Also see http://gagravarr.org/writing/openssl-certs/others.shtml
-if [[ -e "/etc/ssl/certs/ca-certificates.crt" ]]; then
-    SH_CACERT_PATH="/etc/ssl/certs"
-    SH_CACERT_FILE="/etc/ssl/certs/ca-certificates.crt"
-elif [[ -e "/etc/ssl/certs/ca-bundle.crt" ]]; then
-    SH_CACERT_PATH="/etc/ssl/certs"
-    SH_CACERT_FILE="/etc/ssl/certs/ca-bundle.crt"
-elif [[ -d "/etc/ssl/certs" ]]; then
-    SH_CACERT_PATH="/etc/ssl/certs"
-elif [[ -d "/etc/openssl/certs" ]]; then
-    SH_CACERT_PATH="/etc/openssl/certs"
-elif [[ -d "/etc/pki/tls/" ]]; then
-    SH_CACERT_PATH="/etc/pki/tls/"
-elif [[ -d "/etc/ssl/certs/" ]]; then
-    SH_CACERT_PATH="/etc/ssl/certs/"
-elif [[ -d "/etc/pki/ca-trust/extracted/pem/" ]]; then
-    SH_CACERT_PATH="/etc/pki/ca-trust/extracted/pem/certs"
-elif [[ -d "/etc/pki/" ]]; then
-    SH_CACERT_PATH="/etc/pki/"
-fi
+# For simplicity use $INSTX_PREFIX/etc/pki. Avoid about 10 different places.
+
+SH_CACERT_PATH="$INSTX_PREFIX/etc/pki"
+SH_CACERT_FILE="$INSTX_PREFIX/etc/pki/cacert.pem"
 
 ###############################################################################
 
@@ -339,9 +324,9 @@ if [[ -z "$PRINT_ONCE" ]]; then
     echo ""
     echo "Common flags and options:"
     echo ""
-    echo "   BUILD_BITS: $BUILD_BITS-bits"
-    echo " INSTX_PREFIX: $INSTX_PREFIX"
-    echo " INSTX_LIBDIR: $INSTX_LIBDIR"
+    echo " INSTX_BITNESS: $INSTX_BITNESS-bits"
+    echo "  INSTX_PREFIX: $INSTX_PREFIX"
+    echo "  INSTX_LIBDIR: $INSTX_LIBDIR"
 
     echo ""
     echo "  PKGCONFPATH: ${BUILD_PKGCONFIG[*]}"

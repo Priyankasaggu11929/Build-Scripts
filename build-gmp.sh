@@ -67,7 +67,7 @@ cd "$GMP_DIR"
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --enable-shared \
     --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    ABI="$BUILD_BITS"
+    ABI="$INSTX_BITNESS"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure GMP"

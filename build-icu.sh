@@ -70,7 +70,7 @@ cd "$ICU_DIR/source"
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --enable-shared --enable-static \
     --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --with-library-bits="$BUILD_BITS" \
+    --with-library-bits="$INSTX_BITNESS" \
     --with-data-packaging=auto
 
 if [[ "$?" -ne "0" ]]; then

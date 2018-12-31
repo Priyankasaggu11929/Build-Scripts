@@ -108,7 +108,7 @@ fi
 
 # Configure the library
 CONFIG_FLAGS+=("--prefix=$INSTX_PREFIX" "--libdir=$INSTX_LIBDIR")
-KERNEL_BITS="$BUILD_BITS" ./config ${CONFIG_FLAGS[*]}
+KERNEL_BITS="$INSTX_BITNESS" ./config ${CONFIG_FLAGS[*]}
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure OpenSSL"
