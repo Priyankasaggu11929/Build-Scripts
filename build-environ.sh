@@ -244,8 +244,8 @@ if [[ -z "$SH_PTHREAD" ]]; then
     fi
 fi
 
-rm -f "$infile" 2>/dev/null
-rm -f "$outfile" 2>/dev/null
+rm -f "$infile*" 2>/dev/null
+rm -f "$outfile*" 2>/dev/null
 
 ###############################################################################
 
