@@ -40,6 +40,7 @@ fi
 # subshell goes out of scope.
 if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./build-password.sh
+    echo ""
 fi
 
 ###############################################################################
