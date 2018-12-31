@@ -27,19 +27,31 @@ trap finish EXIT
 # Sets the number of make jobs if not set in environment
 : "${INSTX_JOBS:=2}"
 
-############################## CA Certs ##############################
-
-# Copy our copy of cacerts to bootstrap
-mkdir -p "$PREFIX/cacert/"
-cp cacert.pem "$PREFIX/cacert/"
-
-############################## Bitness ##############################
+############################## Misc ##############################
 
 : "${CC:=cc}"
 INSTX_BITNESS=64
 if ! $CC $CFLAGS bitness.c -o /dev/null &>/dev/null; then
     INSTX_BITNESS=32
 fi
+
+IS_DARWIN=$(echo -n $(uname -s 2>&1) | grep -i -c 'darwin')
+if [[ "$IS_DARWIN" -ne "0" ]]; then
+    DARWIN_CFLAGS="-force_cpusubtype_ALL"
+fi
+
+IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
+if [[ "$IS_OLD_DARWIN" -ne "0" ]]; then
+    MAKEDEPPROG="gcc -M"
+else
+    MAKEDEPPROG="$CC"
+fi
+
+############################## CA Certs ##############################
+
+# Copy our copy of cacerts to bootstrap
+mkdir -p "$PREFIX/cacert/"
+cp cacert.pem "$PREFIX/cacert/"
 
 ############################## OpenSSL ##############################
 
@@ -50,11 +62,12 @@ rm -rf "$SSL_DIR" &>/dev/null
 gzip -d < "$SSL_TAR" | tar xf -
 cd "$BOOTSTRAP_DIR/$SSL_DIR"
 
-KERNEL_BITS="$INSTX_BITNESS" ./config \
+    KERNEL_BITS="$INSTX_BITNESS" \
+./config \
     --prefix="$PREFIX" \
     no-asm no-shared no-dso no-engine -fPIC
 
-if ! make depend; then
+if ! make MAKEDEPPROG="$MAKEDEPPROG" depend; then
     echo "Failed to update OpenSSL"
     exit 1
 fi
@@ -90,7 +103,9 @@ if ! patch -u -p0 < wget.patch; then
     exit 1
 fi
 
+    CFLAGS="$CFLAGS $DARWIN_CFLAGS" \
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
+    OPENSSL_LIBS="$PREFIX/lib/libssl.a $PREFIX/lib/libcrypto.a" \
 ./configure \
     --sysconfdir="$PREFIX/etc" \
     --prefix="$PREFIX" \
