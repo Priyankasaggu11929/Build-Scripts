@@ -152,6 +152,6 @@ GnuPG builds and installs OK, but it breaks Git and code signing.
 
 GnuTLS may (or may not) build and install correctly. It is a big recipe and Guile causes a fair amount of trouble on many systems.
 
-GMP is broken on older systems, and Nettle 3.4.1 is broken on newer systems. Programs that depend on them, like GnuTLS, will probbably be out of reach until the libraries are fixed.
+GMP 6.1.2 is broken on most systems, and Nettle 3.4.1 is broken due to a dependency on GMP. Programs that depend on them, like GnuTLS, will probably be out of reach until the libraries are fixed.
 
 If you find a bug then submit a patch or raise a bug report.
