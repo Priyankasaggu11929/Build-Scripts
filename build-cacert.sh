@@ -53,10 +53,12 @@ fi
 
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_CACERT_PATH"
-    echo "$SUDO_PASSWORD" | sudo -S install -m 644 -t "$SH_CACERT_PATH" cacert.pem
+    echo "$SUDO_PASSWORD" | sudo -S cp cacert.pem "$SH_CACERT_FILE"
+    echo "$SUDO_PASSWORD" | sudo -S chmod 644 "$SH_CACERT_FILE"
 else
     mkdir -p "$SH_CACERT_PATH"
-    install -m 644 -t "$SH_CACERT_PATH" cacert.pem
+    cp cacert.pem "$SH_CACERT_FILE"
+    chmod 644 "$SH_CACERT_FILE"
 fi
 
 ###############################################################################

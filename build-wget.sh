@@ -238,10 +238,10 @@ echo "ca_certificate = $SH_CACERT_FILE" >> "./wgetrc"
 
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$INSTX_PREFIX/etc"
-    echo "$SUDO_PASSWORD" | sudo -S install -m 644 -t "$INSTX_PREFIX/etc/" "./wgetrc"
+    echo "$SUDO_PASSWORD" | sudo -S cp "./wgetrc" "$INSTX_PREFIX/etc/"
 else
     mkdir -p "$INSTX_PREFIX/etc"
-    install -m 644 -t "$INSTX_PREFIX/etc/wgetrc" "./wgetrc"
+    cp "./wgetrc" "$INSTX_PREFIX/etc/"
 fi
 
 cd "$CURR_DIR"
