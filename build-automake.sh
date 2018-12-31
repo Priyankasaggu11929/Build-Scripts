@@ -29,7 +29,7 @@ fi
 
 DIGICERT_ROOT="$DIGICERT_ROOT"
 if [[ ! -f "$HOME/.cacert/lets-encrypt-root-x3.pem" ]]; then
-    echo "Libtool requires several CA roots. Please run setup-cacerts.sh."
+    echo "Libtool requires several CA roots. Please run build-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

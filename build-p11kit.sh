@@ -27,9 +27,9 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-CA_ZOO="$HOME/.cacert/cacert.pem"
+CA_ZOO="$SH_CACERT_FILE"
 if [[ ! -f "$CA_ZOO" ]]; then
-    echo "P11-Kit requires several CA roots. Please run setup-cacerts.sh."
+    echo "P11-Kit requires several CA roots. Please run build-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

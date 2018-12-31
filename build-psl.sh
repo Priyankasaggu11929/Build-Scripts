@@ -27,15 +27,15 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-CA_ZOO="$HOME/.cacert/cacert.pem"
+CA_ZOO="$SH_CACERT_FILE"
 if [[ ! -f "$CA_ZOO" ]]; then
-    echo "PSL requires several CA roots. Please run setup-cacerts.sh."
+    echo "PSL requires several CA roots. Please run build-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 DIGICERT_ROOT="$HOME/.cacert/digicert-root-ca.pem"
 if [[ ! -f "$DIGICERT_ROOT" ]]; then
-    echo "Libtool requires several CA roots. Please run setup-cacerts.sh."
+    echo "Libtool requires several CA roots. Please run build-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

@@ -25,7 +25,7 @@ fi
 
 GLOBALSIGN_ROOT="$HOME/.cacert/globalsign-root-r1.pem"
 if [[ ! -f "$GLOBALSIGN_ROOT" ]]; then
-    echo "cURL requires several CA roots. Please run setup-cacerts.sh."
+    echo "cURL requires several CA roots. Please run build-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

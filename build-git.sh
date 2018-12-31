@@ -29,7 +29,7 @@ fi
 
 COMODO_ROOT="$HOME/.cacert/comodo-rsa-root.pem"
 if [[ ! -f "$COMODO_ROOT" ]]; then
-    echo "Git requires several CA roots. Please run setup-cacerts.sh."
+    echo "Git requires several CA roots. Please run build-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
