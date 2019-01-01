@@ -1,5 +1,5 @@
 --- src/openvpn/tun.c	2019-01-01 02:55:15.000000000 -0500
-+++ src/openvpn/tun.c	2019-01-01 02:55:15.000000000 -0500
++++ src/openvpn/tun.c	2019-01-01 02:55:16.000000000 -0500
 @@ -2054,6 +2054,10 @@
  
  #ifdef ENABLE_FEATURE_TUN_PERSIST

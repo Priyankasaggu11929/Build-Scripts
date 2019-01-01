@@ -73,11 +73,7 @@ fi
 
 rm -rf "$TUNTAP_DIR" &>/dev/null
 gzip -d < "$TUNTAP_TAR" | tar xf -
-
-cp openvpn.patch "$TUNTAP_DIR"
 cd "$TUNTAP_DIR"
-
-patch -u -p0 < openvpn.patch
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -128,7 +124,10 @@ fi
 
 rm -rf "$OPENVPN_DIR" &>/dev/null
 gzip -d < "$OPENVPN_TAR" | tar xf -
+
+cp openvpn.patch "$TUNTAP_DIR"
 cd "$OPENVPN_DIR"
+patch -u -p0 < openvpn.patch
 
 # http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
 # AIX needs the execute bit reset on the file.
