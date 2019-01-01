@@ -309,8 +309,8 @@ fi
 # in rebuilding a package under another account.
 if [[ -z "$INSTX_CACHE" ]]; then
     INSTX_CACHE="$HOME/.build-scripts"
+    mkdir -p "$INSTX_CACHE"
 fi
-mkdir -p "$INSTX_CACHE"
 
 ###############################################################################
 
