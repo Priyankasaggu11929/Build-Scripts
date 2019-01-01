@@ -125,7 +125,7 @@ fi
 rm -rf "$OPENVPN_DIR" &>/dev/null
 gzip -d < "$OPENVPN_TAR" | tar xf -
 
-cp openvpn.patch "$TUNTAP_DIR"
+cp openvpn.patch "$OPENVPN_DIR"
 cd "$OPENVPN_DIR"
 patch -u -p0 < openvpn.patch
 
