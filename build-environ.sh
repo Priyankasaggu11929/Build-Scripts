@@ -39,6 +39,24 @@ fi
 
 ###############################################################################
 
+CURR_DIR=$(pwd)
+
+# `gcc ... -o /dev/null` does not work on Solaris due to LD bug.
+# `mktemp` is not available on AIX or Git Windows shell...
+infile="in.$RANDOM$RANDOM.c"
+outfile="out.$RANDOM$RANDOM"
+echo 'int main(int argc, char* argv[]) {return 0;}' > "$infile"
+echo "" >> "$infile"
+
+function finish {
+  cd "$CURR_DIR"
+  rm -f "$infile"* 2>/dev/null
+  rm -f "$outfile"* 2>/dev/null
+}
+trap finish EXIT
+
+###############################################################################
+
 # Autotools on Solaris has an implied requirement for GNU gear. Things fall apart without it.
 # Also see https://blogs.oracle.com/partnertech/entry/preparing_for_the_upcoming_removal.
 if [[ -d "/usr/gnu/bin" ]]; then
@@ -158,13 +176,6 @@ fi
 
 ###############################################################################
 
-# `gcc ... -o /dev/null` does not work on Solaris due to LD bug.
-# `mktemp` is not available on AIX or Git Windows shell...
-infile="in.$RANDOM$RANDOM.c"
-outfile="out.$RANDOM$RANDOM"
-echo 'int main(int argc, char* argv[]) {return 0;}' > "$infile"
-echo "" >> "$infile"
-
 PIC_ERROR=$($CC -fPIC -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$PIC_ERROR" -eq "0" ]]; then
     SH_PIC="-fPIC"
@@ -243,9 +254,6 @@ if [[ -z "$SH_PTHREAD" ]]; then
         SH_PTHREAD="-lpthread"
     fi
 fi
-
-rm -f "$infile*" 2>/dev/null
-rm -f "$outfile*" 2>/dev/null
 
 ###############################################################################
 
