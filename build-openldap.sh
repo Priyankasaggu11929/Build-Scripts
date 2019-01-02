@@ -30,7 +30,7 @@ fi
 
 CA_ZOO="$SH_CACERT_FILE"
 if [[ ! -f "$CA_ZOO" ]]; then
-    echo "Boehm GC requires several CA roots. Please run build-cacerts.sh."
+    echo "OpenLDAP requires several CA roots. Please run build-cacerts.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
