@@ -45,7 +45,7 @@ fi
 
 if ! ./build-openssl.sh
 then
-    echo "Failed to build IDN"
+    echo "Failed to build OpenSSL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
