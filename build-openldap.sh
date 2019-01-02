@@ -51,7 +51,15 @@ fi
 
 if ! ./build-openssl.sh
 then
-    echo "Failed to build IDN"
+    echo "Failed to build OpenSSL"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-bdb.sh
+then
+    echo "Failed to build Berkely DB"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
