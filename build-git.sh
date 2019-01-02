@@ -177,7 +177,8 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="-lssl -lcrypto -lz ${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --with-libdir="$INSTX_LIBDIR" \
+./configure --prefix="$INSTX_PREFIX" \
+    --with-lib=$(basename "$INSTX_LIBDIR") \
     --enable-pthreads --with-openssl="$INSTX_PREFIX" \
     --with-curl="$INSTX_PREFIX" --with-libpcre="$INSTX_PREFIX" \
     --with-zlib="$INSTX_PREFIX" --with-iconv="$INSTX_PREFIX" \
