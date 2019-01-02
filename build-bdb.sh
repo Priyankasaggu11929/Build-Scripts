@@ -4,8 +4,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds OpenLDAP from sources.
 
-LDAP_TAR=db-18.1.25.tar.gz
-LDAP_DIR=db-18.1.25
+LDAP_TAR=db-6.2.32.tar.gz
+LDAP_DIR=db-6.2.32
 PKG_NAME=bdb
 
 ###############################################################################
@@ -62,7 +62,7 @@ gzip -d < "$LDAP_TAR" | tar xf -
 cd "$LDAP_DIR/dist"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
-../fix-config.sh
+../../fix-config.sh
 
 cd "$CURR_DIR"
 cd "$LDAP_DIR/build_unix"
