@@ -88,17 +88,13 @@ rm -rf "$LDAP_DIR" &>/dev/null
 gzip -d < "$LDAP_TAR" | tar xf -
 cd "$LDAP_DIR"
 
-# Avoid reconfiguring.
-if [[ ! -e "configure" ]]; then
-    autoreconf --force --install
-    if [[ "$?" -ne "0" ]]; then
-        echo "Failed to reconfigure OpenLDAP"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-fi
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
+
+sed 's|0x060014|0x060300|g' configure > configure.new
+mv configure.new configure
+chmod +x configure
+
 
 CONFIG_OPTIONS=()
 CONFIG_OPTIONS+=("--prefix=$INSTX_PREFIX")
