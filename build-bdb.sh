@@ -116,8 +116,7 @@ cd "$CURR_DIR"
 # Set to false to retain artifacts
 if true; then
 
-    # Don't remove BDB tarball
-    ARTIFACTS=("$LDAP_DIR")
+    ARTIFACTS=("$LDAP_TAR" "$LDAP_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
