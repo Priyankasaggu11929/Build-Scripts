@@ -3,8 +3,9 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Crypto++ library from sources.
 
-CRYPTOPP_TAR=CRYPTOPP_6_1_0.tar.gz
-CRYPTOPP_DIR=CRYPTOPP_6_1_0
+CRYPTOPP_TAR=CRYPTOPP_8_0_0.tar.gz
+CRYPTOPP_DIR=CRYPTOPP_8_0_0
+PKG_NAME=cryptopp
 
 ###############################################################################
 
@@ -82,18 +83,7 @@ fi
 #     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 # fi
 
-MAKE_FLAGS=("distclean")
-"$MAKE" "${MAKE_FLAGS[@]}"
-
-# Add the data directory for install
-MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
-if ! CXXFLAGS="-DNDEBUG -g2 -O3 -DCRYPTOPP_DATA_DIR='\"$INSTX_PREFIX/share/cryptopp/\"'" "$MAKE" "${MAKE_FLAGS[@]}"
-then
-    echo "Failed to rebuild Crypto++"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-MAKE_FLAGS=("install" "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
+MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
@@ -101,6 +91,13 @@ else
 fi
 
 cd "$CURR_DIR"
+
+# Test from install directory
+if ! "$INSTX_PREFIX/bin/cryptest.exe" v
+then
+    echo "Failed to test Crypto++"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 # Set package status to installed. Delete the file to rebuild the package.
 touch "$INSTX_CACHE/$PKG_NAME"
