@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Wget and its dependencies from sources.
 
-WGET_TAR=wget-1.20.tar.gz
-WGET_DIR=wget-1.20
+WGET_TAR=wget-1.20.1.tar.gz
+WGET_DIR=wget-1.20.1
 
 ###############################################################################
 
