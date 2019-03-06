@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds GnuTLS and its dependencies from sources.
 
-GNUTLS_TAR=gnutls-3.6.5.tar.xz
-GNUTLS_DIR=gnutls-3.6.5
+GNUTLS_TAR=gnutls-3.6.6.tar.xz
+GNUTLS_DIR=gnutls-3.6.6
 PKG_NAME=gnutls
 
 ###############################################################################
