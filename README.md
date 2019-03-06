@@ -87,6 +87,14 @@ The scripts do not check signatures on tarballs with GnuPG. Its non-trivial to b
 
 It is unfortunate GNU does not run their own PKI and have their own CA. More risk could be eliminated if we only needed to trust the GNU organization and their root certificate.
 
+## Boehm GC
+
+If you are building a program that requires Boehm GC then you need to install it from the distribution. Boehm GC is trickier than other packages because the correct version of the package for a particular distro must be downloaded. C++11 and libatomics further complicates the selection process. And an additional complication is alternate stacks and signals.
+
+On Red Hat based systems you should install `gc-devel`. On Debian based systems you should install `libgc-dev`. If a package is not available then you should manually build the garbage collector.
+
+If you attempt a manual build then `build-boehm-gc.sh` may work for you. But the script is pinned at Boehm-GC 7.2k due to C++11 dependencies. And the manual build may not integrate well if a program uses alternate stacks and signals.
+
 ## Documentation
 
 The scripts avoid building documentation. If you need documentation then use the package's online documentation.
@@ -98,14 +106,6 @@ Second, the documentation wastes processing time. Low-end devices like ARM dev-b
 Fourth, and most importantly, the documentation complicates package building. Many packages assume a maintainer is building for a desktop system with repos packed full of everything needed. And reconfiguring with `--no-docs` or `--no-gtk-doc` often requires a `bootstrap` or `autoreconf` which requires additional steps and additional dependencies.
 
 Some documentation is built and installed. You can run `clean-docs` to remove most of it. Use `sudo` if you installed into a privileged location.
-
-## Boehm GC
-
-If you are building a program that requires Boehm GC then you need to install it from the distribution. Boehm GC is trickier than other packages because the correct version of the package for a particular distro must be downloaded. C++11 and libatomics further complicates the selection process.
-
-On Red Hat based systems you should install `gc-devel`. On Debian based systems you should install `libgc-dev`. If a package is not available then you should manually install the garbage collector.
-
-If you attempt a manual install then `build-boehm-gc.sh` may work for you. But the script is pinned at Boehm-GC 7.2k due to C++11 dependencies.
 
 ## Autotools
 
