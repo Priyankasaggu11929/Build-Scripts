@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Expat from sources.
 
-EXPAT_TAR=expat-2.2.5.tar.bz2
-EXPAT_DIR=expat-2.2.5
+EXPAT_TAR=expat-2.2.6.tar.bz2
+EXPAT_DIR=expat-2.2.6
 PKG_NAME=expat
 
 ###############################################################################
@@ -50,9 +50,8 @@ fi
 echo
 echo "********** libexpat **********"
 echo
-
-# https://github.com/libexpat/libexpat/releases/download/R_2_2_5/expat-2.2.5.tar.bz2
-"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/libexpat/libexpat/releases/download/R_2_2_5/$EXPAT_TAR" -O "$EXPAT_TAR"
+# https://github.com/libexpat/libexpat/releases/download/R_2_2_6/expat-2.2.6.tar.bz2
+"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/libexpat/libexpat/releases/download/R_2_2_6/$EXPAT_TAR" -O "$EXPAT_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download libexpat"
