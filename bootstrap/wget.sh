@@ -12,7 +12,7 @@ SSL_TAR=openssl-1.0.2r.tar.gz
 BOOTSTRAP_DIR=$(pwd)
 WGET_DIR=wget-1.20.1
 SSL_DIR=openssl-1.0.2r
-
+s
 # Install location
 PREFIX="$HOME/bootstrap"
 

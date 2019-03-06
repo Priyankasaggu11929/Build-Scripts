@@ -85,17 +85,17 @@ fi
 
 ###############################################################################
 
-if ! ./build-unistr.sh
+if ! ./build-iconv.sh
 then
-    echo "Failed to build Unistring"
+    echo "Failed to build iConv"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 ###############################################################################
 
-if ! ./build-iconv.sh
+if ! ./build-unistr.sh
 then
-    echo "Failed to build iConv"
+    echo "Failed to build Unistring"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
