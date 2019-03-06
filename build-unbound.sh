@@ -127,13 +127,13 @@ touch root.key
 "$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
 
 # Use https://www.icann.org/dns-resolvers-checking-current-trust-anchors
-COUNT=$(grep -i -c -E 'id = 20326|id = 19036' root.key)
-if [[ "$COUNT" -ne "2" ]]; then
+COUNT=$(grep -i -c -E 'id = 20326' root.key)
+if [[ "$COUNT" -ne "1" ]]; then
     echo "Failed to verify root.key"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 COUNT=$(grep -i -c 'state=2 \[  VALID  \]' root.key)
-if [[ "$COUNT" -ne "2" ]]; then
+if [[ "$COUNT" -ne "1" ]]; then
     echo "Failed to verify root.key"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
