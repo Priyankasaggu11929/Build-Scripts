@@ -6,12 +6,12 @@
 
 # Binaries
 WGET_TAR=wget-1.20.1.tar.gz
-SSL_TAR=openssl-1.0.2q.tar.gz
+SSL_TAR=openssl-1.0.2r.tar.gz
 
 # Directories
 BOOTSTRAP_DIR=$(pwd)
 WGET_DIR=wget-1.20.1
-SSL_DIR=openssl-1.0.2q
+SSL_DIR=openssl-1.0.2r
 
 # Install location
 PREFIX="$HOME/bootstrap"
