@@ -101,9 +101,11 @@ Some documentation is built and installed. You can run `clean-docs` to remove mo
 
 ## Boehm GC
 
-If you are building a program that requires Boehm GC then you need to install it from the distribution. Boehm GC is trickier than other packages because the correct version of the package for a particular distro must be downloaded.
+If you are building a program that requires Boehm GC then you need to install it from the distribution. Boehm GC is trickier than other packages because the correct version of the package for a particular distro must be downloaded. C++11 and libatomics further complicates the selection process.
 
 On Red Hat based systems you should install `gc-devel`. On Debian based systems you should install `libgc-dev`. If a package is not available then you should manually install the garbage collector.
+
+If you attempt a manual install then `build-boehm-gc.sh` may work for you. But the script is pinned at Boehm-GC 7.2k due to C++11 dependencies.
 
 ## Autotools
 
