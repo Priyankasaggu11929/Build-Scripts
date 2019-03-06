@@ -32,3 +32,23 @@
      {
        ASSERT (rsa_generate_keypair(&pub, &key, &random_ctx,
                                    (nettle_random_func *) knuth_lfib_random,
+--- testsuite/rsa-compute-root-test.c   2018-12-04 15:56:06.000000000 -0500
++++ testsuite/rsa-compute-root-test.c   2018-12-29 20:56:55.000000000 -0500
+@@ -86,6 +86,7 @@ generate_keypair (gmp_randstate_t rands,
+   mpz_t q1;
+   mpz_t phi;
+   mpz_t tmp;
++  int res;
+
+   mpz_init (p1);
+   mpz_init (q1);
+@@ -124,7 +125,8 @@ generate_keypair (gmp_randstate_t rands,
+    }
+
+   mpz_mul(phi, p1, q1);
+-  assert (mpz_invert(key->d, pub->e, phi));
++  res = mpz_invert(key->d, pub->e, phi);
++  assert (res);
+
+   mpz_fdiv_r (key->a, key->d, p1);
+   mpz_fdiv_r (key->b, key->d, q1);
