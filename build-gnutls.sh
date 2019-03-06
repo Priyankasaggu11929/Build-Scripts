@@ -184,6 +184,16 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+# Test suite does not compile with NDEBUG defined. Configure
+# does not provide option for separate CFLAGS or CXXFLAGS.
+# Makefile does not honor CFLAGS or CXXFLAGS on command line.
+for file in $(find "$PWD/tests" -iname 'Makefile')
+do
+	echo "Patching $file"
+    sed -e 's| -DNDEBUG||g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+done
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "all" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
