@@ -74,7 +74,9 @@ cd "$UNBOUND_DIR"
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
+./configure --enable-shared \
+    --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+    --enable-static-exe
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Unbound"
@@ -113,7 +115,7 @@ touch root.key
 
 # Can't check error codes because they are ambiguous.
 # https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=4134
-LD_LIBRARY_PATH=.libs/ "$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
+"$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
 
 # Use https://www.icann.org/dns-resolvers-checking-current-trust-anchors
 COUNT=$(grep -i -c -E 'id = 20326' root.key)
@@ -126,6 +128,8 @@ if [[ "$COUNT" -ne "1" ]]; then
     echo "Failed to verify root.key"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "Verified root.key"
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
