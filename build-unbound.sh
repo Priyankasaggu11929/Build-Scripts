@@ -65,17 +65,6 @@ rm -rf "$UNBOUND_DIR" &>/dev/null
 gzip -d < "$UNBOUND_TAR" | tar xf -
 cd "$UNBOUND_DIR"
 
-cp configure configure.bu
-
-# https://nlnetlabs.nl/bugs-script/show_bug.cgi?id=4131
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" www.nlnetlabs.nl/svn/unbound/trunk/configure -O configure
-touch -t 197001010000 configure
-
-if [[ "$?" -ne "0" ]]; then
-    echo "Failed to update configure file"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
