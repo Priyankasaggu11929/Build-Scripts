@@ -103,6 +103,8 @@ Some documentation is built and installed. You can run `clean-docs` to remove mo
 
 If you are building a program that requires Boehm GC then you need to install it from the distribution. Boehm GC is trickier than other packages because the correct version of the package for a particular distro must be downloaded.
 
+On Red Hat based systems you should install `gc-devel`. On Debian based systems you should install `libgc-dev`. If a package is not available then you should manually install the garbage collector.
+
 ## Autotools
 
 Autotools is its own special kind of hell. Autotools is a place where progammers get sent when they have behaved badly.
