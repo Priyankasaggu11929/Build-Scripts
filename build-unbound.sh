@@ -124,7 +124,7 @@ touch root.key
 
 # Can't check error codes because they are ambiguous.
 # https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=4134
-"$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
+LD_LIBRARY_PATH=.libs/ "$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
 
 # Use https://www.icann.org/dns-resolvers-checking-current-trust-anchors
 COUNT=$(grep -i -c -E 'id = 20326' root.key)
