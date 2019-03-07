@@ -233,12 +233,20 @@ cd "$CURR_DIR"
 
 ###############################################################################
 
-echo ""
-echo "*****************************************************************************"
-echo "Configuring Git to use CA store at $SH_CACERT_PATH/cacert.pem"
-echo "*****************************************************************************"
+if [[ -z $(git config --get http.sslCAInfo) ]];
+then
+	echo ""
+	echo "*****************************************************************************"
+	echo "Configuring Git to use CA store at $SH_CACERT_PATH/cacert.pem"
+	echo "*****************************************************************************"
 
-git config --global http.sslCAInfo "$SH_CACERT_FILE"
+	git config --global http.sslCAInfo "$SH_CACERT_FILE"
+else
+	echo ""
+	echo "*****************************************************************************"
+	echo "Git already configured to use CA store at $(git config --get http.sslCAInfo)"
+	echo "*****************************************************************************"
+fi
 
 ###############################################################################
 
