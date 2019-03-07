@@ -202,12 +202,21 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("check" "V=1")
+MAKE_FLAGS=("test" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Failed to test cURL"
+    echo "Failed to test Git"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+# SHA-1 has undefined behavior
+#echo "Searching for errors hidden in log files"
+#COUNT=$(grep -oIR 'runtime error' | wc -l)
+#if [[ "${COUNT}" -ne 0 ]];
+#then
+#    echo "Failed to test Git"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
 
 # See INSTALL for the formats and the requirements
 MAKE_FLAGS=("install")
