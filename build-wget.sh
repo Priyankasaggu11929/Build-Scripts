@@ -201,23 +201,26 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "all" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Wget"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Broke at the moment. 'make check' results in the following
-#   gcc: error: unrecognized command line option '-R'
-SKIP_WGET_TESTS=1
-if [[ ! "$SKIP_WGET_TESTS" -eq "1" ]]; then
-    MAKE_FLAGS=("check")
-    if ! "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test Wget"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+	echo "Failed to test Wget"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test Wget"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("install")
