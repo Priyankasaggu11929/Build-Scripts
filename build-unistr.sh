@@ -57,6 +57,15 @@ rm -rf "$UNISTR_DIR" &>/dev/null
 gzip -d < "$UNISTR_TAR" | tar xf -
 cd "$UNISTR_DIR"
 
+cp ../patch/unistring.patch .
+patch -u -p0 < unistring.patch
+echo ""
+
+if [[ "$?" -ne "0" ]]; then
+    echo "Failed to patch Unistring"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -100,13 +109,13 @@ then
 fi
 
 # Unistring has latent undefined behavior
-#echo "Searching for errors hidden in log files"
-#COUNT=$(grep -oIR 'runtime error' | wc -l)
-#if [[ "${COUNT}" -ne 0 ]];
-#then
-#    echo "Failed to test Unistring"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test Unistring"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
