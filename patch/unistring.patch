@@ -9,16 +9,17 @@
 +      memset (p, UC_BREAK_PROHIBITED, n);
 
 -  while (s < s_end)
-+  while (p && s < s_end)
++  while (s < s_end)
      {
        ucs4_t uc;
        int count = u8_mbtouc_unsafe (&uc, s, s_end - s);
 --- lib/unistr/u8-cmp.c  2019-03-07 16:04:35.964722185 -0500
 +++ lib/unistr/u8-cmp.c  2019-03-07 16:07:17.081535803 -0500
-@@ -35,5 +35,7 @@
+@@ -35,5 +35,8 @@
  u8_cmp (const uint8_t *s1, const uint8_t *s2, size_t n)
  {
    /* Use the fact that the UTF-8 encoding preserves lexicographic order.  */
++  if (s1 == NULL && s2 == NULL) return 0;
 +  if (s1 == NULL) return -1;
 +  if (s2 == NULL) return 1;
    return memcmp ((const char *) s1, (const char *) s2, n);
@@ -44,11 +45,11 @@
 +        {
 +           memcpy ((char *) result, src, srclen);
 +           *lengthp = srclen;
-+       }
++        }
 +      else
 +        {
 +           *result = 0;
-+           *lengthp = 0;
++           *lengthp = 1;
 +        }
        return result;
      }
@@ -75,7 +76,7 @@
 +      memset (p, UC_BREAK_PROHIBITED, n);
 
 -  while (s < s_end)
-+  while (p && s < s_end)
++  while (s < s_end)
      {
        ucs4_t uc;
        int count = u16_mbtouc_unsafe (&uc, s, s_end - s);
