@@ -46,7 +46,7 @@ echo
 echo "********** c-ares **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://c-ares.haxx.se/download//$CARES_TAR" -O "$CARES_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://c-ares.haxx.se/download/$CARES_TAR" -O "$CARES_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download c-ares"
@@ -73,7 +73,7 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build c-ares"
@@ -81,7 +81,15 @@ then
 fi
 
 MAKE_FLAGS=("check" "V=1")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+if ! LD_LIBRARY_PATH=./libs "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test c-ares"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test c-ares"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
