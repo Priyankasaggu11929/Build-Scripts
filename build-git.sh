@@ -194,11 +194,18 @@ if [[ "$?" -ne "0" ]]; then
 fi
 
 # See INSTALL for the formats and the requirements
-MAKE_FLAGS=("-j" "$INSTX_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Git"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test cURL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
