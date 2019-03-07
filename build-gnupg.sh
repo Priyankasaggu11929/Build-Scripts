@@ -1,10 +1,11 @@
+
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
 # This script builds GnuPG and its dependencies from sources.
 
-GNUPG_TAR=gnupg-2.2.12.tar.bz2
-GNUPG_DIR=gnupg-2.2.12
+GNUPG_TAR=gnupg-2.2.13.tar.bz2
+GNUPG_DIR=gnupg-2.2.13
 PKG_NAME=gnupg
 
 ###############################################################################
@@ -58,6 +59,14 @@ fi
 
 ###############################################################################
 
+if ! ./build-tasn1.sh
+then
+    echo "Failed to build libtasn1"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 # Need gnulib for intl.h
 #if ! ./build-libintl.sh
 #then
@@ -69,15 +78,7 @@ fi
 
 if ! ./build-gpgerror.sh
 then
-    echo "Failed to build Libgcrypt"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if ! ./build-libgcrypt.sh
-then
-    echo "Failed to build Libgcrypt"
+    echo "Failed to build Libgpg-error"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -94,6 +95,14 @@ fi
 if ! ./build-libassuan.sh
 then
     echo "Failed to build Libassuan"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-libgcrypt.sh
+then
+    echo "Failed to build Libgcrypt"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -166,7 +175,7 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-cp ../gnupg.patch .
+cp ../patch/gnupg.patch .
 patch -u -p0 < gnupg.patch
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
@@ -176,8 +185,27 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("check" "V=1")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+if [[ "$IS_DARWIN" -ne 0 ]];
+then
+	MAKE_FLAGS=("check" "V=1")
+	if ! DYLD_LIBRARY_PATH="./libs" "$MAKE" "${MAKE_FLAGS[@]}"
+	then
+		echo "Failed to test GnuPG"
+		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	fi
+elif [[ "$IS_LINUX" -ne 0 ]];
+then
+	MAKE_FLAGS=("check" "V=1")
+	if ! LD_LIBRARY_PATH="./libs" "$MAKE" "${MAKE_FLAGS[@]}"
+	then
+		echo "Failed to test GnuPG"
+		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	fi
+fi
+
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test GnuPG"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
