@@ -79,20 +79,27 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build libexpat"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# https://github.com/libexpat/libexpat/issues/160
-# MAKE_FLAGS=("check" "V=1")
-# if ! "$MAKE" "${MAKE_FLAGS[@]}"
-# then
-#    echo "Failed to test libexpat"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-# fi
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test libexpat"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test Unbound"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
