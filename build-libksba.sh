@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
-# This script builds libkbsa from sources.
+# This script builds libksba from sources.
 
-LIBKBSA_TAR=libksba-1.3.5.tar.bz2
-LIBKBSA_DIR=libksba-1.3.5
-PKG_NAME=libkbsa
+LIBKSBA_TAR=libksba-1.3.5.tar.bz2
+LIBKSBA_DIR=libksba-1.3.5
+PKG_NAME=libksba
 
 ###############################################################################
 
@@ -42,20 +42,28 @@ fi
 
 ###############################################################################
 
-echo
-echo "********** libkbsa **********"
-echo
-
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://gnupg.org/ftp/gcrypt/libksba/$LIBKBSA_TAR" -O "$LIBKBSA_TAR"
-
-if [[ "$?" -ne "0" ]]; then
-    echo "Failed to download libkbsa"
+if ! ./build-gpgerror.sh
+then
+    echo "Failed to build libgpg-error"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-rm -rf "$LIBKBSA_DIR" &>/dev/null
-tar xjf "$LIBKBSA_TAR"
-cd "$LIBKBSA_DIR"
+###############################################################################
+
+echo
+echo "********** libksba **********"
+echo
+
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.gnupg.org/ftp/gcrypt/libksba/$LIBKSBA_TAR" -O "$LIBKSBA_TAR"
+
+if [[ "$?" -ne "0" ]]; then
+    echo "Failed to download libksba"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+rm -rf "$LIBKSBA_DIR" &>/dev/null
+tar xjf "$LIBKSBA_TAR"
+cd "$LIBKSBA_DIR"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -69,21 +77,30 @@ cd "$LIBKBSA_DIR"
 ./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
 
 if [[ "$?" -ne "0" ]]; then
-    echo "Failed to configure libkbsa"
+    echo "Failed to configure libksba"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Failed to build libkbsa"
+    echo "Failed to build libksba"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+if [[ "$IS_DARWIN" -ne 0]]; then
 MAKE_FLAGS=("check" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Failed to test libkbsa"
+    echo "Failed to test libksba"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test libksba"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -104,14 +121,14 @@ touch "$INSTX_CACHE/$PKG_NAME"
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$LIBKBSA_TAR" "$LIBKBSA_DIR")
+    ARTIFACTS=("$LIBKSBA_TAR" "$LIBKSBA_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
 
-    # ./build-libkbsa.sh 2>&1 | tee build-libkbsa.log
-    if [[ -e build-libkbsa.log ]]; then
-        rm -f build-libkbsa.log
+    # ./build-libksba.sh 2>&1 | tee build-libksba.log
+    if [[ -e build-libksba.log ]]; then
+        rm -f build-libksba.log
     fi
 fi
 
