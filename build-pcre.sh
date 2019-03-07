@@ -103,20 +103,21 @@ if [[ "$IS_MIPS" -ne "0" ]]; then
     mv sljit/sljitNativeMIPS_common.c.fixed sljit/sljitNativeMIPS_common.c
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "all" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build PCRE"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Too many failures on non-Linux systems
-#MAKE_FLAGS=("check")
-#if ! "$MAKE" "${MAKE_FLAGS[@]}"
-#then
-#    echo "Failed to test PCRE"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
+if [[ "$IS_LINUX" -ne "0" ]]; then
+	MAKE_FLAGS=("check" "V=1")
+	if ! "$MAKE" "${MAKE_FLAGS[@]}"
+	then
+		echo "Failed to test PCRE"
+		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	fi
+fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
@@ -171,20 +172,21 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "all" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build PCRE2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Too many failures on non-Linux systems
-#MAKE_FLAGS=("check")
-#if ! "$MAKE" "${MAKE_FLAGS[@]}"
-#then
-#    echo "Failed to test PCRE2"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
+if [[ "$IS_LINUX" -ne "0" ]]; then
+	MAKE_FLAGS=("check" "V=1")
+	if ! "$MAKE" "${MAKE_FLAGS[@]}"
+	then
+		echo "Failed to test PCRE"
+		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	fi
+fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
