@@ -71,9 +71,7 @@ fi
 rm -rf "$NETTLE_DIR" &>/dev/null
 gzip -d < "$NETTLE_TAR" | tar xf -
 
-cp nettle.patch "$NETTLE_DIR"
-cd "$NETTLE_DIR"
-
+cp ../patch/nettle.patch .
 patch -u -p0 < nettle.patch
 
 # This works for all versions of Nettle on all Apple platforms

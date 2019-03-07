@@ -125,8 +125,7 @@ fi
 rm -rf "$OPENVPN_DIR" &>/dev/null
 gzip -d < "$OPENVPN_TAR" | tar xf -
 
-cp openvpn.patch "$OPENVPN_DIR"
-cd "$OPENVPN_DIR"
+cp ../patch/openvpn.patch .
 patch -u -p0 < openvpn.patch
 
 # http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
