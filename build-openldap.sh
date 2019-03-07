@@ -87,7 +87,6 @@ sed 's|0x060014|0x060300|g' configure > configure.new
 mv configure.new configure
 chmod +x configure
 
-
 CONFIG_OPTIONS=()
 CONFIG_OPTIONS+=("--prefix=$INSTX_PREFIX")
 CONFIG_OPTIONS+=("--libdir=$INSTX_LIBDIR")
@@ -111,6 +110,24 @@ then
     echo "Failed to build OpenLDAP"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test OpenLDAP"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+# Too many findings
+# https://www.openldap.org/its/index.cgi/Incoming/8988
+# https://www.openldap.org/its/index.cgi/Incoming/8989
+#echo "Searching for errors hidden in log files"
+#COUNT=$(grep -oIR 'runtime error' | wc -l)
+#if [[ "${COUNT}" -ne 0 ]];
+#then
+#    echo "Failed to test OpenLDAP"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
