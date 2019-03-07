@@ -3,11 +3,11 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Bzip2 from sources.
 
-# Bzip lost its website. The wayback machine has the latest download archived at
-# https://web.archive.org/web/20180624184835/http://www.bzip.org/1.0.6/bzip2-1.0.6.tar.gz
+# Bzip lost its website. This build of Bzip is based on the last known
+# release bzip-1.0.6. Also see https://github.com/noloader/bzip2-noloader.
 
-BZIP2_TAR=bzip2-1.0.6.tar.gz
-BZIP2_DIR=bzip2-1.0.6
+BZIP2_TAR=BZIP2_1_0_6_1.tar.gz
+BZIP2_DIR=BZIP2_1_0_6_1
 PKG_NAME=bzip2
 
 ###############################################################################
@@ -30,6 +30,12 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+DIGICERT_ROOT="$HOME/.cacert/digicert-root-ca.pem"
+if [[ ! -f "$DIGICERT_ROOT" ]]; then
+    echo "Crypto++ requires several CA roots. Please run build-cacerts.sh."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
@@ -49,7 +55,9 @@ echo
 echo "********** Bzip **********"
 echo
 
-"$WGET" "http://web.archive.org/web/20180624184835/http://www.bzip.org/1.0.6/$BZIP2_TAR" -O "$BZIP2_TAR"
+# https://github.com/noloader/bzip2-noloader/archive/BZIP2_1_0_6_1.tar.gz
+
+"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/noloader/bzip2-noloader/archive/$BZIP2_TAR" -O "$BZIP2_TAR"
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to download Bzip"
@@ -58,14 +66,11 @@ fi
 
 rm -rf "$BZIP2_DIR" &>/dev/null
 gzip -d < "$BZIP2_TAR" | tar xf -
+mv "bzip2-noloader-${BZIP2_DIR}" "${BZIP2_DIR}"
 cd "$BZIP2_DIR"
 
-# Squash a warning
-sed -e '558i \
-(void)nread;' bzip2.c > bzip2.c.fixed
-mv bzip2.c.fixed bzip2.c
-
-# Fix format specifier
+# Fix format specifier.
+# TODO: fix this in the source code.
 if [[ "$IS_64BIT" -ne "0" ]]; then
     for cfile in $(find "$PWD" -name '*.c'); do
         sed -e "s|%Lu|%llu|g" "$cfile" > "$cfile.fixed"
@@ -73,35 +78,8 @@ if [[ "$IS_64BIT" -ne "0" ]]; then
     done
 fi
 
-# Symbols and optimizations
-sed 's|-O2 -g ||g' Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
-sed 's|-O2 -g ||g' Makefile-libbz2_so > Makefile-libbz2_so.fixed
-mv Makefile-libbz2_so.fixed Makefile-libbz2_so
-
-# Fix Bzip install paths
-sed 's|$(PREFIX)/lib|$(LIBDIR)|g' Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
-sed 's|$(PREFIX)/lib|$(LIBDIR)|g' Makefile-libbz2_so > Makefile-libbz2_so.fixed
-mv Makefile-libbz2_so.fixed Makefile-libbz2_so
-
-# Hack to get around the array and regular expression in the sed
-TEMP_CPPFLAGS="${BUILD_CPPFLAGS[@]}"
-TEMP_CFLAGS="${BUILD_CFLAGS[@]}"
-TEMP_CXXFLAGS="${BUILD_CXXFLAGS[@]}"
-
-# Fix flags
-sed -e "s|^CFLAGS=*|CFLAGS=$TEMP_CPPFLAGS $TEMP_CFLAGS |g" Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
-sed -e "s|^CXXFLAGS=*|CFLAGS=$TEMP_CPPFLAGS $TEMP_CXXFLAGS |g" Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
-sed -e "s|^CFLAGS=*|CFLAGS=$TEMP_CPPFLAGS $TEMP_CFLAGS |g" Makefile-libbz2_so > Makefile-libbz2_so.fixed
-mv Makefile-libbz2_so.fixed Makefile-libbz2_so
-sed -e "s|^CXXFLAGS=*|CFLAGS=$TEMP_CPPFLAGS $TEMP_CXXFLAGS |g" Makefile-libbz2_so > Makefile-libbz2_so.fixed
-mv Makefile-libbz2_so.fixed Makefile-libbz2_so
-
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bzip"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
