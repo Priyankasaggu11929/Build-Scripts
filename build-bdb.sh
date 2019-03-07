@@ -2,7 +2,7 @@
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
-# This script builds OpenLDAP from sources.
+# This script builds BerkleyDB from sources.
 
 LDAP_TAR=db-6.2.32.tar.gz
 LDAP_DIR=db-6.2.32
@@ -80,14 +80,14 @@ CONFIG_OPTIONS+=("--with-tls=openssl")
 ../dist/configure "${CONFIG_OPTIONS[@]}"
 
 if [[ "$?" -ne "0" ]]; then
-    echo "Failed to configure OpenLDAP"
+    echo "Failed to configure BerkleyDB"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Failed to build OpenLDAP"
+    echo "Failed to build BerkleyDB"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -95,7 +95,7 @@ fi
 #MAKE_FLAGS=("check")
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
-#    echo "Failed to test OpenLDAP"
+#    echo "Failed to test BerkleyDB"
 #    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 #fi
 
