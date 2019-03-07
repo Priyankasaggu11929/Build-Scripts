@@ -81,12 +81,21 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("check")
+MAKE_FLAGS=("check" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to test Unistring"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+# Unistring has latent undefined behavior
+#echo "Searching for errors hidden in log files"
+#COUNT=$(grep -oIR 'runtime error' | wc -l)
+#if [[ "${COUNT}" -ne 0 ]];
+#then
+#    echo "Failed to test Unistring"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
