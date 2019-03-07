@@ -15,13 +15,12 @@
        int count = u8_mbtouc_unsafe (&uc, s, s_end - s);
 --- lib/unistr/u8-cmp.c  2019-03-07 16:04:35.964722185 -0500
 +++ lib/unistr/u8-cmp.c  2019-03-07 16:07:17.081535803 -0500
-@@ -35,5 +35,8 @@
+@@ -35,5 +35,7 @@
  u8_cmp (const uint8_t *s1, const uint8_t *s2, size_t n)
  {
    /* Use the fact that the UTF-8 encoding preserves lexicographic order.  */
-+  uint8_t x = 0; /* fake NULL string */
-+  if (s1 == NULL) s1 = &x;
-+  if (s2 == NULL) s2 = &x;
++  if (s1 == NULL) return -1;
++  if (s2 == NULL) return 1;
    return memcmp ((const char *) s1, (const char *) s2, n);
  }
 --- lib/uniconv/u8-conv-from-enc.c  2019-03-07 16:11:06.683420819 -0500
