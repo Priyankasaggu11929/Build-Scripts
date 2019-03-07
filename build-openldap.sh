@@ -119,8 +119,8 @@ then
 fi
 
 # Too many findings
-# https://www.openldap.org/its/index.cgi/Incoming/8988
-# https://www.openldap.org/its/index.cgi/Incoming/8989
+# https://www.openldap.org/its/index.cgi/Incoming?id=8988
+# https://www.openldap.org/its/index.cgi/Incoming?id=8989
 #echo "Searching for errors hidden in log files"
 #COUNT=$(grep -oIR 'runtime error' | wc -l)
 #if [[ "${COUNT}" -ne 0 ]];
