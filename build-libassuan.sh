@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds libassuan from sources.
 
-LIBASSUAN_TAR=libassuan-2.5.2.tar.bz2
-LIBASSUAN_DIR=libassuan-2.5.2
+LIBASSUAN_TAR=libassuan-2.5.3.tar.bz2
+LIBASSUAN_DIR=libassuan-2.5.3
 PKG_NAME=libassuan
 
 ###############################################################################
@@ -38,6 +38,14 @@ fi
 # subshell goes out of scope.
 if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./build-password.sh
+fi
+
+###############################################################################
+
+if ! ./build-gpgerror.sh
+then
+    echo "Failed to build libgpg-error"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 ###############################################################################
