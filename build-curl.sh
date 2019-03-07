@@ -198,20 +198,30 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build cURL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Too many Valgrind findings
-#MAKE_FLAGS=("check")
-#if ! "$MAKE" "${MAKE_FLAGS[@]}"
-#then
-#    echo "Failed to test cURL"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
+# Disable Valgrind with "TFLAGS=-n". Too many findings due
+# to -march=native. We also want the sanitizers since others
+# are doing the Valgrind testing.
+MAKE_FLAGS=("test" "TFLAGS=-n" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test cURL"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test cURL"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
