@@ -91,8 +91,8 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Too many Valgrind findings
-#MAKE_FLAGS=("check")
+# No check or test recipes
+#MAKE_FLAGS=("check" "V=1")
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
 #    echo "Failed to test BerkleyDB"
