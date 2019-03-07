@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Gzip from sources.
 
-GZIP_TAR=gzip-1.9.tar.gz
-GZIP_DIR=gzip-1.9
+GZIP_TAR=gzip-1.10.tar.gz
+GZIP_DIR=gzip-1.10
 PKG_NAME=gzip
 
 ###############################################################################
@@ -72,7 +72,7 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Gzip"
@@ -85,6 +85,14 @@ if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
    echo "Failed to test Gzip"
    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test Gzip"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("install")
