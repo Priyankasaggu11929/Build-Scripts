@@ -25,8 +25,6 @@
  #include "lmdb.h"
  #include "midl.h"
  
---- libraries/liblmdb/mdb.c.orig	2019-03-08 08:06:02.555239740 -0500
-+++ libraries/liblmdb/mdb.c	2019-03-08 08:08:18.803427242 -0500
 @@ -963,18 +963,14 @@
  	unsigned short *s, *d;	\
  	s = (unsigned short *)&(src);	\
