@@ -63,7 +63,7 @@ cd "$LESS_DIR"
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
-    LDFLAGS="${BUILD_LDFLAGS[*]}" \
+    LDFLAGS="${BUILD_CXXFLAGS[*]} ${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --with-regex=pcre

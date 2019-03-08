@@ -19,7 +19,7 @@ do
 	# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec;
 	sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' "$file" > "$file.fixed"
 	# Can't use "sed -i" missing on BSDs, OS X and Solaris
-	mv "$file.fixed" "$file"
+	rm "$file" && mv "$file.fixed" "$file"
 	# AIX needs the execute bit reset on the file.
 	chmod +x "$file"
 done
