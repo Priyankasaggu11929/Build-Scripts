@@ -124,6 +124,7 @@ fi
 
 rm -rf "$OPENVPN_DIR" &>/dev/null
 gzip -d < "$OPENVPN_TAR" | tar xf -
+cd "$OPENVPN_DIR"
 
 cp ../patch/openvpn.patch .
 patch -u -p0 < openvpn.patch
