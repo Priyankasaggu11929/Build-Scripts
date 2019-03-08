@@ -92,7 +92,7 @@ echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-    echo "Failed to test libksba"
+    echo "Failed to test libffi"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
