@@ -1,5 +1,5 @@
---- lib/unilbrk/u8-possible-linebreaks.c  2019-03-07 15:56:00.883711905 -0500
-+++ lib/unilbrk/u8-possible-linebreaks.c  2019-03-07 15:59:57.018507522 -0500
+--- lib/unilbrk/u8-possible-linebreaks.c
++++ lib/unilbrk/u8-possible-linebreaks.c
 @@ -46,9 +46,10 @@
    char *seen_space2 = NULL; /* At least two spaces after the last non-space? */
 
@@ -13,8 +13,8 @@
      {
        ucs4_t uc;
        int count = u8_mbtouc_unsafe (&uc, s, s_end - s);
---- lib/unistr/u8-cmp.c  2019-03-07 16:04:35.964722185 -0500
-+++ lib/unistr/u8-cmp.c  2019-03-07 16:07:17.081535803 -0500
+--- lib/unistr/u8-cmp.c
++++ lib/unistr/u8-cmp.c
 @@ -35,5 +35,6 @@
  u8_cmp (const uint8_t *s1, const uint8_t *s2, size_t n)
  {
@@ -22,8 +22,8 @@
 +  if (s1 == NULL || s2 == NULL) return 0;
    return memcmp ((const char *) s1, (const char *) s2, n);
  }
---- lib/uniconv/u8-conv-from-enc.c  2019-03-07 18:52:36.625826157 -0500
-+++ lib/uniconv/u8-conv-from-enc.c  2019-03-07 18:54:22.529426975 -0500
+--- lib/uniconv/u8-conv-from-enc.c
++++ lib/uniconv/u8-conv-from-enc.c
 @@ -86,7 +86,8 @@
              }
          }
@@ -34,8 +34,8 @@
        *lengthp = srclen;
        return result;
      }
---- lib/unictype/numeric.c  2019-03-07 16:17:15.726415173 -0500
-+++ lib/unictype/numeric.c  2019-03-07 16:19:28.579613162 -0500
+--- lib/unictype/numeric.c
++++ lib/unictype/numeric.c
 @@ -49,7 +49,7 @@
                /* level3 contains 8-bit values, packed into 16-bit words.  */
                unsigned int lookup3 =
@@ -45,8 +45,8 @@
                   >> (index3 % 16))
                  & 0xff;
 
---- lib/unilbrk/u16-possible-linebreaks.c  2019-03-07 16:20:27.392815429 -0500
-+++ lib/unilbrk/u16-possible-linebreaks.c  2019-03-07 16:21:07.410272634 -0500
+--- lib/unilbrk/u16-possible-linebreaks.c
++++ lib/unilbrk/u16-possible-linebreaks.c
 @@ -46,9 +46,10 @@
    char *seen_space2 = NULL; /* At least two spaces after the last non-space? */
 

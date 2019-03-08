@@ -5,7 +5,7 @@
  				LOGCOPY_32(env, bp, &dbt->size);
  				bp += sizeof(dbt->size);
 -				memcpy(bp, dbt->data, dbt->size);
-+				if (bp &&  dbt->data)
++				if (bp && dbt->data)
 +				    memcpy(bp, dbt->data, dbt->size);
  			}
  			/* Process fields that need to be byte swapped. */
