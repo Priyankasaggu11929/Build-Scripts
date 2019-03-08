@@ -70,6 +70,7 @@ fi
 
 rm -rf "$NETTLE_DIR" &>/dev/null
 gzip -d < "$NETTLE_TAR" | tar xf -
+cd "$NETTLE_DIR"
 
 cp ../patch/nettle.patch .
 patch -u -p0 < nettle.patch
