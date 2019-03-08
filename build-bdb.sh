@@ -59,10 +59,13 @@ cp "bootstrap/$BDB_TAR" .
 rm -rf "$BDB_DIR" &>/dev/null
 gzip -d < "$BDB_TAR" | tar xf -
 
+cd "$BDB_DIR"
+
 cp ../patch/db.patch .
 patch -u -p0 < db.patch
 echo ""
 
+cd "$CURR_DIR"
 cd "$BDB_DIR/dist"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past

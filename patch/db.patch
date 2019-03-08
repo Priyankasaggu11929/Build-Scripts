@@ -1,5 +1,5 @@
---- src/log/log_put.c.orig	2019-03-08 06:35:39.702262631 -0500
-+++ src/log/log_put.c	2019-03-08 06:36:27.894626142 -0500
+--- src/log/log_put.c
++++ src/log/log_put.c
 @@ -1915,7 +1915,8 @@
  			} else {
  				LOGCOPY_32(env, bp, &dbt->size);
