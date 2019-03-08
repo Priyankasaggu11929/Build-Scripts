@@ -84,8 +84,6 @@ cp ../patch/openldap.patch .
 patch -u -p0 < openldap.patch
 echo ""
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
