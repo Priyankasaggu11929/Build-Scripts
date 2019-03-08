@@ -66,7 +66,7 @@ cd "$LESS_DIR"
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --enable-shared --with-regex=pcre
+    --with-regex=pcre
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Less"
