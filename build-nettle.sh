@@ -74,6 +74,7 @@ cd "$NETTLE_DIR"
 
 cp ../patch/nettle.patch .
 patch -u -p0 < nettle.patch
+echo ""
 
 # This works for all versions of Nettle on all Apple platforms
 if [[ "$IS_DARWIN" -ne "0" ]]; then
