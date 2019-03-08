@@ -4,8 +4,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds BerkleyDB from sources.
 
-LDAP_TAR=db-6.2.32.tar.gz
-LDAP_DIR=db-6.2.32
+BDB_TAR=db-6.2.32.tar.gz
+BDB_DIR=db-6.2.32
 PKG_NAME=bdb
 
 ###############################################################################
@@ -55,17 +55,21 @@ echo
 echo "********** Berkely DB **********"
 echo
 
-cp "bootstrap/$LDAP_TAR" .
-rm -rf "$LDAP_DIR" &>/dev/null
-gzip -d < "$LDAP_TAR" | tar xf -
+cp "bootstrap/$BDB_TAR" .
+rm -rf "$BDB_DIR" &>/dev/null
+gzip -d < "$BDB_TAR" | tar xf -
 
-cd "$LDAP_DIR/dist"
+cp ../patch/db.patch .
+patch -u -p0 < db.patch
+echo ""
+
+cd "$BDB_DIR/dist"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../../fix-config.sh
 
 cd "$CURR_DIR"
-cd "$LDAP_DIR/build_unix"
+cd "$BDB_DIR/build_unix"
 
 CONFIG_OPTIONS=()
 CONFIG_OPTIONS+=("--prefix=$INSTX_PREFIX")
@@ -116,7 +120,7 @@ touch "$INSTX_CACHE/$PKG_NAME"
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$LDAP_TAR" "$LDAP_DIR")
+    ARTIFACTS=("$BDB_TAR" "$BDB_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
