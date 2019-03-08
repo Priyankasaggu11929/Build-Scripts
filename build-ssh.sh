@@ -94,12 +94,14 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("test" "V=1")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
-then
-    echo "Failed to test ntbtls"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+# No way to test OpenSSH after build...
+# https://groups.google.com/forum/#!topic/mailing.unix.openssh-dev/srdwaPQQ_Aw
+#MAKE_FLAGS=("check" "V=1")
+#if ! "$MAKE" "${MAKE_FLAGS[@]}"
+#then
+#    echo "Failed to test SSH"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
