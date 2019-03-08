@@ -33,12 +33,12 @@ fi
 # Boehm garbage collector. Look in /usr/lib and /usr/lib64
 if [[ "$IS_DEBIAN" -ne "0" ]]; then
     if [[ -z $(find /usr -maxdepth 2 -name libgc.so 2>/dev/null) ]]; then
-        echo "GnuTLS requires Boehm garbage collector. Please install libgc-dev."
+        echo "Guile requires Boehm garbage collector. Please install libgc-dev."
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 elif [[ "$IS_FEDORA" -ne "0" ]]; then
     if [[ -z $(find /usr -maxdepth 2 -name libgc.so 2>/dev/null) ]]; then
-        echo "GnuTLS requires Boehm garbage collector. Please install gc-devel."
+        echo "Guile requires Boehm garbage collector. Please install gc-devel."
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 fi
@@ -174,12 +174,20 @@ then
 fi
 
 # https://lists.gnu.org/archive/html/guile-devel/2017-10/msg00009.html
-# MAKE_FLAGS=("check" "V=1")
-# if ! "$MAKE" "${MAKE_FLAGS[@]}"
-# then
-#     echo "Failed to test Guile"
-#     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-# fi
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test Guile"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test libksba"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
