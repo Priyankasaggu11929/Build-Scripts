@@ -205,7 +205,7 @@ fi
 if [[ "$IS_DARWIN" -ne 0 ]];
 then
 	MAKE_FLAGS=("test" "V=1")
-	if ! DYLD_LIBRARY_PATH="./libs" "$MAKE" "${MAKE_FLAGS[@]}"
+	if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
 	then
 		echo "Failed to test Git"
 		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
@@ -213,7 +213,7 @@ then
 elif [[ "$IS_LINUX" -ne 0 ]];
 then
 	MAKE_FLAGS=("test" "V=1")
-	if ! LD_LIBRARY_PATH="./libs" "$MAKE" "${MAKE_FLAGS[@]}"
+	if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
 	then
 		echo "Failed to test Git"
 		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1

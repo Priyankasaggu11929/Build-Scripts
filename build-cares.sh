@@ -81,7 +81,7 @@ then
 fi
 
 MAKE_FLAGS=("check" "V=1")
-if ! LD_LIBRARY_PATH=./libs "$MAKE" "${MAKE_FLAGS[@]}"
+if ! LD_LIBRARY_PATH=./.libs "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to test c-ares"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
