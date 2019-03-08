@@ -80,6 +80,12 @@ rm -rf "$LDAP_DIR" &>/dev/null
 gzip -d < "$LDAP_TAR" | tar xf -
 cd "$LDAP_DIR"
 
+cp ../patch/openldap.patch .
+patch -u -p0 < openldap.patch
+echo ""
+
+[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -121,13 +127,13 @@ fi
 # Too many findings
 # https://www.openldap.org/its/index.cgi/Incoming?id=8988
 # https://www.openldap.org/its/index.cgi/Incoming?id=8989
-#echo "Searching for errors hidden in log files"
-#COUNT=$(grep -oIR 'runtime error' | wc -l)
-#if [[ "${COUNT}" -ne 0 ]];
-#then
-#    echo "Failed to test OpenLDAP"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error' | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test OpenLDAP"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
