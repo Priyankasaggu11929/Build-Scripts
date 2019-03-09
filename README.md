@@ -159,6 +159,8 @@ viscii.h:127:56: runtime error: left shift of 1 by 31 places cannot be represent
 tcvn.h:220:56: runtime error: left shift of 1 by 31 places cannot be represented in type 'int'
 ```
 
+Once finished with testing remove `~/.build-scripts` so everything is rebuilt and close the shell.
+
 ## Self Tests
 
 The scripts attempt to run the program's or library's self tests. Usually the recipe is `make check`, but it is `make test` on occassion.
