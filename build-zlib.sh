@@ -57,15 +57,12 @@ rm -rf "$ZLIB_DIR" &>/dev/null
 gzip -d < "$ZLIB_TAR" | tar xf -
 cd "$ZLIB_DIR"
 
+cp ../patch/zlib.patch .
+patch -u -p0 < zlib.patch
+echo ""
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
-
-if [[ "$IS_CYGWIN" -ne "0" ]]; then
-    if [[ -f "gzguts.h" ]]; then
-        sed -e 's/defined(_WIN32) || defined(__CYGWIN__)/defined(_WIN32)/g' gzguts.h > gzguts.h.fixed
-        mv gzguts.h.fixed gzguts.h
-    fi
-fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
@@ -82,6 +79,13 @@ if [[ "$?" -ne "0" ]]; then
 fi
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to build zLib"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+MAKE_FLAGS=("check")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build zLib"
