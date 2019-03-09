@@ -81,6 +81,14 @@ fi
 
 ###############################################################################
 
+if ! ./build-expat.sh
+then
+    echo "Failed to build Expat"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 if ! ./build-pcre.sh
 then
     echo "Failed to build PCRE and PCRE2"
@@ -175,6 +183,9 @@ else
 fi
 
     PERL="$SH_PERL" \
+    EXPATDIR="$INSTX_PREFIX" \
+    CURLDIR="$INSTX_PREFIX" \
+    CURL_CONFIG="$INSTX_PREFIX/bin/curl-config" \
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
