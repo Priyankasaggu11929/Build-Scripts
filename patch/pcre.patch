@@ -244,3 +244,14 @@
    }
  return cc + repeat_length;
  }
+--- pcretest.c
++++ pcretest.c
+@@ -4445,7 +4445,7 @@
+ 
+           if (extra != NULL)
+             {
+-            if (fwrite(extra->study_data, 1, true_study_size, f) <
++            if (extra->study_data && fwrite(extra->study_data, 1, true_study_size, f) <
+                 true_study_size)
+               {
+               fprintf(outfile, "Write error on %s: %s\n", to_file,
