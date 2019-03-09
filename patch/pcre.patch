@@ -240,7 +240,7 @@
       Note: on the target architectures of SLJIT the ((x << 1) >> 1) returns
       the same value for small signed numbers (including negative numbers). */
 -  BACKTRACK_AS(bracket_backtrack)->u.framesize = (BACKTRACK_AS(bracket_backtrack)->u.framesize << 1) | (needs_control_head ? 1 : 0);
-+      BACKTRACK_AS(bracket_backtrack)->u.framesize = (BACKTRACK_AS(((unsigned int)bracket_backtrack)->u.framesize) << 1) | (needs_control_head ? 1 : 0);
++      BACKTRACK_AS(bracket_backtrack)->u.framesize = ((unsigned int)(BACKTRACK_AS(bracket_backtrack)->u.framesize) << 1) | (needs_control_head ? 1 : 0);
    }
  return cc + repeat_length;
  }
