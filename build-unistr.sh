@@ -42,6 +42,14 @@ fi
 
 ###############################################################################
 
+if ! ./build-iconv.sh
+then
+    echo "Failed to build iConv"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 echo
 echo "********** Unistring **********"
 echo
@@ -109,7 +117,7 @@ then
 fi
 
 echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error' | wc -l)
+COUNT=$(grep -oIR -iE 'runtime error|sanitizer' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test Unistring"
