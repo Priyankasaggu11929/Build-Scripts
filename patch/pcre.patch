@@ -45,24 +45,6 @@
              {
              int rc;
              const char *substring;
---- sljit/sljitNativeMIPS_common.c
-+++ sljit/sljitNativeMIPS_common.c
-@@ -500,6 +500,7 @@
- 
- 	compiler->error = SLJIT_ERR_COMPILED;
- 	compiler->executable_offset = executable_offset;
-+{
- 	compiler->executable_size = (code_ptr - code) * sizeof(sljit_ins);
- 
- 	code = (sljit_ins *)SLJIT_ADD_EXEC_OFFSET(code, executable_offset);
-@@ -509,6 +510,7 @@
- 	SLJIT_CACHE_FLUSH(code, code_ptr);
- #else
- 	/* GCC workaround for invalid code generation with -O2. */
-+}
- 	sljit_cache_flush(code, code_ptr);
- #endif
- 	return code;
 --- pcre_compile.c
 +++ pcre_compile.c
 @@ -68,7 +68,7 @@
@@ -240,7 +222,7 @@
       Note: on the target architectures of SLJIT the ((x << 1) >> 1) returns
       the same value for small signed numbers (including negative numbers). */
 -  BACKTRACK_AS(bracket_backtrack)->u.framesize = (BACKTRACK_AS(bracket_backtrack)->u.framesize << 1) | (needs_control_head ? 1 : 0);
-+      BACKTRACK_AS(bracket_backtrack)->u.framesize = ((unsigned int)(BACKTRACK_AS(bracket_backtrack)->u.framesize) << 1) | (needs_control_head ? 1 : 0);
++  BACKTRACK_AS(bracket_backtrack)->u.framesize = ((unsigned int)(BACKTRACK_AS(bracket_backtrack)->u.framesize) << 1) | (needs_control_head ? 1 : 0);
    }
  return cc + repeat_length;
  }
@@ -266,3 +248,21 @@
  
  static const char *errtexts[] = {
    NULL,  /* 0 is no error */
+--- sljit/sljitNativeMIPS_common.c
++++ sljit/sljitNativeMIPS_common.c
+@@ -500,6 +500,7 @@
+ 
+ 	compiler->error = SLJIT_ERR_COMPILED;
+ 	compiler->executable_offset = executable_offset;
++{
+ 	compiler->executable_size = (code_ptr - code) * sizeof(sljit_ins);
+ 
+ 	code = (sljit_ins *)SLJIT_ADD_EXEC_OFFSET(code, executable_offset);
+@@ -509,6 +510,7 @@
+ 	SLJIT_CACHE_FLUSH(code, code_ptr);
+ #else
+ 	/* GCC workaround for invalid code generation with -O2. */
++}
+ 	sljit_cache_flush(code, code_ptr);
+ #endif
+ 	return code;
