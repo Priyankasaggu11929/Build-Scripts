@@ -123,6 +123,42 @@ The build scripts include `build-autotools.sh` but you should use it sparingly o
 
 If you install Autotools using `build-autotools.sh` and it causes more problems then it is worth, then run `clean-autotools.sh`. `clean-autotools.sh` removes all the Autotools artifacts it can find from `/usr/local`. `clean-autotools.sh` does not remove Libtool, so you may need to remove it by hand or reinstall it to ensure it is using the distro's Autotools.
 
+## Sanitizers
+
+One of the benefits of using the build scripts is, you can somewhat easily build programs and dependent libraries using tools like Address Sanitizer (Asan) or Undefined Behavior Sanitizer (UBsan). Only minor modifications are necessary.
+
+First, decide on a directory to sandbox the build. As an example, `/var/sanitize`:
+
+```
+# In the shell
+export INSTX_PREFIX=/var/sanitize
+```
+
+Second, open `build-environ.sh`, and add `-fsanitize=undefined` around line 270:
+
+```
+BUILD_PKGCONFIG=("$INSTX_LIBDIR/pkgconfig")
+BUILD_CPPFLAGS=("-I$INSTX_PREFIX/include" "-DNDEBUG")
+BUILD_CFLAGS=("$SH_SYM" "$SH_OPT -fsanitize=undefined")
+BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT -fsanitize=undefined")
+BUILD_LDFLAGS=("-L$INSTX_LIBDIR -fsanitize=undefined")
+BUILD_LIBS=()
+```
+
+Next, remove `~/.build-scripts` so everything is rebuilt:
+
+```
+rm -rf ~/.build-scripts/
+```
+
+Finally, build and test the program or library as usual. If the program or library swallows `stdout` or `stderr`, then `cd` into the package directory and `grep` for `runtime error`. For example, for iConv:
+
+```
+$ grep -oIR 'runtime error'
+viscii.h:127:56: runtime error: left shift of 1 by 31 places cannot be represented in type 'int'
+tcvn.h:220:56: runtime error: left shift of 1 by 31 places cannot be represented in type 'int'
+```
+
 ## Self Tests
 
 The scripts attempt to run the program's or library's self tests. Usually the recipe is `make check`, but it is `make test` on occassion.
