@@ -82,6 +82,10 @@ cp ../patch/pcre.patch .
 patch -u -p0 < pcre.patch
 echo ""
 
+# Our grep catches 'runtime error' and signals failure.
+# We a source code comment, but it is present in the patch.
+rm pcre.patch
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -117,7 +121,7 @@ fi
 
 # https://bugs.exim.org/show_bug.cgi?id=2380
 echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error' | grep -v 'Textual explanations' | wc -l)
+COUNT=$(grep -oIR 'runtime error' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test PCRE"
