@@ -96,7 +96,7 @@ echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR -iE 'runtime error|sanitize' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-    echo "Failed to test libgcrypt"
+    echo "Failed to test zLib"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
