@@ -137,6 +137,11 @@ rm -rf "$CURL_DIR" &>/dev/null
 gzip -d < "$CURL_TAR" | tar xf -
 cd "$CURL_DIR"
 
+cp ../patch/curl.patch .
+patch -u -p0 < curl.patch
+echo ""
+
+if false; then
 # Avoid reconfiguring.
 if [[ ! -e "configure" ]]; then
     autoreconf --force --install
@@ -144,6 +149,7 @@ if [[ ! -e "configure" ]]; then
         echo "Failed to reconfigure cURL"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
+fi
 fi
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past

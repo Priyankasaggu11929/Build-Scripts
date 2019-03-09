@@ -1,0 +1,10 @@
+--- libcurl.pc.in.orig	2019-03-09 06:47:39.586335250 -0500
++++ libcurl.pc.in	2019-03-09 06:48:24.513733735 -0500
+@@ -25,6 +25,7 @@
+ #
+ prefix=@prefix@
+ exec_prefix=@exec_prefix@
++bindir=@bindir@
+ libdir=@libdir@
+ includedir=@includedir@
+ supported_protocols="@SUPPORT_PROTOCOLS@"
