@@ -117,7 +117,7 @@ fi
 
 # https://bugs.exim.org/show_bug.cgi?id=2380
 echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error' | wc -l)
+COUNT=$(grep -oIR 'runtime error' | grep -v 'Textual explanations' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test PCRE"
