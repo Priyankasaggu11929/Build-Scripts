@@ -130,8 +130,8 @@
       if (!is_startline(scode, new_map, cd, atomcount, inassert)) return FALSE;
       }
  
---- pcre_jit_compile.c.orig	2019-03-09 04:19:10.325809594 -0500
-+++ pcre_jit_compile.c	2018-09-21 11:44:27.000000000 -0400
+--- pcre_jit_compile.c
++++ pcre_jit_compile.c
 @@ -2753,13 +2753,13 @@
  #ifdef SUPPORT_UTF
  if (common->utf && c > 65535)
