@@ -1,0 +1,65 @@
+--- pcretest.c
++++ pcretest.c
+@@ -500,7 +500,7 @@
+ #if (defined (SUPPORT_PCRE8) + defined (SUPPORT_PCRE16) + \
+      defined (SUPPORT_PCRE32)) >= 2
+ 
+-#define CHAR_SIZE (1 << pcre_mode)
++#define CHAR_SIZE (1U << pcre_mode)
+ 
+ /* There doesn't seem to be an easy way of writing these macros that can cope
+ with the 3 pairs of bit sizes plus all three bit sizes. So just handle all the
+@@ -4735,7 +4735,7 @@
+         if (isdigit(*p))    /* Set copy string */
+           {
+           while(isdigit(*p)) n = n * 10 + *p++ - '0';
+-          copystrings |= 1 << n;
++          copystrings |= 1U << n;
+           }
+         else if (isalnum(*p))
+           {
+@@ -4798,7 +4798,7 @@
+         if (isdigit(*p))
+           {
+           while(isdigit(*p)) n = n * 10 + *p++ - '0';
+-          getstrings |= 1 << n;
++          getstrings |= 1U << n;
+           }
+         else if (isalnum(*p))
+           {
+@@ -5335,7 +5335,7 @@
+ 
+         for (i = 0; i < 32; i++)
+           {
+-          if ((copystrings & (1 << i)) != 0)
++          if ((copystrings & (1U << i)) != 0)
+             {
+             int rc;
+             char copybuffer[256];
+@@ -5400,7 +5400,7 @@
+ 
+         for (i = 0; i < 32; i++)
+           {
+-          if ((getstrings & (1 << i)) != 0)
++          if ((getstrings & (1U << i)) != 0)
+             {
+             int rc;
+             const char *substring;
+--- sljit/sljitNativeMIPS_common.c
++++ sljit/sljitNativeMIPS_common.c
+@@ -500,6 +500,7 @@
+ 
+ 	compiler->error = SLJIT_ERR_COMPILED;
+ 	compiler->executable_offset = executable_offset;
++{
+ 	compiler->executable_size = (code_ptr - code) * sizeof(sljit_ins);
+ 
+ 	code = (sljit_ins *)SLJIT_ADD_EXEC_OFFSET(code, executable_offset);
+@@ -509,6 +510,7 @@
+ 	SLJIT_CACHE_FLUSH(code, code_ptr);
+ #else
+ 	/* GCC workaround for invalid code generation with -O2. */
++}
+ 	sljit_cache_flush(code, code_ptr);
+ #endif
+ 	return code;

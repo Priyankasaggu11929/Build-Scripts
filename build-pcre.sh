@@ -78,6 +78,10 @@ rm -rf "$PCRE_DIR" &>/dev/null
 gzip -d < "$PCRE_TAR" | tar xf -
 cd "$PCRE_DIR"
 
+cp ../patch/pcre.patch .
+patch -u -p0 < pcre.patch
+echo ""
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
