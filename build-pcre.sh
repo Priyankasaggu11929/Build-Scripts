@@ -99,14 +99,6 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# MIPS ci20 failed compile due to old toolchain
-if [[ "$IS_MIPS" -ne "0" ]]; then
-    sed -e '503i{' sljit/sljitNativeMIPS_common.c > sljit/sljitNativeMIPS_common.c.fixed
-    mv sljit/sljitNativeMIPS_common.c.fixed sljit/sljitNativeMIPS_common.c
-    sed -e '513i}' sljit/sljitNativeMIPS_common.c > sljit/sljitNativeMIPS_common.c.fixed
-    mv sljit/sljitNativeMIPS_common.c.fixed sljit/sljitNativeMIPS_common.c
-fi
-
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "all" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
