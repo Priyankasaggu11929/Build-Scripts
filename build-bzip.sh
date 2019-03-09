@@ -85,6 +85,13 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+MAKE_FLAGS=("check")
+if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to build Bzip"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR -iE 'runtime error' | grep -v ChangeLog | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
