@@ -85,6 +85,14 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR -iE 'runtime error' | grep -v ChangeLog | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test Bzip"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 MAKE_FLAGS=(install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
