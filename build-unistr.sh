@@ -114,6 +114,13 @@ then
 		echo "Failed to test Unistring"
 		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 	fi
+else
+	MAKE_FLAGS=("check" "V=1")
+	if ! "$MAKE" "${MAKE_FLAGS[@]}"
+	then
+		echo "Failed to test Unistring"
+		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	fi
 fi
 
 echo "Searching for errors hidden in log files"
