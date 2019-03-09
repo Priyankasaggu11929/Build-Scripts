@@ -141,17 +141,6 @@ cp ../patch/curl.patch .
 patch -u -p0 < curl.patch
 echo ""
 
-if false; then
-# Avoid reconfiguring.
-if [[ ! -e "configure" ]]; then
-    autoreconf --force --install
-    if [[ "$?" -ne "0" ]]; then
-        echo "Failed to reconfigure cURL"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-fi
-fi
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 

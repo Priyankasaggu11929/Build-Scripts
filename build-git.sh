@@ -135,6 +135,10 @@ rm -rf "$GIT_DIR" &>/dev/null
 gzip -d < "$GIT_TAR" | tar xf -
 cd "$GIT_DIR"
 
+cp ../patch/git.patch .
+patch -u -p0 < git.patch
+echo ""
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
