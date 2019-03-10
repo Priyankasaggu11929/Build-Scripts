@@ -41,14 +41,6 @@ fi
 
 ###############################################################################
 
-if ! ./build-zlib.sh
-then
-    echo "Failed to build zLib"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
 if ! ./build-bzip.sh
 then
     echo "Failed to build Bzip2"
@@ -176,15 +168,17 @@ fi
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="-lhogweed -lnettle -lgmp ${BUILD_LIBS[*]}" \
 ./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --with-unbound-root-key-file --enable-seccomp-tests \
-    --disable-openssl-compatibility --disable-ssl2-support --disable-ssl3-support \
-    --disable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf \
+    --with-unbound-root-key-file \
+	--enable-seccomp-tests \
+    --disable-openssl-compatibility \
+	--disable-ssl2-support \
+	--disable-ssl3-support \
+    --disable-gtk-doc --disable-gtk-doc-html \
+	--disable-gtk-doc-pdf \
     --with-p11-kit --with-tpm --with-libregex \
-    --with-libz \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX" \
-    --with-libseccomp-prefix="$INSTX_PREFIX" \
-    --with-libunistring
+    --with-libseccomp-prefix="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure GnuTLS"
