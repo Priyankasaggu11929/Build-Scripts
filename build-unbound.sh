@@ -50,6 +50,22 @@ fi
 
 ###############################################################################
 
+if ! ./build-nettle.sh
+then
+    echo "Failed to build Nettle"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-hiredis.sh
+then
+    echo "Failed to build Hiredis"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 echo
 echo "********** Unbound **********"
 echo
@@ -80,7 +96,11 @@ echo ""
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --enable-shared \
     --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --enable-static-exe
+    --enable-static-exe \
+	--with-ssl="$INSTX_PREFIX" \
+	--with-nettle="$INSTX_PREFIX" \
+	--with-libexpat="$INSTX_PREFIX" \
+	--with-libhiredis="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Unbound"
