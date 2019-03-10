@@ -169,6 +169,7 @@ cd "$WGET_DIR"
 
 cp ../patch/wget.patch .
 patch -u -p0 < wget.patch
+echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
