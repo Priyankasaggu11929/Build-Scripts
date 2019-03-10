@@ -43,6 +43,8 @@ fi
 IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
 if [[ "$IS_OLD_DARWIN" -ne "0" ]]; then
     MAKEDEPPROG="gcc -M"
+elif [[ "$IS_SOLARIS" -ne "0" ]]; then
+    MAKEDEPPROG="gcc -M"
 else
     MAKEDEPPROG="$CC"
 fi
