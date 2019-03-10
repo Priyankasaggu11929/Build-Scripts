@@ -105,7 +105,7 @@ fi
 
 ###############################################################################
 
-# Required
+# Required. For Solaris see https://community.oracle.com/thread/1915569.
 if ! perl -MExtUtils::MakeMaker -e1 2>/dev/null
 then
     echo ""
@@ -138,10 +138,6 @@ cd "$GIT_DIR"
 cp ../patch/git.patch .
 patch -u -p0 < git.patch
 echo ""
-
-#echo "SKIP_WGET_TESTS: ${SKIP_WGET_TESTS}"
-#echo "SKIP_LIBPSL: ${SKIP_LIBPSL}"
-#echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh

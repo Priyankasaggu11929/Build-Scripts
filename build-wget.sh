@@ -34,7 +34,7 @@ fi
 
 ###############################################################################
 
-# Wget self tests may be skipped if Perl is missing or too old
+# Optional. For Solaris see https://community.oracle.com/thread/1915569.
 SKIP_WGET_TESTS=0
 if [[ -z $(command -v python) ]]; then
     SKIP_WGET_TESTS=1
