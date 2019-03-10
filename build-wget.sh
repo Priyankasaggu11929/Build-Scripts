@@ -61,7 +61,7 @@ fi
 SKIP_LIBPSL=1
 if [[ ! -z $(command -v python) ]]; then
     ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
-    if [ "$ver" -ge "27" ]; then
+    if [ "$ver" -ge 27 ]; then
         SKIP_LIBPSL=0
     fi
 fi
@@ -170,6 +170,9 @@ cd "$WGET_DIR"
 cp ../patch/wget.patch .
 patch -u -p0 < wget.patch
 echo ""
+
+echo "SKIP_WGET_TESTS: ${SKIP_WGET_TESTS}"
+echo "SKIP_LIBPSL: ${SKIP_LIBPSL}"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
