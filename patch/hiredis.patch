@@ -1,6 +1,15 @@
 --- Makefile
 +++ Makefile
-@@ -15,13 +15,13 @@
+@@ -3,6 +3,8 @@
+ # Copyright (C) 2010-2011 Pieter Noordhuis <pcnoordhuis at gmail dot com>
+ # This file is released under the BSD license, see the COPYING file
+ 
++SHELL=bash
++
+ OBJ=net.o hiredis.o sds.o async.o read.o
+ EXAMPLES=hiredis-example hiredis-example-libevent hiredis-example-libev hiredis-example-glib
+ TESTS=hiredis-test
+@@ -15,13 +17,13 @@
  HIREDIS_SONAME=$(shell grep HIREDIS_SONAME hiredis.h | awk '{print $$3}')
  
  # Installation related variables and target
@@ -21,27 +30,27 @@
  
  # redis-server configuration used for testing
  REDIS_PORT=56379
-@@ -62,7 +62,7 @@
+@@ -62,7 +64,7 @@
  ifeq ($(uname_S),Darwin)
    DYLIBSUFFIX=dylib
    DYLIB_MINOR_NAME=$(LIBNAME).$(HIREDIS_SONAME).$(DYLIBSUFFIX)
 -  DYLIB_MAKE_CMD=$(CC) -dynamiclib -Wl,-install_name,$(PREFIX)/$(LIBRARY_PATH)/$(DYLIB_MINOR_NAME) -o $(DYLIBNAME) $(LDFLAGS)
-+  DYLIB_MAKE_CMD=$(CC) -dynamiclib -Wl,-install_name,$(PREFIX)/$(LIBDIR)/$(DYLIB_MINOR_NAME) -o $(DYLIBNAME) $(LDFLAGS)
++  DYLIB_MAKE_CMD=$(CC) -dynamiclib -Wl,-install_name,$(LIBDIR)/$(DYLIB_MINOR_NAME) -o $(DYLIBNAME) $(LDFLAGS)
  endif
  
  all: $(DYLIBNAME) $(STLIBNAME) hiredis-test $(PKGCONFNAME)
-@@ -166,8 +166,8 @@
+@@ -166,8 +168,8 @@
  	@echo "Generating $@ for pkgconfig..."
  	@echo prefix=$(PREFIX) > $@
  	@echo exec_prefix=\$${prefix} >> $@
 -	@echo libdir=$(PREFIX)/$(LIBRARY_PATH) >> $@
 -	@echo includedir=$(PREFIX)/$(INCLUDE_PATH) >> $@
-+	@echo libdir=$(PREFIX)/$(LIBDIR) >> $@
-+	@echo includedir=$(PREFIX)/$(INCLUDEDIR) >> $@
++	@echo libdir=$(LIBDIR) >> $@
++	@echo includedir=$(INCLUDEDIR) >> $@
  	@echo >> $@
  	@echo Name: hiredis >> $@
  	@echo Description: Minimalistic C client library for Redis. >> $@
-@@ -176,14 +176,14 @@
+@@ -176,14 +178,14 @@
  	@echo Cflags: -I\$${includedir} -D_FILE_OFFSET_BITS=64 >> $@
  
  install: $(DYLIBNAME) $(STLIBNAME) $(PKGCONFNAME)
