@@ -152,9 +152,9 @@ rm -rf "$GNUTLS_DIR" &>/dev/null
 tar xJf "$GNUTLS_TAR"
 cd "$GNUTLS_DIR"
 
-cp ../patch/gnutls.patch .
-patch -u -p0 < gnutls.patch
-echo ""
+#cp ../patch/gnutls.patch .
+#patch -u -p0 < gnutls.patch
+#echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
