@@ -43,6 +43,14 @@ fi
 
 ###############################################################################
 
+# Get a sudo password as needed. The password should die when this
+# subshell goes out of scope.
+if [[ -z "$SUDO_PASSWORD" ]]; then
+    source ./build-password.sh
+fi
+
+###############################################################################
+
 "$WGET" -q --ca-certificate="$GLOBALSIGN_ROOT" https://curl.haxx.se/ca/cacert.pem -O cacert.pem
 
 if [[ "$?" -ne "0" ]]; then
