@@ -55,7 +55,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/bash/$BASH_TAR" -O "$BASH_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Bash"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -74,7 +74,7 @@ cd "$BASH_DIR"
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Bash"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

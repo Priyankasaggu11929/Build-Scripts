@@ -65,7 +65,7 @@ echo
 # coreutils-8.29.tar.xz
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/coreutils/$CORE_TAR" -O "$CORE_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Core Utilities"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -88,7 +88,7 @@ cd "$CORE_DIR"
     --with-libintl-prefix="$INSTX_PREFIX" \
     --with-openssl=yes
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Core Utilities"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

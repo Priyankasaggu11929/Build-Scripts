@@ -55,7 +55,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/make/$MAKE_TAR" -O "$MAKE_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Make"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -74,7 +74,7 @@ cd "$MAKE_DIR"
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Make"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

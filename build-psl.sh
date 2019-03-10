@@ -89,12 +89,12 @@ echo "Attempting download PSL using HTTPS."
 # This is due to the way Wget calls OpenSSL. The OpenSSL context
 # needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
 # trust in this certificate; and not a self-signed CA root."
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Attempting download PSL using insecure channel."
     "$WGET" --no-check-certificate "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
 fi
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download libpsl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -106,7 +106,7 @@ cd "$PSL_DIR"
 # Avoid reconfiguring.
 if [[ ! -e "configure" ]]; then
     autoreconf --force --install
-    if [[ "$?" -ne "0" ]]; then
+    if [[ "$?" -ne 0 ]]; then
         echo "Failed to reconfigure libpsl"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
@@ -127,7 +127,7 @@ fi
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure libpsl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -140,12 +140,12 @@ mkdir -p list
 # This is due to the way Wget calls OpenSSL. The OpenSSL context
 # needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
 # trust in this certificate; and not a self-signed CA root."
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Attempting update PSL using insecure channel."
     "$WGET" --no-check-certificate https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat -O list/public_suffix_list.dat
 fi
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to update Public Suffix List (PSL)"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

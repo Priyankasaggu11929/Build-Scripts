@@ -56,7 +56,7 @@ echo
 # https://github.com/ivmai/bdwgc/releases/download/v7.2k/gc-7.2k.tar.gz
 "$WGET" --ca-certificate="$CA_ZOO" "https://github.com/ivmai/bdwgc/releases/download/v7.2k/$GC_TAR" -O "$GC_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Boehm GC"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -74,9 +74,9 @@ CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR")
 CONFIG_OPTS+=("--enable-shared")
 
 # Awful Solaris 64-bit hack. Rewrite some values
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
     # Autotools uses the i386-pc-solaris2.11, which results in 32-bit binaries
-    if [[ "$IS_X86_64" -eq "1" ]]; then
+    if [[ "$IS_X86_64" -eq 1 ]]; then
         # Fix Autotools mis-detection on Solaris
         CONFIG_OPTS+=("--build=x86_64-pc-solaris2.11")
         CONFIG_OPTS+=("--host=x86_64-pc-solaris2.11")
@@ -91,7 +91,7 @@ fi
     LIBS="${BUILD_LIBS[*]}" \
 ./configure "${CONFIG_OPTS[@]}"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Boehm GC"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

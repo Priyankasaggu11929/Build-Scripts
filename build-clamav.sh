@@ -78,7 +78,7 @@ echo
 
 "$WGET" --ca-certificate="$CA_ZOO" "https://www.clamav.net/downloads/production/$CLAMAV_TAR" -O "$CLAMAV_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download ClamAV"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -99,7 +99,7 @@ cd "$CLAMAV_DIR"
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --with-openssl-dir="$INSTX_PREFIX" --with-zlib="$INSTX_PREFIX"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure ClamAV"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

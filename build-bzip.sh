@@ -59,7 +59,7 @@ echo
 
 "$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/noloader/bzip2-noloader/archive/$BZIP2_TAR" -O "$BZIP2_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Bzip"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -71,7 +71,7 @@ cd "$BZIP2_DIR"
 
 # Fix format specifier.
 # TODO: fix this in the source code.
-if [[ "$IS_64BIT" -ne "0" ]]; then
+if [[ "$IS_64BIT" -ne 0 ]]; then
     for cfile in $(find "$PWD" -name '*.c'); do
         sed -e "s|%Lu|%llu|g" "$cfile" > "$cfile.fixed"
         mv "$cfile.fixed" "$cfile"

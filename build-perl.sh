@@ -45,7 +45,7 @@ echo
 
 "$WGET" --ca-certificate="$GLOBALSIGN_ROOT" "http://www.cpan.org/src/5.0/$PERL_TAR" -O "$PERL_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Perl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -56,7 +56,7 @@ cd "$PERL_DIR"
 
 ./Configure -des -Dextras="HTTP::Daemon HTTP::Request Test::More Text::Template"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Perl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

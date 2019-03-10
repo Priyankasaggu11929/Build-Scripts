@@ -63,7 +63,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/nettle/$NETTLE_TAR" -O "$NETTLE_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Nettle"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -77,7 +77,7 @@ patch -u -p0 < nettle.patch
 echo ""
 
 # This works for all versions of Nettle on all Apple platforms
-if [[ "$IS_DARWIN" -ne "0" ]]; then
+if [[ "$IS_DARWIN" -ne 0 ]]; then
     sed -e 's|LD_LIBRARY_PATH|DYLD_LIBRARY_PATH|g' examples/Makefile.in > examples/Makefile.in.fixed
     mv examples/Makefile.in.fixed examples/Makefile.in
     touch -t 197001010000 examples/Makefile.in
@@ -91,7 +91,7 @@ fi
 ../fix-config.sh
 
 # Awful Solaris 64-bit hack. Rewrite some values
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
     # Solaris requires -shared for shared object
     sed 's| -G -h| -shared -h|g' configure.ac > configure.ac.fixed
     mv configure.ac.fixed configure.ac; chmod +x configure.ac
@@ -101,7 +101,7 @@ fi
 # This scares me, but it is necessary...
 autoreconf
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to reconfigure Nettle"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -112,14 +112,14 @@ CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR")
 CONFIG_OPTS+=("--enable-shared")
 CONFIG_OPTS+=("--disable-documentation")
 
-if [[ "$IS_IA32" -ne "0" ]]; then
+if [[ "$IS_IA32" -ne 0 ]]; then
     CONFIG_OPTS+=("--enable-fat")
 fi
 
 # Awful Solaris 64-bit hack. Rewrite some values
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
     # Autotools uses the i386-pc-solaris2.11, which results in 32-bit binaries
-    if [[ "$IS_X86_64" -eq "1" ]]; then
+    if [[ "$IS_X86_64" -eq 1 ]]; then
         # Fix Autotools mis-detection on Solaris
         CONFIG_OPTS+=("--build=x86_64-pc-solaris2.11")
         CONFIG_OPTS+=("--host=x86_64-pc-solaris2.11")
@@ -134,7 +134,7 @@ fi
     LIBS="${BUILD_LIBS[*]}" \
 ./configure "${CONFIG_OPTS[@]}"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Nettle"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

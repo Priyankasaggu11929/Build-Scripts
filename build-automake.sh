@@ -46,7 +46,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR" -O "$AUTOMAKE_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Automake"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -58,7 +58,7 @@ cd "$AUTOMAKE_DIR"
 # Avoid reconfiguring.
 if [[ ! -e "configure" ]]; then
     autoreconf --force --install
-    if [[ "$?" -ne "0" ]]; then
+    if [[ "$?" -ne 0 ]]; then
         echo "Failed to reconfigure Automake"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
@@ -78,7 +78,7 @@ fi
 sed -e 's|^MAKEINFO =.*|MAKEINFO = true|g' Makefile > Makefile.fixed
 mv Makefile.fixed Makefile
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Automake"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

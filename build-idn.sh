@@ -51,7 +51,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/libidn/$IDN_TAR" -O "$IDN_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download IDN"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -63,7 +63,7 @@ cd "$IDN_DIR"
 # Avoid reconfiguring.
 if [[ ! -e "configure" ]]; then
     ./bootstrap.sh
-    if [[ "$?" -ne "0" ]]; then
+    if [[ "$?" -ne 0 ]]; then
         echo "Failed to reconfigure IDN"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
@@ -72,7 +72,7 @@ fi
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
   if [[ (-f src/idn2.c) ]]; then
     sed -e '/^#include "error.h"/d' src/idn2.c > src/idn2.c.fixed
     mv src/idn2.c.fixed src/idn2.c
@@ -106,7 +106,7 @@ fi
     --enable-shared \
     --disable-doc
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure IDN"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -156,7 +156,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/libidn/$IDN2_TAR" -O "$IDN2_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -168,7 +168,7 @@ cd "$IDN2_DIR"
 # Avoid reconfiguring.
 if [[ ! -e "configure" ]]; then
     ./bootstrap.sh
-    if [[ "$?" -ne "0" ]]; then
+    if [[ "$?" -ne 0 ]]; then
         echo "Failed to reconfigure IDN2"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
@@ -187,7 +187,7 @@ fi
     --enable-shared \
     --disable-doc
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

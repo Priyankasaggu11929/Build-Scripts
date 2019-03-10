@@ -130,7 +130,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://gnupg.org/ftp/gcrypt/gnupg/$GNUPG_TAR" -O "$GNUPG_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download GnuPG"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -143,7 +143,7 @@ cd "$GNUPG_DIR"
 ../fix-config.sh
 
 # Solaris is a tab bit stricter than libc
-#if [[ "$IS_SOLARIS" -eq "1" ]]; then
+#if [[ "$IS_SOLARIS" -eq 1 ]]; then
 #    # Don't use CPPFLAGS. _XOPEN_SOURCE will cross-pollinate into CXXFLAGS.
 #    BUILD_CFLAGS+=("-D_XOPEN_SOURCE=600 -std=c99")
 #    BUILD_CXXFLAGS+=("-std=c++03")
@@ -170,7 +170,7 @@ cd "$GNUPG_DIR"
     --with-zlib="$INSTX_PREFIX" \
     --with-bzip2="$INSTX_PREFIX"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure GnuPG"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

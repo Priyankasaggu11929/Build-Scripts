@@ -47,7 +47,7 @@ echo
 # Redirect to Sourceforge.
 "$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/BLAKE2/BLAKE2/archive/$B2SUM_TAR" -O "$B2SUM_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download b2sum"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -67,18 +67,18 @@ sed "s|-Werror=declaration-after-statement ||g" makefile > makefile.fixed
 mv makefile.fixed makefile
 
 # Add OpenMP if available
-if [[ "$OPENMP_ERROR" -eq "0" ]]; then
+if [[ "$OPENMP_ERROR" -eq 0 ]]; then
     B2CFLAGS="$B2CFLAGS -fopenmp"
 fi
 
-if [[ "$IS_IA32" -eq "0" ]]; then
+if [[ "$IS_IA32" -eq 0 ]]; then
     sed "/^FILES=/d" makefile > makefile.fixed
     mv makefile.fixed makefile
     sed "s|^#FILES=|FILES=|g" makefile > makefile.fixed
     mv makefile.fixed makefile
 fi
 
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
     CC=gcc
     sed 's|CC?=gcc|CC=gcc|g' makefile > makefile.fixed
     mv makefile.fixed makefile

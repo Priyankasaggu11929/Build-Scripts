@@ -71,7 +71,7 @@ echo
 
 "$WGET" --ca-certificate="$CA_ZOO" "https://gpl.savoirfairelinux.net/pub/mirrors/openldap/openldap-release/$LDAP_TAR" -O "$LDAP_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download OpenLDAP"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -103,7 +103,7 @@ CONFIG_OPTIONS+=("--with-tls=openssl")
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
 ./configure "${CONFIG_OPTIONS[@]}"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure OpenLDAP"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

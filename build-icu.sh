@@ -50,7 +50,7 @@ echo
 # http://download.icu-project.org/files/icu4c/60.2/icu4c-60_2-src.tgz
 "$WGET" "http://download.icu-project.org/files/icu4c/60.2/$ICU_TAR" -O "$ICU_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download libicu"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -73,7 +73,7 @@ cd "$ICU_DIR/source"
     --with-library-bits="$INSTX_BITNESS" \
     --with-data-packaging=auto
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure libicu"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

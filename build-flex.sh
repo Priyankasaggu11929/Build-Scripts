@@ -54,7 +54,7 @@ echo
 # https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
 "$WGET" --ca-certificate="$CA_ZOO" "https://github.com/westes/flex/releases/download/v2.6.4/$FLEX_TAR" -O "$FLEX_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Flex"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -79,7 +79,7 @@ mv configure.ac.fixed configure.ac; chmod +x configure.ac
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Flex"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

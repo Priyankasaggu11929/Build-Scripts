@@ -86,7 +86,7 @@ CONFIG_OPTIONS+=("--with-tls=openssl")
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
 ../dist/configure "${CONFIG_OPTIONS[@]}"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure BerkleyDB"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

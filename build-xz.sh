@@ -50,7 +50,7 @@ echo
 # Redirect to Sourceforge.
 "$WGET" --no-check-certificate "https://tukaani.org/xz/$XZ_TAR" -O "$XZ_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download xz"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -71,7 +71,7 @@ cd "$XZ_DIR"
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-shared --disable-doc
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure xz"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

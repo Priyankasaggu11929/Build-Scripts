@@ -58,7 +58,7 @@ fi
 
 ###############################################################################
 
-if [[ "$IS_SOLARIS" -ne "0" ]]; then
+if [[ "$IS_SOLARIS" -ne 0 ]]; then
 
 echo
 echo "********** Solaris TUN/TAP Driver **********"
@@ -66,7 +66,7 @@ echo
 
 "$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/kaizawa/tuntap/archive/$TUNTAP_TAR" -O "$TUNTAP_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download TUN/TAP driver"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -86,7 +86,7 @@ cd "$TUNTAP_DIR"
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure TUN/TAP driver"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -117,7 +117,7 @@ echo
 
 "$WGET" --ca-certificate="$ADDTRUST_ROOT" "https://swupdate.openvpn.org/community/releases/$OPENVPN_TAR" -O "$OPENVPN_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download OpenVPN"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -141,7 +141,7 @@ mv configure.fixed configure; chmod +x configure
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --with-crypto-library=openssl --disable-lzo --disable-lz4 --disable-plugin-auth-pam
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure OpenVPN"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

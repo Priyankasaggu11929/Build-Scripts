@@ -49,7 +49,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/readline/$READLN_TAR" -O "$READLN_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Readline"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -61,7 +61,7 @@ cd "$READLN_DIR"
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
-if [[ "$IS_DARWIN" -ne "0" ]]; then
+if [[ "$IS_DARWIN" -ne 0 ]]; then
     BUILD_CPPFLAGS+=("-DNEED_EXTERN_PC")
 fi
 
@@ -88,7 +88,7 @@ if [[ ! -z "$SH_TINFO" ]]; then
     done
 fi
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Readline"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

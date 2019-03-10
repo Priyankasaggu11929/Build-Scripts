@@ -122,10 +122,10 @@ echo
 
 "$WGET" --ca-certificate="$CA_ZOO" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Git. Attempting to skip validation checks."
 	"$WGET" --no-check-certificate "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
-	if [[ "$?" -ne "0" ]]; then
+	if [[ "$?" -ne 0 ]]; then
 		echo "Failed to download Git."
 		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 	fi
@@ -158,7 +158,7 @@ do
 done
 
 # Various Solaris 11 workarounds
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
     for file in $(find "$PWD" -iname 'Makefile*')
     do
         sed -e 's|-lsocket|-lnsl -lsocket|g' "$file" > "$file.fixed"
@@ -204,7 +204,7 @@ fi
     --with-zlib="$INSTX_PREFIX" --with-iconv="$INSTX_PREFIX" \
     --with-perl="$SH_PERL"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Git"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

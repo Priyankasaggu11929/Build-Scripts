@@ -48,7 +48,7 @@ rm -rf "$VALGRIND_DIR" 2>/dev/null
 
 git clone git://sourceware.org/git/valgrind.git "$VALGRIND_DIR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to checkout Valgrind"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -57,7 +57,7 @@ cd "$VALGRIND_DIR"
 
 ./autogen.sh
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to generate Valgrind build files"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -73,7 +73,7 @@ fi
     LIBS="" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Valgrind"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

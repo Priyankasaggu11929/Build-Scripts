@@ -72,7 +72,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.openssl.org/source/$OPENSSL_TAR" -O "$OPENSSL_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download OpenSSL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -92,10 +92,10 @@ done
 
 CONFIG_FLAGS=("no-ssl2" "no-ssl3" "no-comp" "shared" "-DNDEBUG" "$SH_SYM" "$SH_OPT")
 
-if [[ "$IS_X86_64" -eq "1" ]]; then
+if [[ "$IS_X86_64" -eq 1 ]]; then
     CONFIG_FLAGS+=("enable-ec_nistp_64_gcc_128")
 fi
-if [[ "$IS_FREEBSD" -eq "1" ]]; then
+if [[ "$IS_FREEBSD" -eq 1 ]]; then
     CONFIG_FLAGS+=("-Wno-error")
 fi
 
@@ -110,12 +110,12 @@ fi
 CONFIG_FLAGS+=("--prefix=$INSTX_PREFIX" "--libdir=$INSTX_LIBDIR")
 KERNEL_BITS="$INSTX_BITNESS" ./config ${CONFIG_FLAGS[*]}
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure OpenSSL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ "$IS_DARWIN" -ne "0" ]]; then
+if [[ "$IS_DARWIN" -ne 0 ]]; then
     for mfile in $(find "$PWD" -name 'Makefile'); do
         sed -e 's|LD_LIBRARY_PATH|DYLD_LIBRARY_PATH|g' "$mfile" > "$mfile.fixed"
         mv "$mfile.fixed" "$mfile"
@@ -124,9 +124,9 @@ fi
 
 # Try to make depend...
 IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
-if [[ "$IS_OLD_DARWIN" -ne "0" ]]; then
+if [[ "$IS_OLD_DARWIN" -ne 0 ]]; then
     "$MAKE" MAKEDEPPROG="gcc -M" depend
-elif [[ "$IS_SOLARIS" -ne "0" ]]; then
+elif [[ "$IS_SOLARIS" -ne 0 ]]; then
     "$MAKE" MAKEDEPPROG="gcc -M" depend
 else
     "$MAKE" depend

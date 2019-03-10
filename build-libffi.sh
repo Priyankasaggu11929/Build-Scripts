@@ -48,7 +48,7 @@ echo
 # ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz
 "$WGET" --ca-certificate="$DIGICERT_ROOT" "ftp://sourceware.org/pub/libffi/$LIBFFI_TAR" -O "$LIBFFI_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download libffi"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -69,7 +69,7 @@ cd "$LIBFFI_DIR"
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-shared
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure libffi"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

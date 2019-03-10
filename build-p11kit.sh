@@ -61,7 +61,7 @@ echo
 
 "$WGET" --ca-certificate="$CA_ZOO" "https://github.com/p11-glue/p11-kit/releases/download/0.23.12/$P11KIT_TAR" -O "$P11KIT_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download p11-kit"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -82,7 +82,7 @@ else
     P11KIT_CONFIG_OPTS+=("--without-trust-paths")
 fi
 
-if [[ "$IS_SOLARIS" -ne "0" ]]; then
+if [[ "$IS_SOLARIS" -ne 0 ]]; then
     BUILD_CPPFLAGS+=("-D_XOPEN_SOURCE=500")
     BUILD_LDFLAGS=("-lsocket -lnsl ${BUILD_LDFLAGS[@]}")
 fi
@@ -96,14 +96,14 @@ fi
 ./configure "${P11KIT_CONFIG_OPTS[@]}"
 
 # On Solaris the script puts /usr/gnu/bin on-path, so we get a useful grep
-if [[ "$IS_SOLARIS" -ne "0" ]]; then
+if [[ "$IS_SOLARIS" -ne 0 ]]; then
     for sfile in $(grep -IR '#define _XOPEN_SOURCE' "$PWD" | cut -f 1 -d ':' | sort | uniq); do
         sed -e '/#define _XOPEN_SOURCE/d' "$sfile" > "$sfile.fixed"
         mv "$sfile.fixed" "$sfile"
     done
 fi
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure p11-kit"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

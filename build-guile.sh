@@ -31,12 +31,12 @@ then
 fi
 
 # Boehm garbage collector. Look in /usr/lib and /usr/lib64
-if [[ "$IS_DEBIAN" -ne "0" ]]; then
+if [[ "$IS_DEBIAN" -ne 0 ]]; then
     if [[ -z $(find /usr -maxdepth 2 -name libgc.so 2>/dev/null) ]]; then
         echo "Guile requires Boehm garbage collector. Please install libgc-dev."
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
-elif [[ "$IS_FEDORA" -ne "0" ]]; then
+elif [[ "$IS_FEDORA" -ne 0 ]]; then
     if [[ -z $(find /usr -maxdepth 2 -name libgc.so 2>/dev/null) ]]; then
         echo "Guile requires Boehm garbage collector. Please install gc-devel."
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
@@ -66,7 +66,7 @@ fi
 ###############################################################################
 
 # Solaris is missing the Boehm GC. We have to build it. Ugh...
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
     if ! ./build-boehm-gc.sh
     then
         echo "Failed to build Boehm GC"
@@ -115,7 +115,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/guile/$GUILE_TAR" -O "$GUILE_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Guile"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -144,9 +144,9 @@ CONFIG_OPTS+=("--with-libintl-prefix=$INSTX_PREFIX")
 # --disable-posix --disable-networking
 
 # Awful Solaris 64-bit hack. Rewrite some values
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
     # Autotools uses the i386-pc-solaris2.11, which results in 32-bit binaries
-    if [[ "$IS_X86_64" -eq "1" ]]; then
+    if [[ "$IS_X86_64" -eq 1 ]]; then
         # Fix Autotools mis-detection on Solaris
         CONFIG_OPTS+=("--build=x86_64-pc-solaris2.11")
         CONFIG_OPTS+=("--host=x86_64-pc-solaris2.11")
@@ -161,7 +161,7 @@ fi
     LIBS="${BUILD_LIBS[*]}" \
 ./configure "${CONFIG_OPTS[@]}"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Guile"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

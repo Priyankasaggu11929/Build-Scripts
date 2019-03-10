@@ -64,12 +64,12 @@ echo "Attempting download PCRE using HTTPS."
 # This is due to the way Wget calls OpenSSL. The OpenSSL context
 # needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
 # trust in this certificate; and not a self-signed CA root."
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Attempting download PCRE using insecure channel."
     "$WGET" --no-check-certificate "https://ftp.pcre.org/pub/pcre/$PCRE_TAR" -O "$PCRE_TAR"
 fi
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download PCRE"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -98,7 +98,7 @@ rm pcre.patch
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-shared --enable-pcregrep-libz --enable-jit --enable-pcregrep-libbz2
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure PCRE"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -110,7 +110,7 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ "$IS_LINUX" -ne "0" ]]; then
+if [[ "$IS_LINUX" -ne 0 ]]; then
 	MAKE_FLAGS=("check" "V=1")
 	if ! "$MAKE" "${MAKE_FLAGS[@]}"
 	then
@@ -153,12 +153,12 @@ echo "Attempting download PCRE2 using HTTPS."
 # This is due to the way Wget calls OpenSSL. The OpenSSL context
 # needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
 # trust in this certificate; and not a self-signed CA root."
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Attempting download PCRE2 using insecure channel."
     "$WGET" --no-check-certificate "https://ftp.pcre.org/pub/pcre/$PCRE2_TAR" -O "$PCRE2_TAR"
 fi
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download PCRE2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -176,7 +176,7 @@ cd "$PCRE2_DIR"
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-shared --enable-pcre2-8 --enable-pcre2-16 --enable-pcre2-32
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure PCRE2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -188,7 +188,7 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ "$IS_LINUX" -ne "0" ]]; then
+if [[ "$IS_LINUX" -ne 0 ]]; then
 	MAKE_FLAGS=("check" "V=1")
 	if ! "$MAKE" "${MAKE_FLAGS[@]}"
 	then

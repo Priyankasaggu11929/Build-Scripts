@@ -128,7 +128,7 @@ echo
 echo "Attempting download cURL using HTTPS."
 "$WGET" --ca-certificate="$GLOBALSIGN_ROOT" "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download cURL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -188,7 +188,7 @@ CONFIG_OPTIONS+=("--with-ca-bundle=$SH_CACERT_FILE")
     LIBS="-lidn2 -lssl -lcrypto -lz ${BUILD_LIBS[*]}" \
 ./configure "${CONFIG_OPTIONS[@]}"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure cURL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

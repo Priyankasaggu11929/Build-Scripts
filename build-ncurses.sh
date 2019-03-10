@@ -47,7 +47,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/pub/gnu/ncurses/$NCURSES_TAR" -O "$NCURSES_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Ncurses"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -85,13 +85,13 @@ fi
     --with-build-ldflags="${BUILD_LDFLAGS[*]}" \
     --with-build-libs="${BUILD_LIBS[*]}"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure ncurses"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 # Fix Clang warning
-if [[ "$IS_CLANG" -ne "0" ]]; then
+if [[ "$IS_CLANG" -ne 0 ]]; then
     for mfile in $(find "$PWD" -name 'Makefile'); do
         sed -e 's|--param max-inline-insns-single=1200||g' "$mfile" > "$mfile.fixed"
         mv "$mfile.fixed" "$mfile"

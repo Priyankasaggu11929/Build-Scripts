@@ -143,7 +143,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/$GNUTLS_TAR" -O "$GNUTLS_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download GnuTLS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -163,7 +163,7 @@ echo ""
 autoreconf
 
 # Solaris is a tab bit stricter than libc
-if [[ "$IS_SOLARIS" -eq "1" ]]; then
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
     # Don't use CPPFLAGS. _XOPEN_SOURCE will cross-pollinate into CXXFLAGS.
     BUILD_CFLAGS+=("-D_XOPEN_SOURCE=600 -std=c99")
     BUILD_CXXFLAGS+=("-std=c++03")
@@ -186,7 +186,7 @@ fi
     --with-libseccomp-prefix="$INSTX_PREFIX" \
     --with-libunistring-prefix="$INSTX_PREFIX"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure GnuTLS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

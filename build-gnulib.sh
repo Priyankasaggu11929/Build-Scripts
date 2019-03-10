@@ -69,7 +69,7 @@ cd "$GNULIB_DIR"
     SHELL="$(command -v bash)" \
 "$MAKE" "-j" "$INSTX_JOBS" "V=1"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to build Gnulib"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
