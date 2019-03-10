@@ -64,6 +64,7 @@ cd "$GNULIB_DIR"
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
+    SHELL="$(command -v bash)" \
 "$MAKE" "-j" "$INSTX_JOBS" "V=1"
 
 if [[ "$?" -ne "0" ]]; then
