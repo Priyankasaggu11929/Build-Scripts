@@ -50,14 +50,9 @@
  	@echo >> $@
  	@echo Name: hiredis >> $@
  	@echo Description: Minimalistic C client library for Redis. >> $@
-@@ -175,15 +177,19 @@
- 	@echo Libs: -L\$${libdir} -lhiredis >> $@
+@@ -176,14 +176,14 @@
  	@echo Cflags: -I\$${includedir} -D_FILE_OFFSET_BITS=64 >> $@
  
-+$(info PREFIX: $(PREFIX))
-+$(info INCLUDEDIR: $(INCLUDEDIR))
-+$(info LIBDIR: $(LIBDIR))
-+
  install: $(DYLIBNAME) $(STLIBNAME) $(PKGCONFNAME)
 -	mkdir -p $(INSTALL_INCLUDE_PATH) $(INSTALL_INCLUDE_PATH)/adapters $(INSTALL_LIBRARY_PATH)
 -	$(INSTALL) hiredis.h async.h read.h sds.h $(INSTALL_INCLUDE_PATH)
