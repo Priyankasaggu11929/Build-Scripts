@@ -58,12 +58,11 @@ fi
 
 # PSL may be skipped if Python is too old. libpsl requires Python 2.7
 # Also see https://stackoverflow.com/a/40950971/608639
-INCLUDE_LIBPSL=0
-
+SKIP_LIBPSL=1
 if [[ ! -z $(command -v python) ]]; then
     ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
     if [ "$ver" -ge "27" ]; then
-        INCLUDE_LIBPSL=1
+        SKIP_LIBPSL=0
     fi
 fi
 
@@ -133,7 +132,7 @@ fi
 
 ###############################################################################
 
-if [[ "$INCLUDE_LIBPSL" -eq "1" ]]; then
+if [[ "$SKIP_LIBPSL" -eq 0 ]]; then
 
 if ! ./build-psl.sh
 then
@@ -141,7 +140,7 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-fi  # INCLUDE_LIBPSL
+fi  # SKIP_LIBPSL
 
 ###############################################################################
 
@@ -159,7 +158,7 @@ echo
 
 "$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/pub/gnu//wget/$WGET_TAR" -O "$WGET_TAR"
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Wget"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -192,7 +191,7 @@ touch -t 197001010000 fuzz/Makefile.am
     --with-libidn="$INSTX_PREFIX" \
     --with-cares
 
-if [[ "$?" -ne "0" ]]; then
+if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Wget"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -204,19 +203,22 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("check" "V=1")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+if [[ "$SKIP_WGET_TESTS" -eq 0 ]]
 then
-	echo "Failed to test Wget"
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+	MAKE_FLAGS=("check" "V=1")
+	if ! "$MAKE" "${MAKE_FLAGS[@]}"
+	then
+		echo "Failed to test Wget"
+		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	fi
 
-echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error' | wc -l)
-if [[ "${COUNT}" -ne 0 ]];
-then
-    echo "Failed to test Wget"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	echo "Searching for errors hidden in log files"
+	COUNT=$(grep -oIR 'runtime error' | wc -l)
+	if [[ "${COUNT}" -ne 0 ]];
+	then
+		echo "Failed to test Wget"
+		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	fi
 fi
 
 MAKE_FLAGS=("install")
