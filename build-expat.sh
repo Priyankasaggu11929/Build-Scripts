@@ -71,7 +71,9 @@ cd "$EXPAT_DIR"
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+./configure --enable-shared \
+	--prefix="$INSTX_PREFIX" \
+	--libdir="$INSTX_LIBDIR" \
     --without-xmlwf
 
 if [[ "$?" -ne 0 ]]; then
