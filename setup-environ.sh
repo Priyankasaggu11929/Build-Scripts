@@ -46,6 +46,11 @@ fi
 
 ###############################################################################
 
+LETS_ENCRYPT_ROOT="$HOME/.cacert/lets-encrypt-root-x3.pem"
+IDENTRUST_ROOT="$HOME/.cacert/identrust-root-x3.pem"
+
+###############################################################################
+
 CURR_DIR=$(pwd)
 
 # `gcc ... -o /dev/null` does not work on Solaris due to LD bug.
