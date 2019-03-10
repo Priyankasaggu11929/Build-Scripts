@@ -3,8 +3,10 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Gnulib from sources.
 
-# Gnulib is distributed as source from GitHub.
-# No packages are available for download.
+# Gnulib is distributed as source from GitHub. No packages
+# are available for download. Also see
+# https://www.linux.com/news/using-gnulib-improve-software-portability
+
 GNULIB_DIR=gnulib
 PKG_NAME=Gnulib
 
