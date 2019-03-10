@@ -98,7 +98,6 @@ echo ""
     --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-static-exe \
 	--with-ssl="$INSTX_PREFIX" \
-	--with-nettle="$INSTX_PREFIX" \
 	--with-libexpat="$INSTX_PREFIX" \
 	--with-libhiredis="$INSTX_PREFIX"
 

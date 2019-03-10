@@ -94,6 +94,8 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+# TODO
+if false; then
 if [[ "$IS_DARWIN" -ne 0 ]];
 then
 	MAKE_FLAGS=("check" "V=1")
@@ -117,6 +119,7 @@ else
 		echo "Failed to test Hidredis"
 		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 	fi
+fi
 fi
 
 echo "Searching for errors hidden in log files"
