@@ -12,8 +12,7 @@
  /** Use small-ldns codebase */
 --- configure.ac
 +++ configure.ac
-@@ -1649,7 +1649,9 @@
- 
+@@ -1650,7 +1650,9 @@
  dnl includes
  [
  #ifndef UNBOUND_DEBUG
@@ -22,3 +21,4 @@
 +# endif
  #endif
  
+ /** Use small-ldns codebase */
