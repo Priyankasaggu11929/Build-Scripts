@@ -56,6 +56,14 @@ fi
 
 ###############################################################################
 
+if ! ./build-openssl.sh
+then
+    echo "Failed to build OpenSSL"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 echo
 echo "********** Hiredis **********"
 echo
@@ -75,19 +83,12 @@ cp ../patch/hiredis.patch .
 patch -u -p0 < hiredis.patch
 echo ""
 
-# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
-../fix-config.sh
-
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-"$MAKE" "-j" "$INSTX_JOBS" \
-	SHELL=$(command -v bash) \
-	PREFIX="$INSTX_PREFIX" \
-	LIBDIR="$INSTX_LIBDIR" \
-	PKGLIBDIR="${BUILD_PKGCONFIG[*]}"
+"$MAKE" "-f" "Makefile" "-j" "$INSTX_JOBS"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to build Hiredis"
@@ -131,6 +132,10 @@ then
 fi
 
 MAKE_FLAGS=("install")
+MAKE_FLAGS+=("PREFIX=$INSTX_PREFIX")
+MAKE_FLAGS+=("LIBDIR=$INSTX_LIBDIR")
+MAKE_FLAGS+=("PKGLIBDIR=${BUILD_PKGCONFIG[*]}")
+
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
