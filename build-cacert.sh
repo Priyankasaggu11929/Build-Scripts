@@ -23,10 +23,14 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+# Perform this action automatically for the user.
+# setup-cacert.sh writes the certs locally for the user so
+# we can download cacerts.pem from cURL. build-cacert.sh
+# installs cacerts.pem in ${SH_CACERT_PATH}. Programs like
+# cURL, Git and Wget will use cacerts.pem.
 GLOBALSIGN_ROOT="$HOME/.cacert/globalsign-root-r1.pem"
 if [[ ! -f "$GLOBALSIGN_ROOT" ]]; then
-    echo "cURL requires several CA roots. Please run build-cacerts.sh."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    ./setup-cacert.sh
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
