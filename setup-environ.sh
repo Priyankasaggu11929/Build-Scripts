@@ -350,12 +350,12 @@ if [[ -z "$PRINT_ONCE" ]]; then
     echo "  INSTX_LIBDIR: $INSTX_LIBDIR"
 
     echo ""
-    echo "  PKGCONFPATH: ${BUILD_PKGCONFIG[*]}"
-    echo "     CPPFLAGS: ${BUILD_CPPFLAGS[*]}"
-    echo "       CFLAGS: ${BUILD_CFLAGS[*]}"
-    echo "     CXXFLAGS: ${BUILD_CXXFLAGS[*]}"
-    echo "      LDFLAGS: ${BUILD_LDFLAGS[*]}"
-    echo "       LDLIBS: ${BUILD_LIBS[*]}"
+    echo "PKG_CONFIG_PATH: ${BUILD_PKGCONFIG[*]}"
+    echo "       CPPFLAGS: ${BUILD_CPPFLAGS[*]}"
+    echo "         CFLAGS: ${BUILD_CFLAGS[*]}"
+    echo "       CXXFLAGS: ${BUILD_CXXFLAGS[*]}"
+    echo "        LDFLAGS: ${BUILD_LDFLAGS[*]}"
+    echo "         LDLIBS: ${BUILD_LIBS[*]}"
     echo ""
 
     echo " WGET: $WGET"
