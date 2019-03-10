@@ -166,6 +166,7 @@ fi
 
 rm -rf "$WGET_DIR" &>/dev/null
 gzip -d < "$WGET_TAR" | tar xf -
+cd "$WGET_DIR"
 
 cp ../patch/wget.patch .
 patch -u -p0 < wget.patch
