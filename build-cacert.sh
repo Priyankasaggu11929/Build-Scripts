@@ -30,7 +30,8 @@ fi
 # cURL, Git and Wget will use cacerts.pem.
 GLOBALSIGN_ROOT="$HOME/.cacert/globalsign-root-r1.pem"
 if [[ ! -f "$GLOBALSIGN_ROOT" ]]; then
-    ./setup-cacerts.sh
+    # Hide output to cut down on noise.
+    ./setup-cacerts.sh &>/dev/null
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
