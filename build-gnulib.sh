@@ -58,25 +58,15 @@ cd "$GNULIB_DIR"
 #patch -u -p0 < gnulib.patch
 #echo ""
 
-# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
-../fix-config.sh
-
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
+"$MAKE" "-j" "$INSTX_JOBS" "V=1"
 
 if [[ "$?" -ne "0" ]]; then
-    echo "Failed to configure Gnulib"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
-then
     echo "Failed to build Gnulib"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
