@@ -78,14 +78,16 @@ echo ""
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
-    PKGLIBDIR="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
 "$MAKE" "-j" "$INSTX_JOBS" \
-	SHELL=$(command -v bash)
+	SHELL=$(command -v bash) \
+	PREFIX="$INSTX_PREFIX" \
+	LIBDIR="$INSTX_LIBDIR" \
+	PKGLIBDIR="${BUILD_PKGCONFIG[*]}"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to build Hiredis"
