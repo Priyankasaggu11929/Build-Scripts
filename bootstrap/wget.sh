@@ -36,11 +36,13 @@ if ! $CC $CFLAGS bitness.c -o /dev/null &>/dev/null; then
 fi
 
 IS_DARWIN=$(echo -n $(uname -s 2>&1) | grep -i -c 'darwin')
+IS_SOLARIS=$(echo -n $(uname -s 2>&1) | grep -i -c 'sunos')
+IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
+
 if [[ "$IS_DARWIN" -ne "0" ]]; then
     DARWIN_CFLAGS="-force_cpusubtype_ALL"
 fi
 
-IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
 if [[ "$IS_OLD_DARWIN" -ne "0" ]]; then
     MAKEDEPPROG="gcc -M"
 elif [[ "$IS_SOLARIS" -ne "0" ]]; then
