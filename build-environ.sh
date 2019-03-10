@@ -155,8 +155,8 @@ fi
 
 # Don't override a user choice of INSTX_LIBDIR
 if [[ -z "$INSTX_LIBDIR" ]]; then
-    if [[ "$IS_64BIT" -ne "0" ]]; then
-        if [[ "$IS_SOLARIS" -ne "0" ]]; then
+    if [[ "$IS_64BIT" -ne 0 ]]; then
+        if [[ "$IS_SOLARIS" -ne 0 ]]; then
             INSTX_LIBDIR="$INSTX_PREFIX/lib/64"
         elif [[ (-d /usr/lib) && (-d /usr/lib32) ]]; then
             INSTX_LIBDIR="$INSTX_PREFIX/lib"
@@ -178,51 +178,51 @@ fi
 ###############################################################################
 
 PIC_ERROR=$($CC -fPIC -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$PIC_ERROR" -eq "0" ]]; then
+if [[ "$PIC_ERROR" -eq 0 ]]; then
     SH_PIC="-fPIC"
 fi
 
 # For the benefit of the programs and libraries. Make them run faster.
 NATIVE_ERROR=$($CC -march=native -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$NATIVE_ERROR" -eq "0" ]]; then
+if [[ "$NATIVE_ERROR" -eq 0 ]]; then
     SH_NATIVE="-march=native"
 fi
 
 RPATH_ERROR=$($CC -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$RPATH_ERROR" -eq "0" ]]; then
+if [[ "$RPATH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-rpath,$INSTX_LIBDIR"
 fi
 
 # AIX ld uses -R for runpath when -bsvr4
 RPATH_ERROR=$($CC -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$RPATH_ERROR" -eq "0" ]]; then
+if [[ "$RPATH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-R,$INSTX_LIBDIR"
 fi
 
 OPENMP_ERROR=$($CC -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$SH_ERROR" -eq "0" ]]; then
+if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_OPENMP="-fopenmp"
 fi
 
 SH_ERROR=$($CC -Wl,--enable-new-dtags -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$SH_ERROR" -eq "0" ]]; then
+if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_DTAGS="-Wl,--enable-new-dtags"
 fi
 
 # OS X linker and install names
 SH_ERROR=$($CC -headerpad_max_install_names -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$SH_ERROR" -eq "0" ]]; then
+if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_INSTNAME="-headerpad_max_install_names"
 fi
 
 # Debug symbols
 if [[ -z "$SH_SYM" ]]; then
     SH_ERROR=$($CC -g2 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-    if [[ "$SH_ERROR" -eq "0" ]]; then
+    if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_SYM="-g2"
     else
         SH_ERROR=$($CC -g -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-        if [[ "$SH_ERROR" -eq "0" ]]; then
+        if [[ "$SH_ERROR" -eq 0 ]]; then
             SH_SYM="-g"
         fi
     fi
@@ -231,11 +231,11 @@ fi
 # Optimizations symbols
 if [[ -z "$SH_OPT" ]]; then
     SH_ERROR=$($CC -O2 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-    if [[ "$SH_ERROR" -eq "0" ]]; then
+    if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_OPT="-O2"
     else
         SH_ERROR=$($CC -O -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-        if [[ "$SH_ERROR" -eq "0" ]]; then
+        if [[ "$SH_ERROR" -eq 0 ]]; then
             SH_OPT="-O"
         fi
     fi
@@ -244,14 +244,14 @@ fi
 # OpenBSD does not have -ldl
 if [[ -z "$SH_DL" ]]; then
     SH_ERROR=$($CC -o "$outfile" "$infile" -ldl 2>&1 | tr ' ' '\n' | wc -l)
-    if [[ "$SH_ERROR" -eq "0" ]]; then
+    if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_DL="-ldl"
     fi
 fi
 
 if [[ -z "$SH_PTHREAD" ]]; then
     SH_ERROR=$($CC -o "$outfile" "$infile" -lpthread 2>&1 | tr ' ' '\n' | wc -l)
-    if [[ "$SH_ERROR" -eq "0" ]]; then
+    if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_PTHREAD="-lpthread"
     fi
 fi
@@ -300,7 +300,7 @@ if [[ ! -z "$SH_PTHREAD" ]]; then
     BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_PTHREAD"
 fi
 
-#if [[ "$IS_DARWIN" -ne "0" ]] && [[ ! -z "$SH_INSTNAME" ]]; then
+#if [[ "$IS_DARWIN" -ne 0 ]] && [[ ! -z "$SH_INSTNAME" ]]; then
 #    BUILD_LDFLAGS+=("$SH_INSTNAME")
 #    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_INSTNAME"
 #fi
