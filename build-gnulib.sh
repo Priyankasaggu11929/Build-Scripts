@@ -46,7 +46,7 @@ echo
 echo "********** Gnulib **********"
 echo
 
-if ! git clone git://git.savannah.gnu.org/gnulib.git "$GNULIB_DIR"
+if ! git clone --depth=3 git://git.savannah.gnu.org/gnulib.git "$GNULIB_DIR"
 then
     echo "Failed to clone Gnulib"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
