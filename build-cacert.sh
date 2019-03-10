@@ -36,13 +36,6 @@ if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
 fi
 
-# Get a sudo password as needed. The password should die when this
-# subshell goes out of scope.
-if [[ -z "$SUDO_PASSWORD" ]]; then
-    source ./build-password.sh
-    echo ""
-fi
-
 ###############################################################################
 
 "$WGET" -q --ca-certificate="$GLOBALSIGN_ROOT" https://curl.haxx.se/ca/cacert.pem -O cacert.pem
