@@ -19,11 +19,13 @@
 
 # Prerequisites needed for nearly all packages
 
-LETS_ENCRYPT_ROOT="$HOME/.cacert/lets-encrypt-root-x3.pem"
-IDENTRUST_ROOT="$HOME/.cacert/identrust-root-x3.pem"
+if [[ -z $(command -v autoconf 2>/dev/null) ]]; then
+    echo "Some packages require Autotools. Please install autoconf, automake and libtool."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
-if [[ ! -f "$IDENTRUST_ROOT" ]]; then
-    echo "Some packages require several CA roots. Please run setup-cacerts.sh."
+if [[ -z $(command -v automake 2>/dev/null) ]]; then
+    echo "Some packages require Autotools. Please install autoconf, automake and libtool."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -33,7 +35,12 @@ if [[ -z $(command -v autoreconf 2>/dev/null) ]]; then
 fi
 
 if [[ -z $(command -v gzip 2>/dev/null) ]]; then
-    echo "Some packages require gzip. Please install gzip."
+    echo "Some packages require Gzip. Please install Gzip."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+if [[ -z $(command -v tar 2>/dev/null) ]]; then
+    echo "Some packages require Tar. Please install Tar."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
