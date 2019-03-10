@@ -1,0 +1,10 @@
+--- configure.ac
++++ configure.ac
+@@ -859,6 +859,7 @@
+       AC_PATH_PROG([GUILD], [guild])
+       AC_SUBST([GUILD])
+ 
++      GUILE_PKG
+       GUILE_PROGS
+       GUILE_FLAGS
+ 

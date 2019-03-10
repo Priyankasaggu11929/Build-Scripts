@@ -152,9 +152,9 @@ rm -rf "$GNUTLS_DIR" &>/dev/null
 tar xJf "$GNUTLS_TAR"
 cd "$GNUTLS_DIR"
 
-#cp ../patch/gnutls.patch .
-#patch -u -p0 < gnutls.patch
-#echo ""
+cp ../patch/gnutls.patch .
+patch -u -p0 < gnutls.patch
+echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -180,11 +180,11 @@ fi
     --disable-openssl-compatibility --disable-ssl2-support --disable-ssl3-support \
     --disable-gtk-doc --disable-gtk-doc-html --disable-gtk-doc-pdf \
     --with-p11-kit --with-tpm --with-libregex \
-    --with-libz-prefix="$INSTX_PREFIX" \
+    --with-libz \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX" \
     --with-libseccomp-prefix="$INSTX_PREFIX" \
-    --with-libunistring-prefix="$INSTX_PREFIX"
+    --with-libunistring
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure GnuTLS"
