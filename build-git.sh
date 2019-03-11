@@ -35,6 +35,14 @@ fi
 
 ###############################################################################
 
+if ! ./build-cacert.sh
+then
+    echo "Failed to install CA certs"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 if ! ./build-zlib.sh
 then
     echo "Failed to build zLib"
@@ -131,6 +139,10 @@ cd "$GIT_DIR"
 
 cp ../patch/git.patch .
 patch -u -p0 < git.patch
+echo ""
+
+cp ../git2.patch .
+patch -u -p0 < git2.patch
 echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past

@@ -41,6 +41,14 @@ fi
 
 ###############################################################################
 
+if ! ./build-cacert.sh
+then
+    echo "Failed to install CA certs"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 if ! ./build-bzip.sh
 then
     echo "Failed to build Bzip2"

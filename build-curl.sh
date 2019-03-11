@@ -28,11 +28,8 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-GLOBALSIGN_ROOT="$HOME/.cacert/globalsign-root-r1.pem"
-if [[ ! -f "$GLOBALSIGN_ROOT" ]]; then
-    echo "cURL requires several CA roots. Please run build-cacerts.sh."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+# cURL needs the CA Zoo
+CA_ZOO="$SH_CACERT_FILE"
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
@@ -45,6 +42,14 @@ fi
 # subshell goes out of scope.
 if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./build-password.sh
+fi
+
+###############################################################################
+
+if ! ./build-cacert.sh
+then
+    echo "Failed to install CA certs"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 ###############################################################################
@@ -126,7 +131,7 @@ echo "********** cURL **********"
 echo
 
 echo "Attempting download cURL using HTTPS."
-"$WGET" --ca-certificate="$GLOBALSIGN_ROOT" "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
+"$WGET" --ca-certificate="$CA_ZOO" "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download cURL"
