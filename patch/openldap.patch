@@ -25,24 +25,35 @@
  #include "lmdb.h"
  #include "midl.h"
  
-@@ -963,18 +963,14 @@
- 	unsigned short *s, *d;	\
- 	s = (unsigned short *)&(src);	\
- 	d = (unsigned short *)&(dst);	\
--	*d++ = *s++;	\
--	*d++ = *s++;	\
--	*d++ = *s++;	\
--	*d = *s;	\
-+	memcpy(d, s, 8);		\
+@@ -964,9 +960,13 @@
+ #else
+ #if SIZE_MAX > 4294967295UL
+ #define COPY_PGNO(dst,src)	do { \
+-	unsigned short *s, *d;	\
+-	s = (unsigned short *)&(src);	\
+-	d = (unsigned short *)&(dst);	\
++	unsigned char *s, *d;	\
++	s = (unsigned char *)&(src);	\
++	d = (unsigned char *)&(dst);	\
++	*d++ = *s++;	\
++	*d++ = *s++;	\
++	*d++ = *s++;	\
++	*d++ = *s++;	\
+ 	*d++ = *s++;	\
+ 	*d++ = *s++;	\
+ 	*d++ = *s++;	\
+@@ -974,9 +974,11 @@
  } while (0)
  #else
  #define COPY_PGNO(dst,src)	do { \
- 	unsigned short *s, *d;	\
- 	s = (unsigned short *)&(src);	\
- 	d = (unsigned short *)&(dst);	\
--	*d++ = *s++;	\
--	*d = *s;	\
-+	memcpy(d, s, 4);		\
+-	unsigned short *s, *d;	\
+-	s = (unsigned short *)&(src);	\
+-	d = (unsigned short *)&(dst);	\
++	unsigned char *s, *d;	\
++	s = (unsigned char *)&(src);	\
++	d = (unsigned char *)&(dst);	\
++	*d++ = *s++;	\
++	*d++ = *s++;	\
+ 	*d++ = *s++;	\
+ 	*d = *s;	\
  } while (0)
- #endif
- #endif
