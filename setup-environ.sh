@@ -75,19 +75,19 @@ if [[ -d "/usr/gnu/bin" ]]; then
     if [[ ! ("$PATH" == *"/usr/gnu/bin"*) ]]; then
         echo
         echo "Adding /usr/gnu/bin to PATH for Solaris"
-        PATH="/usr/gnu/bin:$PATH"
+        export PATH="/usr/gnu/bin:$PATH"
     fi
 elif [[ -d "/usr/swf/bin" ]]; then
     if [[ ! ("$PATH" == *"/usr/sfw/bin"*) ]]; then
         echo
         echo "Adding /usr/sfw/bin to PATH for Solaris"
-        PATH="/usr/sfw/bin:$PATH"
+        export PATH="/usr/sfw/bin:$PATH"
     fi
 elif [[ -d "/usr/ucb/bin" ]]; then
     if [[ ! ("$PATH" == *"/usr/ucb/bin"*) ]]; then
         echo
         echo "Adding /usr/ucb/bin to PATH for Solaris"
-        PATH="/usr/ucb/bin:$PATH"
+        export PATH="/usr/ucb/bin:$PATH"
     fi
 fi
 
