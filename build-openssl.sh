@@ -90,7 +90,10 @@ do
     mv "$file.fixed" "$file"
 done
 
-CONFIG_FLAGS=("no-ssl2" "no-ssl3" "no-comp" "shared" "-DNDEBUG" "$SH_SYM" "$SH_OPT")
+CONFIG_FLAGS=("no-ssl2" "no-ssl3" "no-comp" "shared" "$SH_SYM" "$SH_OPT")
+CONFIG_FLAGS+=("${BUILD_CPPFLAGS[*]}")
+CONFIG_FLAGS+=("${BUILD_CFLAGS[*]}")
+CONFIG_FLAGS+=("${BUILD_LDFLAGS[*]}")
 
 if [[ "$IS_X86_64" -eq 1 ]]; then
     CONFIG_FLAGS+=("enable-ec_nistp_64_gcc_128")
