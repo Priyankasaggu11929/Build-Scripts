@@ -46,7 +46,7 @@ Generally speaking you need some CA certificates, a modern Wget and a modern Bas
 ./setup-wget.sh
 ```
 
-The CA certificates are written to `$HOME/.cacerts`. The CAs are public/commercial issuers, and there are about six of them. They are used to connect to sites like `gnu.org` and `github.com`. All the script that call Wget use a `--ca-certificate=<exact-ca-for-site>` option. 
+The CA certificates are written to `$HOME/.cacerts`. The CAs are public/commercial issuers, and there are about six of them. They are used to connect to sites like `gnu.org` and `github.com`. The script that call Wget usually use a `--ca-certificate=<exact-ca-for-site>` option. Sometimes the CA Zoo is used when a lot of redirects are used.
 
 The bootstrapped Wget is located in `$HOME/bootstrap`. The bootstrapped version of Wget uses static linking to avoid Linux path problems. You can export the WGET variable to build the rest of the tools with `export WGET="$HOME/bootstrap/bin/wget"`.
 
@@ -83,7 +83,7 @@ You can delete `$HOME/.build-scripts` and all dependent libraries will be rebuil
 
 ## Authenticity
 
-The scripts do not check signatures on tarballs with GnuPG. Its non-trivial to build and install GnuPG for some of these machines. Instead, the scripts rely on a trusted distribution channel to deliver authentic tarballs. `setup-cacertss.sh` and `build-wget.sh` are enough to ensure the correct CAs and Wget are available to bootstrap the process with minimal risk.
+The scripts do not check signatures on tarballs with GnuPG. Its non-trivial to build and install GnuPG for some of these machines. Instead, the scripts rely on a trusted distribution channel to deliver authentic tarballs. `setup-cacerts.sh` and `setup-wget.sh` are enough to ensure the correct CAs and Wget are available to bootstrap the process with minimal risk.
 
 It is unfortunate GNU does not run their own PKI and have their own CA. More risk could be eliminated if we only needed to trust the GNU organization and their root certificate.
 
