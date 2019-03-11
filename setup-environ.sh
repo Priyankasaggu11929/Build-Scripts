@@ -345,9 +345,9 @@ if [[ -z "$PRINT_ONCE" ]]; then
     echo ""
     echo "Common flags and options:"
     echo ""
-    echo " INSTX_BITNESS: $INSTX_BITNESS-bits"
-    echo "  INSTX_PREFIX: $INSTX_PREFIX"
-    echo "  INSTX_LIBDIR: $INSTX_LIBDIR"
+    echo "  INSTX_BITNESS: $INSTX_BITNESS-bits"
+    echo "   INSTX_PREFIX: $INSTX_PREFIX"
+    echo "   INSTX_LIBDIR: $INSTX_LIBDIR"
 
     echo ""
     echo "PKG_CONFIG_PATH: ${BUILD_PKGCONFIG[*]}"
