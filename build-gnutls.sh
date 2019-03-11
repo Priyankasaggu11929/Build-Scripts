@@ -105,9 +105,9 @@ fi
 
 ###############################################################################
 
-if ! ./build-readline.sh
+if ! ./build-libffi.sh
 then
-    echo "Failed to build Readline"
+    echo "Failed to build Libffi"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

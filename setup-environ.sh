@@ -342,6 +342,15 @@ done
 # Print a summary once
 if [[ -z "$PRINT_ONCE" ]]; then
 
+	if [[ "$IS_SOLARIS" -ne 0 ]]; then
+		echo ""
+		echo "Solaris tools:"
+		echo ""
+		echo "     sed: $(command -v sed)"
+		echo "     awk: $(command -v awk)"
+		echo "    grep: $(command -v grep)"
+	fi
+
     echo ""
     echo "Common flags and options:"
     echo ""
