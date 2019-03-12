@@ -1,28 +1,3 @@
---- sha1dc/sha1.c
-+++ sha1dc/sha1.c
-@@ -26,14 +26,6 @@
- #include "sha1.h"
- #include "ubc_check.h"
- 
--#if (defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || \
--     defined(i386) || defined(__i386) || defined(__i386__) || defined(__i486__)  || \
--     defined(__i586__) || defined(__i686__) || defined(_M_IX86) || defined(__X86__) || \
--     defined(_X86_) || defined(__THW_INTEL__) || defined(__I86__) || defined(__INTEL__) || \
--     defined(__386) || defined(_M_X64) || defined(_M_AMD64))
--#define SHA1DC_ON_INTEL_LIKE_PROCESSOR
--#endif
--
- /*
-    Because Little-Endian architectures are most common,
-    we only set SHA1DC_BIGENDIAN if one of these conditions is met.
-@@ -124,7 +116,7 @@
- #endif
- /*ENDIANNESS SELECTION*/
- 
--#if defined(SHA1DC_FORCE_UNALIGNED_ACCESS) || defined(SHA1DC_ON_INTEL_LIKE_PROCESSOR)
-+#if defined(SHA1DC_FORCE_UNALIGNED_ACCESS)
- #define SHA1DC_ALLOW_UNALIGNED_ACCESS
- #endif /*UNALIGNMENT DETECTION*/
 --- t/Makefile
 +++ t/Makefile
 @@ -11,11 +11,25 @@
@@ -98,3 +73,20 @@
  		test -z "$$bad" || { \
  		echo >&2 "non-portable file name(s): $$bad"; exit 1; }
  
+--- sha1dc/sha1.c
++++ sha1dc/sha1.c
+@@ -26,14 +26,6 @@
+ #include "sha1.h"
+ #include "ubc_check.h"
+ 
+-#if (defined(__amd64__) || defined(__amd64) || defined(__x86_64__) || defined(__x86_64) || \
+-     defined(i386) || defined(__i386) || defined(__i386__) || defined(__i486__)  || \
+-     defined(__i586__) || defined(__i686__) || defined(_M_IX86) || defined(__X86__) || \
+-     defined(_X86_) || defined(__THW_INTEL__) || defined(__I86__) || defined(__INTEL__) || \
+-     defined(__386) || defined(_M_X64) || defined(_M_AMD64))
+-#define SHA1DC_ON_INTEL_LIKE_PROCESSOR
+-#endif
+-
+ /*
+    Because Little-Endian architectures are most common,
+    we only set SHA1DC_BIGENDIAN if one of these conditions is met.
