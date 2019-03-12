@@ -1,9 +1,14 @@
 --- t/Makefile
 +++ t/Makefile
-@@ -11,11 +11,25 @@
+@@ -7,15 +7,28 @@
+ -include ../config.mak
+ 
+ #GIT_TEST_OPTS = --verbose --debug
+-SHELL_PATH ?= $(SHELL)
  TEST_SHELL_PATH ?= $(SHELL_PATH)
  PERL_PATH ?= /usr/bin/perl
- TAR ?= tar
+-TAR ?= $(TAR)
++TAR ?= $(TAR)
 +AWK ?= awk
 +SED ?= sed
 +GREP ?= grep
@@ -26,7 +31,7 @@
  ifdef TEST_OUTPUT_DIRECTORY
  TEST_RESULTS_DIRECTORY = $(TEST_OUTPUT_DIRECTORY)/test-results
  CHAINLINTTMP = $(TEST_OUTPUT_DIRECTORY)/chainlinttmp
-@@ -35,7 +49,7 @@
+@@ -35,7 +48,7 @@
  TGITWEB = $(sort $(wildcard t95[0-9][0-9]-*.sh))
  THELPERS = $(sort $(filter-out $(T),$(wildcard *.sh)))
  CHAINLINTTESTS = $(sort $(patsubst chainlint/%.test,%,$(wildcard chainlint/*.test)))
@@ -35,7 +40,7 @@
  
  all: $(DEFAULT_TEST_TARGET)
  
-@@ -44,8 +58,8 @@
+@@ -44,8 +57,8 @@
  
  failed:
  	@failed=$$(cd '$(TEST_RESULTS_DIRECTORY_SQ)' && \
@@ -46,7 +51,7 @@
  	test -z "$$failed" || $(MAKE) $$failed
  
  prove: pre-clean check-chainlint $(TEST_LINT)
-@@ -73,7 +87,7 @@
+@@ -73,7 +86,7 @@
  	err=0 && \
  	for i in $(CHAINLINTTESTS); do \
  		$(CHAINLINT) <chainlint/$$i.test | \
@@ -55,7 +60,7 @@
  		diff -u chainlint/$$i.expect '$(CHAINLINTTMP_SQ)'/$$i.actual || err=1; \
  	done && exit $$err
  
-@@ -81,7 +95,7 @@
+@@ -81,7 +94,7 @@
  	test-lint-filenames
  
  test-lint-duplicates:
@@ -64,7 +69,7 @@
  		test -z "$$dups" || { \
  		echo >&2 "duplicate test numbers:" $$dups; exit 1; }
  
-@@ -97,7 +111,7 @@
+@@ -97,7 +110,7 @@
  	@# We do *not* pass a glob to ls-files but use grep instead, to catch
  	@# non-ASCII characters (which are quoted within double-quotes)
  	@bad="$$(git -c core.quotepath=true ls-files 2>/dev/null | \
