@@ -25,6 +25,33 @@
  #include "lmdb.h"
  #include "midl.h"
  
+@@ -767,7 +763,7 @@
+ #endif
+ 		char pad[(MNAME_LEN+CACHELINE-1) & ~(CACHELINE-1)];
+ 	} mt2;
+-	MDB_reader	mti_readers[1];
++	MDB_reader	mti_readers[];
+ } MDB_txninfo;
+ 
+ 	/** Lockfile format signature: version, features and field layout */
+@@ -830,7 +826,7 @@
+ 		} pb;
+ 		uint32_t	pb_pages;	/**< number of overflow pages */
+ 	} mp_pb;
+-	indx_t		mp_ptrs[1];		/**< dynamic size */
++	indx_t		mp_ptrs[];		/**< dynamic size */
+ } MDB_page;
+ 
+ 	/** Size of the page header, excluding dynamic data at the end */
+@@ -913,7 +909,7 @@
+ /** @} */
+ 	unsigned short	mn_flags;		/**< @ref mdb_node */
+ 	unsigned short	mn_ksize;		/**< key size */
+-	char		mn_data[1];			/**< key and data are appended here */
++	char		mn_data[];			/**< key and data are appended here */
+ } MDB_node;
+ 
+ 	/** Size of the node header, excluding dynamic data at the end */
 @@ -964,9 +960,13 @@
  #else
  #if SIZE_MAX > 4294967295UL
