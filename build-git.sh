@@ -122,6 +122,14 @@ echo
 echo "********** Git **********"
 echo
 
+echo "Environment:"
+echo "  PATH: $PATH"
+echo "  wget: $WGET"
+echo "  grep: $(command -v grep)"
+echo "   sed: $(command -v sed)"
+echo "   awk: $(command -v awk)"
+echo ""
+
 "$WGET" --ca-certificate="$CA_ZOO" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
 
 if [[ "$?" -ne 0 ]]; then
