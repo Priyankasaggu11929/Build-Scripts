@@ -3,10 +3,10 @@
 @@ -11,11 +11,25 @@
  TEST_SHELL_PATH ?= $(SHELL_PATH)
  PERL_PATH ?= /usr/bin/perl
- TAR ?= $(TAR)
-+AWK ?= $(AWK)
-+SED ?= $(SED)
-+GREP ?= $(GREP)
+ TAR ?= tar
++AWK ?= awk
++SED ?= sed
++GREP ?= grep
  RM ?= rm -f
  PROVE ?= prove
  DEFAULT_TEST_TARGET ?= test
