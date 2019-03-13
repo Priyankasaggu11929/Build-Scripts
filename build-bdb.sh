@@ -43,7 +43,7 @@ fi
 
 ###############################################################################
 
-if ! ./build-cacerts.sh
+if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1

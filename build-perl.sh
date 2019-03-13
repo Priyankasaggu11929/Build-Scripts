@@ -28,7 +28,7 @@ fi
 
 GLOBALSIGN_ROOT="$HOME/.cacert/globalsign-root-r1.pem"
 if [[ ! -f "$GLOBALSIGN_ROOT" ]]; then
-    echo "Perl requires several CA roots. Please run build-cacerts.sh."
+    echo "Perl requires several CA roots. Please run build-cacert.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -39,7 +39,7 @@ fi
 
 ###############################################################################
 
-if ! ./build-cacerts.sh
+if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
