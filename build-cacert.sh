@@ -74,6 +74,5 @@ fi
 touch "$INSTX_CACHE/$PKG_NAME"
 
 echo ""
-rm cacert.pem
 
 [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
