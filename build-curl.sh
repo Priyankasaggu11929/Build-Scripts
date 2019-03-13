@@ -28,16 +28,6 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# cURL needs the CA Zoo
-CA_ZOO="$SH_CACERT_FILE"
-
-if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
-    # Already installed, return success
-    echo ""
-    echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
-fi
-
 # Get a sudo password as needed. The password should die when this
 # subshell goes out of scope.
 if [[ -z "$SUDO_PASSWORD" ]]; then

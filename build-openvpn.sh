@@ -29,15 +29,17 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-ADDTRUST_ROOT="$HOME/.cacert/addtrust-root-ca.pem"
-if [[ ! -f "$ADDTRUST_ROOT" ]]; then
-    echo "OpenVPN requires several CA roots. Please run build-cacerts.sh."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
 # The password should die when this subshell goes out of scope
 if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./build-password.sh
+fi
+
+###############################################################################
+
+if ! ./build-cacerts.sh
+then
+    echo "Failed to install CA Certs"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 ###############################################################################

@@ -27,18 +27,6 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-CA_ZOO="$SH_CACERT_FILE"
-if [[ ! -f "$CA_ZOO" ]]; then
-    echo "PSL requires several CA roots. Please run build-cacerts.sh."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-DIGICERT_ROOT="$HOME/.cacert/digicert-root-ca.pem"
-if [[ ! -f "$DIGICERT_ROOT" ]]; then
-    echo "PSL requires several CA roots. Please run build-cacerts.sh."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
@@ -50,6 +38,14 @@ fi
 # subshell goes out of scope.
 if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./build-password.sh
+fi
+
+###############################################################################
+
+if ! ./build-cacerts.sh
+then
+    echo "Failed to install CA Certs"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 ###############################################################################
