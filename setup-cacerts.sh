@@ -13,6 +13,7 @@ function finish {
 trap finish EXIT
 
 mkdir -p "$HOME/.cacert"
+cp ./bootstrap/cacert.pem "$HOME/.cacert"
 cd "$HOME/.cacert/"
 
 ###############################################################################
