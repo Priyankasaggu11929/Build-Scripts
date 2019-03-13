@@ -48,6 +48,10 @@ fi
 
 LETS_ENCRYPT_ROOT="$HOME/.cacert/lets-encrypt-root-x3.pem"
 IDENTRUST_ROOT="$HOME/.cacert/identrust-root-x3.pem"
+GO_DADDY_ROOT="$HOME/.cacert/godaddy-root-x3.pem"
+
+# Some downloads need the CA Zoo due to multiple redirects
+CA_ZOO="$HOME/.cacert/cacert.pem"
 
 ###############################################################################
 

@@ -71,7 +71,7 @@ echo
 echo "********** OpenLDAP **********"
 echo
 
-"$WGET" --ca-certificate="$CA_ZOO" "https://gpl.savoirfairelinux.net/pub/mirrors/openldap/openldap-release/$LDAP_TAR" -O "$LDAP_TAR"
+"$WGET" --ca-certificate="$GO_DADDY_ROOT" "https://gpl.savoirfairelinux.net/pub/mirrors/openldap/openldap-release/$LDAP_TAR" -O "$LDAP_TAR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download OpenLDAP"
