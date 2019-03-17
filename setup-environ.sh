@@ -49,6 +49,8 @@ fi
 LETS_ENCRYPT_ROOT="$HOME/.cacert/lets-encrypt-root-x3.pem"
 IDENTRUST_ROOT="$HOME/.cacert/identrust-root-x3.pem"
 GO_DADDY_ROOT="$HOME/.cacert/godaddy-root-ca.pem"
+DIGICERT_ROOT="$HOME/.cacert/digicert-root-ca.pem"
+DIGITRUST_ROOT="$HOME/.cacert/digitrust-root-ca.pem"
 
 # Some downloads need the CA Zoo due to multiple redirects
 CA_ZOO="$HOME/.cacert/cacert.pem"
@@ -284,9 +286,9 @@ SH_CACERT_FILE="$INSTX_PREFIX/etc/pki/cacert.pem"
 
 BUILD_PKGCONFIG=("$INSTX_LIBDIR/pkgconfig")
 BUILD_CPPFLAGS=("-I$INSTX_PREFIX/include" "-DNDEBUG")
-BUILD_CFLAGS=("$SH_SYM" "$SH_OPT")
-BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT")
-BUILD_LDFLAGS=("-L$INSTX_LIBDIR")
+BUILD_CFLAGS=("$SH_SYM" "$SH_OPT" -fsanitize=undefined)
+BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT" -fsanitize=undefined)
+BUILD_LDFLAGS=("-L$INSTX_LIBDIR" -fsanitize=undefined)
 BUILD_LIBS=()
 
 if [[ ! -z "$SH_NATIVE" ]]; then
