@@ -28,8 +28,7 @@ fi
 # we can download cacerts.pem from cURL. build-cacert.sh
 # installs cacerts.pem in ${SH_CACERT_PATH}. Programs like
 # cURL, Git and Wget will use cacerts.pem.
-GLOBALSIGN_ROOT="$HOME/.cacert/globalsign-root-r1.pem"
-if [[ ! -f "$GLOBALSIGN_ROOT" ]]; then
+if [[ ! -f "$HOME/.cacert/cacert.pem" ]]; then
     # Hide output to cut down on noise.
     ./setup-cacerts.sh &>/dev/null
 fi
