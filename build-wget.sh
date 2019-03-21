@@ -218,6 +218,9 @@ fi
 
 if [[ "$SKIP_WGET_TESTS" -eq 0 ]]
 then
+	# Perl IPv6 may be broken and cause Wget self tests to fail.
+	# Ignore failures about Socket::inet_itoa and incorrect sizes.
+	# https://rt.cpan.org/Public/Bug/Display.html?id=91699
 	MAKE_FLAGS=("check" "V=1")
 	if ! "$MAKE" "${MAKE_FLAGS[@]}"
 	then
