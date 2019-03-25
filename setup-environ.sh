@@ -109,7 +109,9 @@ if [[ -z "$WGET" ]]; then
         WGET="$HOME/bootstrap/bin/wget"
     elif [[ -e "/usr/local/bin/wget" ]]; then
         WGET="/usr/local/bin/wget"
-    else
+    elif [[ ! -z $(command -v wget) ]]; then
+        WGET=$(command -v wget)
+	else
         WGET=wget
     fi
 fi
