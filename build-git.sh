@@ -153,7 +153,13 @@ echo ""
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
-if ! "$MAKE" configure
+# Disables message translation if msgfmt is missing.
+MAKE_CONFIG_ARGS=()
+if [[ -z $(command -v msgfmt) ]]; then
+	MAKE_CONFIG_ARGS+="NO_GETTEXT=Yes"
+fi
+
+if ! "$MAKE" configure "${MAKE_CONFIG_ARGS[@]}"
 then
     echo "Failed to make configure Git"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
