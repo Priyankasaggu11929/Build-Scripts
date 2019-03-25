@@ -1,4 +1,5 @@
 
+
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
@@ -130,7 +131,7 @@ echo "   sed: $(command -v sed)"
 echo "   awk: $(command -v awk)"
 echo ""
 
-"$WGET" --ca-certificate="$CA_ZOO" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
+"$WGET" --ca-certificate="$USERTRUST_ROOT" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Git. Attempting to skip validation checks."
