@@ -227,6 +227,10 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if [[ -z $(command -v msgfmt) ]]; then
 	MAKE_FLAGS+=("NO_GETTEXT=Yes")
 fi
+# Disables GUI if TCL is missing.
+if [[ -z $(command -v tclsh) ]]; then
+	MAKE_FLAGS+=("NO_TCLTK=Yes")
+fi
 
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
