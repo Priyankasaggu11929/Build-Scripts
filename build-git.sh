@@ -1,5 +1,3 @@
-
-
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
