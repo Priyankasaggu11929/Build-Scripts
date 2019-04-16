@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Wget and its dependencies from sources.
 
-WGET_TAR=wget-1.20.1.tar.gz
-WGET_DIR=wget-1.20.1
+WGET_TAR=wget-1.20.3.tar.gz
+WGET_DIR=wget-1.20.3
 
 ###############################################################################
 
@@ -164,7 +164,7 @@ echo
 echo "********** Wget **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/pub/gnu//wget/$WGET_TAR" -O "$WGET_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/pub/gnu/wget/$WGET_TAR" -O "$WGET_TAR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Wget"
