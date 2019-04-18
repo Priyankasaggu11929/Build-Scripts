@@ -1,12 +1,14 @@
 --- configure.ac
 +++ configure.ac
-@@ -859,8 +859,7 @@
+@@ -840,10 +840,7 @@
        AC_PATH_PROG([GUILD], [guild])
        AC_SUBST([GUILD])
- 
+
+-      GUILE_PKG
 -      GUILE_PROGS
+-      GUILE_SITE_DIR
 -      GUILE_FLAGS
 +      PKG_CHECK_MODULES([GUILE], [guile-2.2])
- 
+
        save_CFLAGS="$CFLAGS"
        save_LIBS="$LIBS"
