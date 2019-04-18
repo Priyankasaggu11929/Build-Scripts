@@ -4,7 +4,7 @@
 # This script builds GnuTLS and its dependencies from sources.
 
 GNUTLS_TAR=gnutls-3.6.7.1.tar.xz
-GNUTLS_DIR=gnutls-3.6.7.1
+GNUTLS_DIR=gnutls-3.6.7
 PKG_NAME=gnutls
 
 ###############################################################################
