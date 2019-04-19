@@ -175,10 +175,6 @@ rm -rf "$WGET_DIR" &>/dev/null
 gzip -d < "$WGET_TAR" | tar xf -
 cd "$WGET_DIR"
 
-cp ../patch/wget.patch .
-patch -u -p0 < wget.patch
-echo ""
-
 echo "SKIP_WGET_TESTS: ${SKIP_WGET_TESTS}"
 echo "SKIP_LIBPSL: ${SKIP_LIBPSL}"
 echo ""
