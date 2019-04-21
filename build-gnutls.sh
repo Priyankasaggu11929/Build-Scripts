@@ -177,12 +177,12 @@ fi
     LIBS="-lhogweed -lnettle -lgmp ${BUILD_LIBS[*]}" \
 ./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --with-unbound-root-key-file \
-	--enable-seccomp-tests \
+    --enable-seccomp-tests \
     --disable-openssl-compatibility \
-	--disable-ssl2-support \
-	--disable-ssl3-support \
+    --disable-ssl2-support \
+    --disable-ssl3-support \
     --disable-gtk-doc --disable-gtk-doc-html \
-	--disable-gtk-doc-pdf \
+    --disable-gtk-doc-pdf \
     --with-p11-kit --with-tpm --with-libregex \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX" \
@@ -193,13 +193,19 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Test suite does not compile with NDEBUG defined. Configure
-# does not provide option for separate CFLAGS or CXXFLAGS.
-# Makefile does not honor CFLAGS or CXXFLAGS on command line.
+# [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+
 for file in $(find "$PWD/tests" -iname 'Makefile')
 do
-	echo "Patching $file"
+    # Test suite does not compile with NDEBUG defined. Configure
+    # does not provide option for separate CFLAGS or CXXFLAGS.
+    # Makefile does not honor CFLAGS or CXXFLAGS on command line.
+    echo "Patching $file"
     sed -e 's| -DNDEBUG||g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+
+    # libcrypto.so must come after other libraries
+    sed -e 's|$(crypto_OBJECTS) $(crypto_LDADD) $(LIBS)|$(crypto_OBJECTS) $(LIBS) $(crypto_LDADD)|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
 
@@ -212,27 +218,27 @@ fi
 
 if [[ "$IS_DARWIN" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! DYLD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test GnuTLS"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! DYLD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test GnuTLS"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 elif [[ "$IS_LINUX" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! LD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test GnuTLS"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! LD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test GnuTLS"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 else
-	MAKE_FLAGS=("check" "V=1")
-	if ! "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test GnuTLS"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test GnuTLS"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"
