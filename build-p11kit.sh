@@ -97,17 +97,17 @@ fi
     LIBS="${BUILD_LIBS[*]}" \
 ./configure "${P11KIT_CONFIG_OPTS[@]}"
 
+if [[ "$?" -ne 0 ]]; then
+    echo "Failed to configure p11-kit"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 # On Solaris the script puts /usr/gnu/bin on-path, so we get a useful grep
 if [[ "$IS_SOLARIS" -ne 0 ]]; then
     for sfile in $(grep -IR '#define _XOPEN_SOURCE' "$PWD" | cut -f 1 -d ':' | sort | uniq); do
         sed -e '/#define _XOPEN_SOURCE/d' "$sfile" > "$sfile.fixed"
         mv "$sfile.fixed" "$sfile"
     done
-fi
-
-if [[ "$?" -ne 0 ]]; then
-    echo "Failed to configure p11-kit"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")

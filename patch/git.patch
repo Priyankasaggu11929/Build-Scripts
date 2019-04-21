@@ -17,7 +17,7 @@
  DEFAULT_TEST_TARGET ?= test
  TEST_LINT ?= test-lint
  
-+# Fix Solaris tools. GNU tools at /usr/gnu/bin. Posix tools /usr/xpg4/bin.
++# Fix Solaris tools. GNU tools at /usr/gnu/bin. Posix tools at /usr/xpg4/bin.
 +ifneq ($(wildcard /usr/gnu/bin/grep),)
 +  GREP := /usr/gnu/bin/grep
 +endif
