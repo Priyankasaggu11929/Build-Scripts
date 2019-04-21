@@ -12,3 +12,23 @@
 
        save_CFLAGS="$CFLAGS"
        save_LIBS="$LIBS"
+--- tests/slow/Makefile.in
++++ tests/slow/Makefile.in
+@@ -268,7 +268,7 @@
+ cipher_openssl_compat_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
+ 	$(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=link $(CCLD) \
+ 	$(AM_CFLAGS) $(CFLAGS) $(cipher_openssl_compat_LDFLAGS) \
+-	$(LDFLAGS) -o $@
++	$(LDFLAGS) $(cipher_openssl_compat_LDFLAGS) -o $@
+ cipher_override_SOURCES = cipher-override.c
+ cipher_override_OBJECTS = cipher_override-cipher-override.$(OBJEXT)
+ cipher_override_LDADD = $(LDADD)
+@@ -1749,7 +1749,7 @@
+ 
+ cipher-openssl-compat$(EXEEXT): $(cipher_openssl_compat_OBJECTS) $(cipher_openssl_compat_DEPENDENCIES) $(EXTRA_cipher_openssl_compat_DEPENDENCIES) 
+ 	@rm -f cipher-openssl-compat$(EXEEXT)
+-	$(AM_V_CCLD)$(cipher_openssl_compat_LINK) $(cipher_openssl_compat_OBJECTS) $(cipher_openssl_compat_LDADD) $(LIBS)
++	$(AM_V_CCLD)$(cipher_openssl_compat_LINK) $(cipher_openssl_compat_OBJECTS) $(cipher_openssl_compat_LDADD) $(LIBS) $(cipher_openssl_compat_LDADD)
+ 
+ cipher-override$(EXEEXT): $(cipher_override_OBJECTS) $(cipher_override_DEPENDENCIES) $(EXTRA_cipher_override_DEPENDENCIES) 
+ 	@rm -f cipher-override$(EXEEXT)
