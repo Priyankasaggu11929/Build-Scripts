@@ -204,7 +204,7 @@ do
     sed -e 's| -DNDEBUG||g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 	
-    sed -e 's|$(AM_V_CCLD)$(cipher_openssl_compat_LINK) $(cipher_openssl_compat_OBJECTS) $(cipher_openssl_compat_LDADD) $(LIBS)|$(AM_V_CCLD)$(cipher_openssl_compat_LINK) $(cipher_openssl_compat_OBJECTS) $(cipher_openssl_compat_LDADD) $(LIBS) -lcrypto|g' "$file" > "$file.fixed"
+    sed -e 's|$(cipher_openssl_compat_LDADD) $(LIBS)|$(cipher_openssl_compat_LDADD) $(LIBS) -lcrypto|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
 
