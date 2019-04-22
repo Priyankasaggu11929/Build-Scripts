@@ -203,7 +203,10 @@ do
     echo "Patching $file"
     sed -e 's| -DNDEBUG||g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
+done
 
+for file in $(find "$PWD/tests" -iname 'Makefile.in')
+do
     # libcrypto.so must come after other libraries
     sed -e 's|$(crypto_OBJECTS) $(crypto_LDADD) $(LIBS)|$(crypto_OBJECTS) $(LIBS) $(crypto_LDADD)|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
