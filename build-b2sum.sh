@@ -68,9 +68,15 @@ mv makefile.fixed makefile
 sed "s|-Werror=declaration-after-statement ||g" makefile > makefile.fixed
 mv makefile.fixed makefile
 
-# Either add the SSE include directory, or remove the SSE source files
+# Remove all CFLAGS. We build our own list
+sed "/^CFLAGS/d" makefile > makefile.fixed
+mv makefile.fixed makefile
+
+# Either use the SSE files, or remove the SSE source files
 if [[ "$IS_IA32" -ne 0 ]]; then
     B2CFLAGS="$B2CFLAGS -I../sse"
+    sed "/^#FILES=/d" makefile > makefile.fixed
+    mv makefile.fixed makefile
 else
     B2CFLAGS="$B2CFLAGS -I../ref"
     sed "/^FILES=/d" makefile > makefile.fixed
