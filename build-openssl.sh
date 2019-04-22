@@ -152,13 +152,15 @@ then
 fi
 
 # Self tests are still unreliable, https://github.com/openssl/openssl/issues/4963
-# TODO: tie self-tests to SKIP_OPENSSL_TESTS
-# MAKE_FLAGS=("-j" "$INSTX_JOBS" test)
-# if ! "$MAKE" "${MAKE_FLAGS[@]}"
-# then
-#     echo "Failed to test OpenSSL"
-#     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-# fi
+if [[ "$SKIP_OPENSSL_TESTS" -eq 0 ]];
+then
+    MAKE_FLAGS=("-j" "$INSTX_JOBS" test)
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test OpenSSL"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
+fi
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' | wc -l)
