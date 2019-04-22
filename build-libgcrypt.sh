@@ -115,7 +115,7 @@ then
 fi
 
 echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error' | wc -l)
+COUNT=$(grep -oIR 'runtime error:' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test libgcrypt"
