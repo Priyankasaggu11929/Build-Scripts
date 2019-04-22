@@ -86,8 +86,8 @@ else
 fi
 
 # Add OpenMP if available
-if [[ "$OPENMP_ERROR" -eq 0 ]]; then
-    B2CFLAGS="$B2CFLAGS -fopenmp"
+if [[ ! -z "$SH_OPENMP" ]]; then
+    B2CFLAGS="$B2CFLAGS $SH_OPENMP"
 fi
 
 if [[ "$IS_SOLARIS" -eq 1 ]]; then
