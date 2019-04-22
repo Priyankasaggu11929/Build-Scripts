@@ -58,7 +58,7 @@ rm -rf "$B2SUM_DIR" &>/dev/null
 gzip -d < "$B2SUM_TAR" | tar xf -
 cd "$B2SUM_DIR/b2sum"
 
-B2CFLAGS="${BUILD_CFLAGS[@]} -std=c99 -I."
+B2CFLAGS="${BUILD_CPPFLAGS[@]} ${BUILD_CFLAGS[@]} -std=c99 -I."
 
 # Unconditionally remove OpenMP from makefile
 sed "/^NO_OPENMP/d" makefile > makefile.fixed
