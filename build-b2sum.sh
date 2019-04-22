@@ -58,7 +58,7 @@ rm -rf "$B2SUM_DIR" &>/dev/null
 gzip -d < "$B2SUM_TAR" | tar xf -
 cd "$B2SUM_DIR/b2sum"
 
-B2CFLAGS="${BUILD_CPPFLAGS[@]} ${BUILD_CFLAGS[@]} -std=c99 -I."
+B2SUM_CFLAGS="${BUILD_CPPFLAGS[@]} ${BUILD_CFLAGS[@]} -std=c99 -I."
 
 # Unconditionally remove OpenMP from makefile
 sed "/^NO_OPENMP/d" makefile > makefile.fixed
@@ -74,11 +74,11 @@ mv makefile.fixed makefile
 
 # Either use the SSE files, or remove the SSE source files
 if [[ "$IS_IA32" -ne 0 ]]; then
-    B2CFLAGS="$B2CFLAGS -I../sse"
+    B2SUM_CFLAGS="$B2SUM_CFLAGS -I../sse"
     sed "/^#FILES=/d" makefile > makefile.fixed
     mv makefile.fixed makefile
 else
-    B2CFLAGS="$B2CFLAGS -I../ref"
+    B2SUM_CFLAGS="$B2SUM_CFLAGS -I../ref"
     sed "/^FILES=/d" makefile > makefile.fixed
     mv makefile.fixed makefile
     sed "s|^#FILES=|FILES=|g" makefile > makefile.fixed
@@ -87,7 +87,7 @@ fi
 
 # Add OpenMP if available
 if [[ ! -z "$SH_OPENMP" ]]; then
-    B2CFLAGS="$B2CFLAGS $SH_OPENMP"
+    B2SUM_CFLAGS="$B2SUM_CFLAGS $SH_OPENMP"
 fi
 
 if [[ "$IS_SOLARIS" -eq 1 ]]; then
@@ -96,7 +96,7 @@ if [[ "$IS_SOLARIS" -eq 1 ]]; then
     mv makefile.fixed makefile
 fi
 
-MAKE_FLAGS=("CFLAGS=$B2CFLAGS" "-j" "$INSTX_JOBS")
+MAKE_FLAGS=("CFLAGS=$B2SUM_CFLAGS" "-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build b2sum"
