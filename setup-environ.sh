@@ -210,6 +210,20 @@ if [[ "$NATIVE_ERROR" -eq 0 ]]; then
     SH_NATIVE="-march=native"
 fi
 
+# Switch from -march=native to something more apprpriate
+if [[ $(uname -m 2>&1 | grep -i -c -E 'armv7') -ne 0 ]]; then
+	ARMV7_ERROR=$($CC -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+	if [[ "$ARMV7_ERROR" -eq 0 ]]; then
+		SH_ARMV7="-march=armv7-a"
+	fi
+fi
+if [[ $(uname -m 2>&1 | grep -i -c -E 'aarch32|aarch64') -ne 0 ]]; then
+	ARMV8_ERROR=$($CC -march=armv8-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+	if [[ "$ARMV8_ERROR" -eq 0 ]]; then
+		SH_ARMV8="-march=armv8-a"
+	fi
+fi
+
 RPATH_ERROR=$($CC -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$RPATH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-rpath,$INSTX_LIBDIR"
@@ -295,7 +309,13 @@ BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT")
 BUILD_LDFLAGS=("-L$INSTX_LIBDIR")
 BUILD_LIBS=()
 
-if [[ ! -z "$SH_NATIVE" ]]; then
+if [[ ! -z "$SH_ARMV8" ]]; then
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_ARMV8"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_ARMV8"
+elif [[ ! -z "$SH_ARMV7" ]]; then
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_ARMV7"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_ARMV7"
+elif [[ ! -z "$SH_NATIVE" ]]; then
     BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_NATIVE"
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_NATIVE"
 fi
