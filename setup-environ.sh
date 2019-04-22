@@ -19,13 +19,18 @@
 
 # Prerequisites needed for nearly all packages
 
+if [[ -z $(command -v pkg-config 2>/dev/null) ]]; then
+    echo "Some packages require Package-Config. Please install pkg-config."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 if [[ -z $(command -v autoconf 2>/dev/null) ]]; then
-    echo "Some packages require Autotools. Please install autoconf, automake and libtool."
+    echo "Some packages require Autoconf. Please install autoconf, automake and libtool."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 if [[ -z $(command -v automake 2>/dev/null) ]]; then
-    echo "Some packages require Autotools. Please install autoconf, automake and libtool."
+    echo "Some packages require Automake. Please install autoconf, automake and libtool."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -111,7 +116,7 @@ if [[ -z "$WGET" ]]; then
         WGET="/usr/local/bin/wget"
     elif [[ ! -z $(command -v wget) ]]; then
         WGET=$(command -v wget)
-	else
+    else
         WGET=wget
     fi
 fi
@@ -212,24 +217,24 @@ fi
 
 # Switch from -march=native to something more appropriate
 if [[ $(cat /proc/cpuinfo | grep -i -c -E 'armv7') -ne 0 ]]; then
-	ARMV7_ERROR=$($CC -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-	if [[ "$ARMV7_ERROR" -eq 0 ]]; then
-		SH_ARMV7="-march=armv7-a"
-	fi
+    ARMV7_ERROR=$($CC -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    if [[ "$ARMV7_ERROR" -eq 0 ]]; then
+        SH_ARMV7="-march=armv7-a"
+    fi
 fi
 # See if we can upgrade to ARMv7+NEON
 if [[ $(cat /proc/cpuinfo | grep -i -c -E 'neon') -ne 0 ]]; then
-	ARMV7_ERROR=$($CC -march=armv7-a -mfpu=neon -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-	if [[ "$ARMV7_ERROR" -eq 0 ]]; then
-		SH_ARMV7="-march=armv7-a -mfpu=neon"
-	fi
+    ARMV7_ERROR=$($CC -march=armv7-a -mfpu=neon -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    if [[ "$ARMV7_ERROR" -eq 0 ]]; then
+        SH_ARMV7="-march=armv7-a -mfpu=neon"
+    fi
 fi
 # See if we can upgrade to ARMv8
 if [[ $(uname -m 2>&1 | grep -i -c -E 'aarch32|aarch64') -ne 0 ]]; then
-	ARMV8_ERROR=$($CC -march=armv8-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-	if [[ "$ARMV8_ERROR" -eq 0 ]]; then
-		SH_ARMV8="-march=armv8-a"
-	fi
+    ARMV8_ERROR=$($CC -march=armv8-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    if [[ "$ARMV8_ERROR" -eq 0 ]]; then
+        SH_ARMV8="-march=armv8-a"
+    fi
 fi
 
 RPATH_ERROR=$($CC -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
@@ -380,14 +385,14 @@ done
 # Print a summary once
 if [[ -z "$PRINT_ONCE" ]]; then
 
-	if [[ "$IS_SOLARIS" -ne 0 ]]; then
-		echo ""
-		echo "Solaris tools:"
-		echo ""
-		echo "     sed: $(command -v sed)"
-		echo "     awk: $(command -v awk)"
-		echo "    grep: $(command -v grep)"
-	fi
+    if [[ "$IS_SOLARIS" -ne 0 ]]; then
+        echo ""
+        echo "Solaris tools:"
+        echo ""
+        echo "     sed: $(command -v sed)"
+        echo "     awk: $(command -v awk)"
+        echo "    grep: $(command -v grep)"
+    fi
 
     echo ""
     echo "Common flags and options:"
