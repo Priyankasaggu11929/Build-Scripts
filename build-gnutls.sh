@@ -193,7 +193,7 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 
 for file in $(find "$PWD/tests" -iname 'Makefile')
 do
@@ -204,7 +204,7 @@ do
     sed -e 's| -DNDEBUG||g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 	
-    sed -e 's|$(cipher_openssl_compat_OBJECTS) $(cipher_openssl_compat_DEPENDENCIES) $(EXTRA_cipher_openssl_compat_DEPENDENCIES)|$(cipher_openssl_compat_OBJECTS) $(cipher_openssl_compat_DEPENDENCIES) $(EXTRA_cipher_openssl_compat_DEPENDENCIES) -lcrypto|g' "$file" > "$file.fixed"
+    sed -e 's|$(AM_V_CCLD)$(cipher_openssl_compat_LINK) $(cipher_openssl_compat_OBJECTS) $(cipher_openssl_compat_LDADD) $(LIBS)|$(AM_V_CCLD)$(cipher_openssl_compat_LINK) $(cipher_openssl_compat_OBJECTS) $(cipher_openssl_compat_LDADD) $(LIBS) -lcrypto|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
 
