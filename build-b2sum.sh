@@ -58,7 +58,7 @@ rm -rf "$B2SUM_DIR" &>/dev/null
 gzip -d < "$B2SUM_TAR" | tar xf -
 cd "$B2SUM_DIR/b2sum"
 
-B2CFLAGS="${CFLAGS[@]} -std=c99 -I. -I../sse"
+B2CFLAGS="${CFLAGS[@]} -std=c99 -I."
 
 # Unconditionally remove OpenMP from makefile
 sed "/^NO_OPENMP/d" makefile > makefile.fixed
@@ -68,16 +68,19 @@ mv makefile.fixed makefile
 sed "s|-Werror=declaration-after-statement ||g" makefile > makefile.fixed
 mv makefile.fixed makefile
 
-# Add OpenMP if available
-if [[ "$OPENMP_ERROR" -eq 0 ]]; then
-    B2CFLAGS="$B2CFLAGS -fopenmp"
-fi
-
-if [[ "$IS_IA32" -eq 0 ]]; then
+# Eiter add the SSE include directory, or remove the SSE source files
+if [[ "$IS_IA32" -ne 0 ]]; then
+    B2CFLAGS="$B2CFLAGS -I../sse"
+else
     sed "/^FILES=/d" makefile > makefile.fixed
     mv makefile.fixed makefile
     sed "s|^#FILES=|FILES=|g" makefile > makefile.fixed
     mv makefile.fixed makefile
+fi
+
+# Add OpenMP if available
+if [[ "$OPENMP_ERROR" -eq 0 ]]; then
+    B2CFLAGS="$B2CFLAGS -fopenmp"
 fi
 
 if [[ "$IS_SOLARIS" -eq 1 ]]; then
