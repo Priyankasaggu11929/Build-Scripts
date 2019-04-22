@@ -127,9 +127,9 @@ if true; then
         rm -rf "$artifact"
     done
 
-    # ./build-zlib.sh 2>&1 | tee build-zlib.log
-    if [[ -e build-zlib.log ]]; then
-        rm -f build-zlib.log
+    # ./build-b2sum.sh 2>&1 | tee build-b2sum.log
+    if [[ -e build-b2sum.log ]]; then
+        rm -f build-b2sum.log
     fi
 fi
 
