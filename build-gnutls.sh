@@ -156,6 +156,13 @@ cp ../patch/gnutls.patch .
 patch -u -p0 < gnutls.patch
 echo ""
 
+for file in $(find "$PWD/tests" -iname 'Makefile.in')
+do
+    # libcrypto.so must come after other libraries
+    sed -e 's|$(crypto_OBJECTS) $(crypto_LDADD) $(LIBS)|$(crypto_OBJECTS) $(LIBS) $(crypto_LDADD)|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+done
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -202,13 +209,6 @@ do
     # Makefile does not honor CFLAGS or CXXFLAGS on command line.
     echo "Patching $file"
     sed -e 's| -DNDEBUG||g' "$file" > "$file.fixed"
-    mv "$file.fixed" "$file"
-done
-
-for file in $(find "$PWD/tests" -iname 'Makefile.in')
-do
-    # libcrypto.so must come after other libraries
-    sed -e 's|$(crypto_OBJECTS) $(crypto_LDADD) $(LIBS)|$(crypto_OBJECTS) $(LIBS) $(crypto_LDADD)|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
 
