@@ -68,10 +68,11 @@ mv makefile.fixed makefile
 sed "s|-Werror=declaration-after-statement ||g" makefile > makefile.fixed
 mv makefile.fixed makefile
 
-# Eiter add the SSE include directory, or remove the SSE source files
+# Either add the SSE include directory, or remove the SSE source files
 if [[ "$IS_IA32" -ne 0 ]]; then
     B2CFLAGS="$B2CFLAGS -I../sse"
 else
+    B2CFLAGS="$B2CFLAGS -I../ref"
     sed "/^FILES=/d" makefile > makefile.fixed
     mv makefile.fixed makefile
     sed "s|^#FILES=|FILES=|g" makefile > makefile.fixed
