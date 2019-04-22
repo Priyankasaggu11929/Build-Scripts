@@ -174,7 +174,7 @@ fi
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
-    LIBS="-lhogweed -lnettle -lgmp -lcrypto ${BUILD_LIBS[*]}" \
+    LIBS="-lhogweed -lnettle -lgmp ${BUILD_LIBS[*]}" \
 ./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --with-unbound-root-key-file \
     --enable-seccomp-tests \
