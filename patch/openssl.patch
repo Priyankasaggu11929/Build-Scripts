@@ -48,3 +48,60 @@
  }
  
  static void felem_to_bin28(u8 out[28], const felem in)
+--- crypto/ec/ecp_nistp521.c
++++ crypto/ec/ecp_nistp521.c
+@@ -156,6 +156,46 @@
+  */
+ static void felem_to_bin66(u8 out[66], const felem in)
+ {
++#ifdef PEDANTIC
++    limb temp;
++    memset(out, 0, 66);
++
++    memcpy(&temp, out+ 0, sizeof(limb));
++    temp = in[0];
++    memcpy(out+ 0, &temp, sizeof(limb));
++
++    memcpy(&temp, out+ 7, sizeof(limb));
++    temp |= in[1] << 2;
++    memcpy(out+ 7, &temp, sizeof(limb));
++
++    memcpy(&temp, out+14, sizeof(limb));
++    temp |= in[2] << 4;
++    memcpy(out+14, &temp, sizeof(limb));
++
++    memcpy(&temp, out+21, sizeof(limb));
++    temp |= in[3] << 6;
++    memcpy(out+21, &temp, sizeof(limb));
++
++    memcpy(&temp, out+29, sizeof(limb));
++    temp = in[4];
++    memcpy(out+29, &temp, sizeof(limb));  
++
++    memcpy(&temp, out+36, sizeof(limb));
++    temp |= in[5] << 2;
++    memcpy(out+36, &temp, sizeof(limb));
++
++    memcpy(&temp, out+43, sizeof(limb));
++    temp |= in[6] << 4;
++    memcpy(out+43, &temp, sizeof(limb));
++
++    memcpy(&temp, out+50, sizeof(limb));
++    temp |= in[7] << 6;
++    memcpy(out+50, &temp, sizeof(limb));
++
++    memcpy(&temp, out+58, sizeof(limb));
++    temp = in[8];
++    memcpy(out+58, &temp, sizeof(limb));
++#else
+     memset(out, 0, 66);
+     (*((limb *) & out[0])) = in[0];
+     (*((limb *) & out[7])) |= in[1] << 2;
+@@ -166,6 +206,7 @@
+     (*((limb *) & out[43])) |= in[6] << 4;
+     (*((limb *) & out[50])) |= in[7] << 6;
+     (*((limb *) & out[58])) = in[8];
++#endif
+ }
+ 
+ /* To preserve endianness when using BN_bn2bin and BN_bin2bn */
