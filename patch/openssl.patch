@@ -1,0 +1,25 @@
+--- crypto/cast/cast_lcl.h
++++ crypto/cast/cast_lcl.h
+@@ -152,10 +152,8 @@
+ 
+ #if defined(OPENSSL_SYS_WIN32) && defined(_MSC_VER)
+ # define ROTL(a,n)     (_lrotl(a,n))
+-#elif defined(PEDANTIC)
+-# define ROTL(a,n)     ((((a)<<(n))&0xffffffffL)|((a)>>((32-(n))&31)))
+ #else
+-# define ROTL(a,n)     ((((a)<<(n))&0xffffffffL)|((a)>>(32-(n))))
++# define ROTL(a,n)     ((((a)<<((n)&31))&0xffffffffL)|((a)>>((32-(n))&31)))
+ #endif
+ 
+ #define C_M    0x3fc
+--- crypto/lhash/lhash.c
++++ crypto/lhash/lhash.c
+@@ -463,7 +463,7 @@
+         v = n | (*c);
+         n += 0x100;
+         r = (int)((v >> 2) ^ v) & 0x0f;
+-        ret = (ret << r) | (ret >> (32 - r));
++        ret = (ret << (r&31) | (ret >> ((32-r)&31));
+         ret &= 0xFFFFFFFFL;
+         ret ^= v * v;
+         c++;

@@ -89,6 +89,10 @@ rm -rf "$OPENSSL_DIR" &>/dev/null
 gzip -d < "$OPENSSL_TAR" | tar xf -
 cd "$OPENSSL_DIR"
 
+cp ../patch/openssl.patch .
+patch -u -p0 < openssl.patch
+echo ""
+
 # Fix the twisted library paths used by OpenSSL
 for file in $(find . -iname '*makefile*')
 do
@@ -132,6 +136,8 @@ if [[ "$IS_DARWIN" -ne 0 ]]; then
         mv "$mfile.fixed" "$mfile"
     done
 fi
+
+[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 
 # Try to make depend...
 IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
