@@ -322,6 +322,16 @@ BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT")
 BUILD_LDFLAGS=("-L$INSTX_LIBDIR")
 BUILD_LIBS=()
 
+if [[ ! -z "$INSTX_UBSAN" ]]; then
+    BUILD_CFLAGS+=("-fsanitize=undefined")
+    BUILD_CXXFLAGS+=("-fsanitize=undefined")
+    BUILD_LDFLAGS+=("-fsanitize=undefined")
+elif [[ ! -z "$INSTX_ASAN" ]]; then
+    BUILD_CFLAGS+=("-fsanitize=address")
+    BUILD_CXXFLAGS+=("-fsanitize=address")
+    BUILD_LDFLAGS+=("-fsanitize=address")
+fi
+
 if [[ ! -z "$SH_ARMV8" ]]; then
     BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_ARMV8"
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_ARMV8"
