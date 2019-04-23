@@ -137,7 +137,7 @@ if [[ "$IS_DARWIN" -ne 0 ]]; then
     done
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 
 # Try to make depend...
 IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
