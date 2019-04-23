@@ -373,8 +373,6 @@ if [[ -z "$INSTX_CACHE" ]]; then
     mkdir -p "$INSTX_CACHE"
 fi
 
-echo "INSTX_CACHE: $INSTX_CACHE"
-
 ###############################################################################
 
 # If the package is older than 7 days, then rebuild it. This sidesteps the
