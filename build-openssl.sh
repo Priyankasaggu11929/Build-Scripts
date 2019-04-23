@@ -93,6 +93,8 @@ cp ../patch/openssl.patch .
 patch -u -p0 < openssl.patch
 echo ""
 
+#[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+
 # Fix the twisted library paths used by OpenSSL
 for file in $(find . -iname '*makefile*')
 do
@@ -107,6 +109,10 @@ CONFIG_FLAGS+=("${BUILD_CPPFLAGS[*]}")
 CONFIG_FLAGS+=("${BUILD_CFLAGS[*]}")
 CONFIG_FLAGS+=("${BUILD_LDFLAGS[*]}")
 
+# This a fair amount of UB and UBsan findings
+if [[ "$IS_IA32" -eq 1 ]]; then
+    CONFIG_FLAGS+=("-DPEDANTIC")
+fi
 if [[ "$IS_X86_64" -eq 1 ]]; then
     CONFIG_FLAGS+=("enable-ec_nistp_64_gcc_128")
 fi
@@ -136,8 +142,6 @@ if [[ "$IS_DARWIN" -ne 0 ]]; then
         mv "$mfile.fixed" "$mfile"
     done
 fi
-
-#[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 
 # Try to make depend...
 IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
