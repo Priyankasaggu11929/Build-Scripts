@@ -362,11 +362,18 @@ fi
 
 # Used to track packages that have been built by these scripts.
 # The accounting is local to a user account. There is no harm
-# in rebuilding a package under another account.
+# in rebuilding a package under another account. In April 2019
+# we added INSTX_PREFIX so we could build packages in multiple
+# locations. For example, /usr/local for updated packages, and
+# /var/sanitize for testing packages.
 if [[ -z "$INSTX_CACHE" ]]; then
-    INSTX_CACHE="$HOME/.build-scripts"
+    # Change / to - for CACHE_DIR
+    CACHE_DIR=$(echo "$INSTX_PREFIX" | cut -c 2- | sed 's/\//-/g')
+    INSTX_CACHE="$HOME/.build-scripts/$CACHE_DIR"
     mkdir -p "$INSTX_CACHE"
 fi
+
+echo "INSTX_CACHE: $INSTX_CACHE"
 
 ###############################################################################
 
