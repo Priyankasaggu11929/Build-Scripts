@@ -50,7 +50,43 @@
  static void felem_to_bin28(u8 out[28], const felem in)
 --- crypto/ec/ecp_nistp521.c
 +++ crypto/ec/ecp_nistp521.c
-@@ -156,6 +156,46 @@
+@@ -139,6 +139,27 @@
+  */
+ static void bin66_to_felem(felem out, const u8 in[66])
+ {
++#ifdef PEDANTIC
++    limb temp;
++    memcpy(&temp, in+ 0, sizeof(limb));
++    out[0] = temp & bottom58bits;
++    memcpy(&temp, in+ 7, sizeof(limb));
++    out[1] = (temp >> 2) & bottom58bits;
++    memcpy(&temp, in+14, sizeof(limb));
++    out[2] = (temp >> 4) & bottom58bits;
++    memcpy(&temp, in+21, sizeof(limb));
++    out[3] = (temp >> 6) & bottom58bits;
++    memcpy(&temp, in+29, sizeof(limb));
++    out[4] = temp & bottom58bits;
++    memcpy(&temp, in+36, sizeof(limb));
++    out[5] = (temp >> 2) & bottom58bits;
++    memcpy(&temp, in+43, sizeof(limb));
++    out[6] = (temp >> 4) & bottom58bits;
++    memcpy(&temp, in+50, sizeof(limb));
++    out[7] = (temp >> 6) & bottom58bits;
++    memcpy(&temp, in+58, sizeof(limb));
++    out[8] = temp & bottom57bits;
++#else
+     out[0] = (*((limb *) & in[0])) & bottom58bits;
+     out[1] = (*((limb *) & in[7]) >> 2) & bottom58bits;
+     out[2] = (*((limb *) & in[14]) >> 4) & bottom58bits;
+@@ -148,6 +169,7 @@
+     out[6] = (*((limb *) & in[43]) >> 4) & bottom58bits;
+     out[7] = (*((limb *) & in[50]) >> 6) & bottom58bits;
+     out[8] = (*((limb *) & in[58])) & bottom57bits;
++#endif
+ }
+ 
+ /*
+@@ -156,6 +178,46 @@
   */
  static void felem_to_bin66(u8 out[66], const felem in)
  {
@@ -97,7 +133,7 @@
      memset(out, 0, 66);
      (*((limb *) & out[0])) = in[0];
      (*((limb *) & out[7])) |= in[1] << 2;
-@@ -166,6 +206,7 @@
+@@ -166,6 +228,7 @@
      (*((limb *) & out[43])) |= in[6] << 4;
      (*((limb *) & out[50])) |= in[7] << 6;
      (*((limb *) & out[58])) = in[8];
@@ -105,44 +141,6 @@
  }
  
  /* To preserve endianness when using BN_bn2bin and BN_bin2bn */
---- crypto/ec/ecp_nistp521.c
-+++ crypto/ec/ecp_nistp521.c
-@@ -139,6 +139,27 @@
-  */
- static void bin66_to_felem(felem out, const u8 in[66])
- {
-+#ifdef PEDANTIC
-+    limb temp;
-+    memcpy(&temp, in+ 0, sizeof(limb));
-+    out[0] = temp & bottom58bits;
-+    memcpy(&temp, in+ 7, sizeof(limb));
-+    out[1] = (temp >> 2) & bottom58bits;
-+    memcpy(&temp, in+14, sizeof(limb));
-+    out[2] = (temp >> 4) & bottom58bits;
-+    memcpy(&temp, in+21, sizeof(limb));
-+    out[3] = (temp >> 6) & bottom58bits;
-+    memcpy(&temp, in+29, sizeof(limb));
-+    out[4] = temp & bottom58bits;
-+    memcpy(&temp, in+36, sizeof(limb));
-+    out[5] = (temp >> 2) & bottom58bits;
-+    memcpy(&temp, in+43, sizeof(limb));
-+    out[6] = (temp >> 4) & bottom58bits;
-+    memcpy(&temp, in+50, sizeof(limb));
-+    out[7] = (temp >> 6) & bottom58bits;
-+    memcpy(&temp, in+58, sizeof(limb));
-+    out[8] = temp & bottom57bits;
-+#else
-     out[0] = (*((limb *) & in[0])) & bottom58bits;
-     out[1] = (*((limb *) & in[7]) >> 2) & bottom58bits;
-     out[2] = (*((limb *) & in[14]) >> 4) & bottom58bits;
-@@ -148,6 +169,7 @@
-     out[6] = (*((limb *) & in[43]) >> 4) & bottom58bits;
-     out[7] = (*((limb *) & in[50]) >> 6) & bottom58bits;
-     out[8] = (*((limb *) & in[58])) & bottom57bits;
-+#endif
- }
- 
- /*
 --- ssl/ssltest.c
 +++ ssl/ssltest.c
 @@ -470,10 +470,17 @@
