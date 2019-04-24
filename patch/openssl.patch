@@ -31,13 +31,13 @@
  {
 +#ifdef PEDANTIC
 +    uint64_t temp;
-+    memcpy(&temp, in+ 0, 8);
++    memcpy(&temp, in+ 0, sizeof(temp));
 +    out[0] = temp & 0x00ffffffffffffff;
-+    memcpy(&temp, in+ 7, 8);
++    memcpy(&temp, in+ 7, sizeof(temp));
 +    out[1] = temp & 0x00ffffffffffffff;
-+    memcpy(&temp, in+14, 8);
++    memcpy(&temp, in+14, sizeof(temp));
 +    out[2] = temp & 0x00ffffffffffffff;
-+    memcpy(&temp, in+20, 8);
++    memcpy(&temp, in+20, sizeof(temp));
 +    out[3] = temp >> 8;
 +#else   
      out[0] = *((const uint64_t *)(in)) & 0x00ffffffffffffff;
@@ -56,23 +56,23 @@
  {
 +#ifdef PEDANTIC
 +    limb temp;
-+    memcpy(&temp, in+ 0, sizeof(limb));
++    memcpy(&temp, in+ 0, sizeof(temp));
 +    out[0] = temp & bottom58bits;
-+    memcpy(&temp, in+ 7, sizeof(limb));
++    memcpy(&temp, in+ 7, sizeof(temp));
 +    out[1] = (temp >> 2) & bottom58bits;
-+    memcpy(&temp, in+14, sizeof(limb));
++    memcpy(&temp, in+14, sizeof(temp));
 +    out[2] = (temp >> 4) & bottom58bits;
-+    memcpy(&temp, in+21, sizeof(limb));
++    memcpy(&temp, in+21, sizeof(temp));
 +    out[3] = (temp >> 6) & bottom58bits;
-+    memcpy(&temp, in+29, sizeof(limb));
++    memcpy(&temp, in+29, sizeof(temp));
 +    out[4] = temp & bottom58bits;
-+    memcpy(&temp, in+36, sizeof(limb));
++    memcpy(&temp, in+36, sizeof(temp));
 +    out[5] = (temp >> 2) & bottom58bits;
-+    memcpy(&temp, in+43, sizeof(limb));
++    memcpy(&temp, in+43, sizeof(temp));
 +    out[6] = (temp >> 4) & bottom58bits;
-+    memcpy(&temp, in+50, sizeof(limb));
++    memcpy(&temp, in+50, sizeof(temp));
 +    out[7] = (temp >> 6) & bottom58bits;
-+    memcpy(&temp, in+58, sizeof(limb));
++    memcpy(&temp, in+58, sizeof(temp));
 +    out[8] = temp & bottom57bits;
 +#else
      out[0] = (*((limb *) & in[0])) & bottom58bits;
@@ -94,41 +94,41 @@
 +    limb temp;
 +    memset(out, 0, 66);
 +
-+    memcpy(&temp, out+ 0, sizeof(limb));
++    memcpy(&temp, out+ 0, sizeof(temp));
 +    temp = in[0];
-+    memcpy(out+ 0, &temp, sizeof(limb));
++    memcpy(out+ 0, &temp, sizeof(temp));
 +
-+    memcpy(&temp, out+ 7, sizeof(limb));
++    memcpy(&temp, out+ 7, sizeof(temp));
 +    temp |= in[1] << 2;
-+    memcpy(out+ 7, &temp, sizeof(limb));
++    memcpy(out+ 7, &temp, sizeof(temp));
 +
-+    memcpy(&temp, out+14, sizeof(limb));
++    memcpy(&temp, out+14, sizeof(temp));
 +    temp |= in[2] << 4;
-+    memcpy(out+14, &temp, sizeof(limb));
++    memcpy(out+14, &temp, sizeof(temp));
 +
-+    memcpy(&temp, out+21, sizeof(limb));
++    memcpy(&temp, out+21, sizeof(temp));
 +    temp |= in[3] << 6;
-+    memcpy(out+21, &temp, sizeof(limb));
++    memcpy(out+21, &temp, sizeof(temp));
 +
-+    memcpy(&temp, out+29, sizeof(limb));
++    memcpy(&temp, out+29, sizeof(temp));
 +    temp = in[4];
-+    memcpy(out+29, &temp, sizeof(limb));  
++    memcpy(out+29, &temp, sizeof(temp));
 +
-+    memcpy(&temp, out+36, sizeof(limb));
++    memcpy(&temp, out+36, sizeof(temp));
 +    temp |= in[5] << 2;
-+    memcpy(out+36, &temp, sizeof(limb));
++    memcpy(out+36, &temp, sizeof(temp));
 +
-+    memcpy(&temp, out+43, sizeof(limb));
++    memcpy(&temp, out+43, sizeof(temp));
 +    temp |= in[6] << 4;
-+    memcpy(out+43, &temp, sizeof(limb));
++    memcpy(out+43, &temp, sizeof(temp));
 +
-+    memcpy(&temp, out+50, sizeof(limb));
++    memcpy(&temp, out+50, sizeof(temp));
 +    temp |= in[7] << 6;
-+    memcpy(out+50, &temp, sizeof(limb));
++    memcpy(out+50, &temp, sizeof(temp));
 +
-+    memcpy(&temp, out+58, sizeof(limb));
++    memcpy(&temp, out+58, sizeof(temp));
 +    temp = in[8];
-+    memcpy(out+58, &temp, sizeof(limb));
++    memcpy(out+58, &temp, sizeof(temp));
 +#else
      memset(out, 0, 66);
      (*((limb *) & out[0])) = in[0];
@@ -141,7 +141,7 @@
  }
  
  /* To preserve endianness when using BN_bn2bin and BN_bin2bn */
- --- ssl/t1_lib.c
+--- ssl/t1_lib.c
 +++ ssl/t1_lib.c
 @@ -133,7 +133,8 @@
  #endif
@@ -165,7 +165,7 @@
      SSL_get0_alpn_selected(server, &server_proto, &server_proto_len);
  
 +    if (client_proto == NULL)
-+	client_proto = null_protocol;
++        client_proto = null_protocol;
 +
 +    if (server_proto == NULL)
 +        server_proto = null_protocol;
