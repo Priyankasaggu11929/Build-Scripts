@@ -109,10 +109,9 @@ CONFIG_FLAGS+=("${BUILD_CPPFLAGS[*]}")
 CONFIG_FLAGS+=("${BUILD_CFLAGS[*]}")
 CONFIG_FLAGS+=("${BUILD_LDFLAGS[*]}")
 
-# This a fair amount of UB and UBsan findings
-if [[ "$IS_IA32" -eq 1 ]]; then
-    CONFIG_FLAGS+=("-DPEDANTIC")
-fi
+# This clears a fair amount of UBsan findings
+CONFIG_FLAGS+=("-DPEDANTIC")
+
 if [[ "$IS_X86_64" -eq 1 ]]; then
     CONFIG_FLAGS+=("enable-ec_nistp_64_gcc_128")
 fi
