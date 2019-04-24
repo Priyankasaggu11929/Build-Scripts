@@ -141,6 +141,18 @@
  }
  
  /* To preserve endianness when using BN_bn2bin and BN_bin2bn */
+ --- ssl/t1_lib.c
++++ ssl/t1_lib.c
+@@ -133,7 +133,8 @@
+ #endif
+ 
+ #define CHECKLEN(curr, val, limit) \
+-    (((curr) >= (limit)) || (size_t)((limit) - (curr)) < (size_t)(val))
++    (((size_t)(curr) >= (size_t)(limit)) || \
++     ((size_t)(limit) - (size_t)(curr)) < (size_t)(val))
+ 
+ SSL3_ENC_METHOD TLSv1_enc_data = {
+     tls1_enc,
 --- ssl/ssltest.c
 +++ ssl/ssltest.c
 @@ -470,10 +470,17 @@
