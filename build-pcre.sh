@@ -91,8 +91,7 @@ patch -u -p0 < pcre.patch
 echo ""
 
 # Our grep catches 'runtime error' and signals failure.
-# We a source code comment, but it is present in the patch.
-rm pcre.patch
+# rm pcre.patch
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh

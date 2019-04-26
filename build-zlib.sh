@@ -101,7 +101,7 @@ then
 fi
 
 echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR -iE 'runtime error' | grep -v ChangeLog | wc -l)
+COUNT=$(grep -oIR -iE 'runtime error:' | grep -v ChangeLog | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test zLib"
