@@ -7,8 +7,8 @@ PCRE_TAR=pcre-8.43.tar.gz
 PCRE_DIR=pcre-8.43
 PKG_NAME1=pcre
 
-PCRE2_TAR=pcre2-10.32.tar.gz
-PCRE2_DIR=pcre2-10.32
+PCRE2_TAR=pcre2-10.33.tar.gz
+PCRE2_DIR=pcre2-10.33
 PKG_NAME2=pcre2
 
 ###############################################################################
