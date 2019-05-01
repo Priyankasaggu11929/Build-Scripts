@@ -35,8 +35,8 @@ if ! $CC $CFLAGS bitness.c -o /dev/null &>/dev/null; then
     INSTX_BITNESS=32
 fi
 
-if $CC $CFLAGS comptest.c -Wl,-static $LDFLAGS -o /dev/null &>/dev/null; then
-    STATIC_LDFLAGS=-Wl,-static
+if $CC $CFLAGS comptest.c -static $LDFLAGS -o /dev/null &>/dev/null; then
+    STATIC_LDFLAGS=-static
 fi
 
 IS_DARWIN=$(echo -n $(uname -s 2>&1) | grep -i -c 'darwin')
@@ -66,6 +66,7 @@ cp cacert.pem "$PREFIX/cacert/"
 
 ############################## OpenSSL ##############################
 
+echo
 echo "*************************************************"
 echo "Building OpenSSL"
 echo "*************************************************"
@@ -97,9 +98,9 @@ fi
 
 ############################## Wget ##############################
 
-# Build Wget
 cd "$BOOTSTRAP_DIR"
 
+echo
 echo "*************************************************"
 echo "Building Wget"
 echo "*************************************************"
