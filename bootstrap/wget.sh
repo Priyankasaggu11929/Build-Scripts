@@ -108,6 +108,7 @@ if ! patch -u -p0 < wget.patch; then
 fi
 
     CFLAGS="$CFLAGS $DARWIN_CFLAGS" \
+    LDFLAGS="-static" \
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
     OPENSSL_LIBS="$PREFIX/lib/libssl.a $PREFIX/lib/libcrypto.a" \
 ./configure \
@@ -123,8 +124,8 @@ fi
     --disable-pcre2 \
     --disable-nls \
     --disable-iri \
-    --without-libiconv-prefix \
-    --without-libunistring-prefix
+    --without-libiconv \
+    --without-libunistring
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Wget"
