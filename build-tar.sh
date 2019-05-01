@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Tar from sources.
 
-TAR_TAR=tar-1.29.tar.gz
-TAR_DIR=tar-1.29
+TAR_TAR=tar-1.32.tar.gz
+TAR_DIR=tar-1.32
 
 ###############################################################################
 
