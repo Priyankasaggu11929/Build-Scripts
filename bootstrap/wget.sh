@@ -35,8 +35,8 @@ if ! $CC $CFLAGS bitness.c -o /dev/null &>/dev/null; then
     INSTX_BITNESS=32
 fi
 
-if $CC $CFLAGS comptest.c -static $LDFLAGS -o /dev/null &>/dev/null; then
-    STATIC_LDFLAGS=-static
+if $CC $CFLAGS comptest.c -Wl,-static $LDFLAGS -o /dev/null &>/dev/null; then
+    STATIC_LDFLAGS=-Wl,-static-static
 fi
 
 IS_DARWIN=$(echo -n $(uname -s 2>&1) | grep -i -c 'darwin')
@@ -120,9 +120,7 @@ fi
     --disable-pcre \
     --disable-pcre2 \
     --disable-nls \
-    --disable-iri \
-    --without-libiconv \
-    --without-libunistring
+    --disable-iri
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Wget"
