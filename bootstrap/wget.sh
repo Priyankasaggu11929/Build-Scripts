@@ -126,7 +126,7 @@ if [[ "$?" -ne 0 ]]; then
 fi
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+if ! make "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Unistring"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
