@@ -76,6 +76,7 @@ cd "$EXPAT_DIR"
 ./configure --enable-shared \
 	--prefix="$INSTX_PREFIX" \
 	--libdir="$INSTX_LIBDIR" \
+    --without-docbook \
     --without-xmlwf
 
 if [[ "$?" -ne 0 ]]; then
