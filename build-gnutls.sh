@@ -203,7 +203,7 @@ do
     echo "Patching $file"
     sed -e 's| -DNDEBUG||g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
-	
+
     sed -e 's|$(cipher_openssl_compat_LDADD) $(LIBS)|$(cipher_openssl_compat_LDADD) $(LIBS) -lcrypto|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
