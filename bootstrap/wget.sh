@@ -129,7 +129,7 @@ if [[ "$?" -ne "0" ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if ! make -j V=1 "$INSTX_JOBS"; then
+if ! make V=1 -j "$INSTX_JOBS"; then
     echo "Failed to build Wget"
     exit 1
 fi
