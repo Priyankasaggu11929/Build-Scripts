@@ -97,6 +97,7 @@ cd "$BOOTSTRAP_DIR"
 
 rm -rf "$WGET_DIR" &>/dev/null
 gzip -d < "$WGET_TAR" | tar xf -
+cd "$BOOTSTRAP_DIR/$WGET_DIR"
 
 # Install recipe does not overwrite a config, if present.
 if [[ -f "$PREFIX/etc/wgetrc" ]]; then
