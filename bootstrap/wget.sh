@@ -117,8 +117,7 @@ cd "$BOOTSTRAP_DIR/$UNISTR_DIR"
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
     OPENSSL_LIBS="$PREFIX/lib/libssl.a $PREFIX/lib/libcrypto.a" \
 ./configure \
-    --prefix="$INSTX_PREFIX" \
-    --libdir="$INSTX_LIBDIR" \
+    --prefix="$PREFIX" \
     --disable-shared
 
 if [[ "$?" -ne 0 ]]; then
