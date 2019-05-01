@@ -55,6 +55,9 @@ else
     MAKEDEPPROG="$CC"
 fi
 
+# Welcome to the Jungle...
+cd "$BOOTSTRAP_DIR"
+
 ############################## CA Certs ##############################
 
 # Copy our copy of cacerts to bootstrap
@@ -62,9 +65,6 @@ mkdir -p "$PREFIX/cacert/"
 cp cacert.pem "$PREFIX/cacert/"
 
 ############################## OpenSSL ##############################
-
-# Build OpenSSL
-cd "$BOOTSTRAP_DIR"
 
 echo "*************************************************"
 echo "Building OpenSSL"
