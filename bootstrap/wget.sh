@@ -6,11 +6,13 @@
 
 # Binaries
 WGET_TAR=wget-1.20.3.tar.gz
+UNISTR_TAR=libunistring-0.9.10.tar.gz
 SSL_TAR=openssl-1.0.2r.tar.gz
 
 # Directories
 BOOTSTRAP_DIR=$(pwd)
 WGET_DIR=wget-1.20.3
+UNISTR_DIR=libunistring-0.9.10
 SSL_DIR=openssl-1.0.2r
 
 # Install location
@@ -93,6 +95,46 @@ fi
 
 if ! make install_sw; then
     echo "Failed to install OpenSSL"
+    exit 1
+fi
+
+############################## Unistring ##############################
+
+cd "$BOOTSTRAP_DIR"
+
+echo
+echo "*************************************************"
+echo "Building Unistring"
+echo "*************************************************"
+echo
+
+rm -rf "$UNISTR_DIR" &>/dev/null
+gzip -d < "$UNISTR_TAR" | tar xf -
+cd "$BOOTSTRAP_DIR/$UNISTR_DIR"
+
+    CFLAGS="$CFLAGS $DARWIN_CFLAGS" \
+    LDFLAGS="$LDFLAGS $STATIC_LDFLAGS" \
+    PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
+    OPENSSL_LIBS="$PREFIX/lib/libssl.a $PREFIX/lib/libcrypto.a" \
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
+    --disable-shared
+
+if [[ "$?" -ne 0 ]]; then
+    echo "Failed to configure Unistring"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to build Unistring"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+if ! make install; then
+    echo "Failed to install Wget"
     exit 1
 fi
 
