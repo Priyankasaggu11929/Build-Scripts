@@ -199,6 +199,7 @@ echo "" >> "$PREFIX/etc/wgetrc"
 if true; then
     cd "$CURR_DIR"
     rm -rf "$WGET_DIR" &>/dev/null
+    rm -rf "$UNISTR_DIR" &>/dev/null
     rm -rf "$SSL_DIR" &>/dev/null
 fi
 
