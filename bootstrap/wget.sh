@@ -108,7 +108,7 @@ if ! patch -u -p0 < wget.patch; then
 fi
 
     CFLAGS="$CFLAGS $DARWIN_CFLAGS" \
-    LDFLAGS="-static" \
+    LDFLAGS="$LDFLAGS -static" \
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
     OPENSSL_LIBS="$PREFIX/lib/libssl.a $PREFIX/lib/libcrypto.a" \
 ./configure \
