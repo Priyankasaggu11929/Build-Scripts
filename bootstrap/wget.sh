@@ -5,12 +5,12 @@
 # is useful for bootstrapping a full Wget build.
 
 # Binaries
-WGET_TAR=wget-1.20.1.tar.gz
+WGET_TAR=wget-1.20.3.tar.gz
 SSL_TAR=openssl-1.0.2r.tar.gz
 
 # Directories
 BOOTSTRAP_DIR=$(pwd)
-WGET_DIR=wget-1.20.1
+WGET_DIR=wget-1.20.3
 SSL_DIR=openssl-1.0.2r
 
 # Install location
@@ -33,6 +33,10 @@ trap finish EXIT
 INSTX_BITNESS=64
 if ! $CC $CFLAGS bitness.c -o /dev/null &>/dev/null; then
     INSTX_BITNESS=32
+fi
+
+if $CC $CFLAGS comptest.c -static $LDFLAGS -o /dev/null &>/dev/null; then
+    STATIC_LDFLAGS=-static
 fi
 
 IS_DARWIN=$(echo -n $(uname -s 2>&1) | grep -i -c 'darwin')
@@ -99,16 +103,8 @@ if [[ -f "$PREFIX/etc/wgetrc" ]]; then
     rm "$PREFIX/etc/wgetrc"
 fi
 
-cp wget.patch "$WGET_DIR"
-cd "$WGET_DIR"
-
-if ! patch -u -p0 < wget.patch; then
-    echo "Wget patch failed"
-    exit 1
-fi
-
     CFLAGS="$CFLAGS $DARWIN_CFLAGS" \
-    LDFLAGS="$LDFLAGS -static" \
+    LDFLAGS="$LDFLAGS $STATIC_LDFLAGS" \
     PKG_CONFIG_PATH="$PREFIX/lib/pkgconfig/" \
     OPENSSL_LIBS="$PREFIX/lib/libssl.a $PREFIX/lib/libcrypto.a" \
 ./configure \
