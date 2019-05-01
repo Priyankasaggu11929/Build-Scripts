@@ -12,7 +12,7 @@ trap finish EXIT
 # Bootstrap directory has OpenSSL and Wget
 cd "bootstrap"
 
-if ! ./wget.sh; then
+if ! ./bootstrap-wget.sh; then
     echo "Bootstrap failed for Wget"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
