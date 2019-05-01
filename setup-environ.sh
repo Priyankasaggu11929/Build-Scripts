@@ -216,14 +216,14 @@ if [[ "$NATIVE_ERROR" -eq 0 ]]; then
 fi
 
 # Switch from -march=native to something more appropriate
-if [[ $(cat /proc/cpuinfo | grep -i -c -E 'armv7') -ne 0 ]]; then
+if [[ $(cat /proc/cpuinfo 2>&1 | grep -i -c -E 'armv7') -ne 0 ]]; then
     ARMV7_ERROR=$($CC -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$ARMV7_ERROR" -eq 0 ]]; then
         SH_ARMV7="-march=armv7-a"
     fi
 fi
 # See if we can upgrade to ARMv7+NEON
-if [[ $(cat /proc/cpuinfo | grep -i -c -E 'neon') -ne 0 ]]; then
+if [[ $(cat /proc/cpuinfo 2>&1 | grep -i -c -E 'neon') -ne 0 ]]; then
     ARMV7_ERROR=$($CC -march=armv7-a -mfpu=neon -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$ARMV7_ERROR" -eq 0 ]]; then
         SH_ARMV7="-march=armv7-a -mfpu=neon"
