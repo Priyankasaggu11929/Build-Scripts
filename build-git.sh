@@ -164,6 +164,11 @@ done
 # Solaris 11.3 no longer has /usr/ucb/install
 for file in $(find "$PWD" -name 'config*')
 do
+    if [[ ! -f "$file" ]]
+    then
+        continue
+    fi
+
     sed -e 's|/usr/ucb/install|install|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
     chmod +x "$file"
