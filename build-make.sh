@@ -72,9 +72,6 @@ rm -rf "$MAKE_DIR" &>/dev/null
 gzip -d < "$MAKE_TAR" | tar xf -
 cd "$MAKE_DIR"
 
-#cp configure.ac configure.ac.orig
-#[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-
 cp ../patch/make.patch .
 patch -u -p0 < make.patch
 echo ""
