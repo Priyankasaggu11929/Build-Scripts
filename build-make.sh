@@ -72,6 +72,22 @@ rm -rf "$MAKE_DIR" &>/dev/null
 gzip -d < "$MAKE_TAR" | tar xf -
 cd "$MAKE_DIR"
 
+#cp configure.ac configure.ac.orig
+#[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+
+cp ../patch/make.patch .
+patch -u -p0 < make.patch
+echo ""
+
+if ! autoreconf
+then
+    echo "Failed to reconfigure Make"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
+
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \

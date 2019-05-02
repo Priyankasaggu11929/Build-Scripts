@@ -1,0 +1,11 @@
+--- configure.ac.orig	2019-05-02 02:23:10.478574829 -0400
++++ configure.ac	2019-05-02 02:24:18.988706134 -0400
+@@ -402,7 +402,7 @@
+ #define GLOB_INTERFACE_VERSION 1
+ #if !defined _LIBC && defined __GNU_LIBRARY__ && __GNU_LIBRARY__ > 1
+ # include <gnu-versions.h>
+-# if _GNU_GLOB_INTERFACE_VERSION == GLOB_INTERFACE_VERSION
++# if _GNU_GLOB_INTERFACE_VERSION >= GLOB_INTERFACE_VERSION
+    gnu glob
+ # endif
+ #endif],
