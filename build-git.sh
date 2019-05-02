@@ -153,15 +153,6 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-for file in $(find "$PWD" -iname 'Makefile*')
-do
-    sed -e 's|-lrt|-lrt -lpthread|g' "$file" > "$file.fixed"
-    mv "$file.fixed" "$file"
-    sed -e 's|rGIT-PERL-HEADER|r GIT-PERL-HEADER|g' "$file" > "$file.fixed"
-    mv "$file.fixed" "$file"
-    touch -t 197001010000 "$file"
-done
-
 # Various Solaris 11 workarounds
 if [[ "$IS_SOLARIS" -eq 1 ]]; then
     for file in $(find "$PWD" -iname 'Makefile*')
