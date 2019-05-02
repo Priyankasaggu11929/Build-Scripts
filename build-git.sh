@@ -153,6 +153,14 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+# Add missing pthread library
+for file in $(find "$PWD" -iname 'Makefile*')
+do
+    sed -e 's|-lrt|-lrt -lpthread|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    touch -t 197001010000 "$file"
+done
+
 if [[ -e /usr/local/bin/perl ]]; then
     SH_PERL=/usr/local/bin/perl
 elif [[ -e /usr/bin/perl ]]; then
