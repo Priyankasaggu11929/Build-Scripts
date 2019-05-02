@@ -83,7 +83,7 @@ if [[ "$?" -ne 0 ]]; then
 fi
 
 rm -rf "$GREP_DIR" &>/dev/null
-tar xJf "$GREP_TAR"
+xz -d < "$GREP_TAR" | tar xf -
 cd "$GREP_DIR"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
