@@ -56,7 +56,7 @@ echo "********** Boehm GC **********"
 echo
 
 # https://github.com/ivmai/bdwgc/releases/download/v7.2k/gc-7.2k.tar.gz
-"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/ivmai/bdwgc/releases/download/v7.2k/$GC_TAR" -O "$GC_TAR"
+"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/ivmai/bdwgc/releases/download/v7.2k/$GC_TAR" -O "$GC_TAR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Boehm GC"

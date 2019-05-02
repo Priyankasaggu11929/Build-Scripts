@@ -80,7 +80,7 @@ echo
 
 # This fails when Wget < 1.14
 echo "Attempting download PSL using HTTPS."
-"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
+"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
 
 # This is due to the way Wget calls OpenSSL. The OpenSSL context
 # needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
