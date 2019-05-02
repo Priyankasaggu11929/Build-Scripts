@@ -1,0 +1,152 @@
+diff --git a/src/common/tuklib_integer.h b/src/common/tuklib_integer.h
+index b1e84d5..1bbc72e 100644
+--- a/src/common/tuklib_integer.h
++++ b/src/common/tuklib_integer.h
+@@ -187,7 +187,7 @@
+ static inline uint16_t
+ read16be(const uint8_t *buf)
+ {
+-	uint16_t num = *(const uint16_t *)buf;
++    uint16_t num; memcpy(&num, buf, sizeof(num));
+ 	return conv16be(num);
+ }
+ 
+@@ -195,7 +195,7 @@ read16be(const uint8_t *buf)
+ static inline uint16_t
+ read16le(const uint8_t *buf)
+ {
+-	uint16_t num = *(const uint16_t *)buf;
++    uint16_t num; memcpy(&num, buf, sizeof(num));
+ 	return conv16le(num);
+ }
+ 
+@@ -203,7 +203,7 @@ read16le(const uint8_t *buf)
+ static inline uint32_t
+ read32be(const uint8_t *buf)
+ {
+-	uint32_t num = *(const uint32_t *)buf;
++    uint32_t num; memcpy(&num, buf, sizeof(num));
+ 	return conv32be(num);
+ }
+ 
+@@ -211,7 +211,7 @@ read32be(const uint8_t *buf)
+ static inline uint32_t
+ read32le(const uint8_t *buf)
+ {
+-	uint32_t num = *(const uint32_t *)buf;
++    uint32_t num; memcpy(&num, buf, sizeof(num));
+ 	return conv32le(num);
+ }
+ 
+@@ -219,7 +219,7 @@ read32le(const uint8_t *buf)
+ static inline uint64_t
+ read64be(const uint8_t *buf)
+ {
+-	uint64_t num = *(const uint64_t *)buf;
++    uint64_t num; memcpy(&num, buf, sizeof(num));
+ 	return conv64be(num);
+ }
+ 
+@@ -227,7 +227,7 @@ read64be(const uint8_t *buf)
+ static inline uint64_t
+ read64le(const uint8_t *buf)
+ {
+-	uint64_t num = *(const uint64_t *)buf;
++    uint64_t num; memcpy(&num, buf, sizeof(num));
+ 	return conv64le(num);
+ }
+ 
+@@ -249,7 +249,7 @@ read64le(const uint8_t *buf)
+ static inline void
+ write16ne(uint8_t *buf, uint16_t num)
+ {
+-	*(uint16_t *)buf = num;
++	memcpy(buf, &num, sizeof(num));
+ 	return;
+ }
+ 
+@@ -257,7 +257,7 @@ write16ne(uint8_t *buf, uint16_t num)
+ static inline void
+ write32ne(uint8_t *buf, uint32_t num)
+ {
+-	*(uint32_t *)buf = num;
++	memcpy(buf, &num, sizeof(num));
+ 	return;
+ }
+ 
+@@ -265,7 +265,7 @@ write32ne(uint8_t *buf, uint32_t num)
+ static inline void
+ write64ne(uint8_t *buf, uint64_t num)
+ {
+-	*(uint64_t *)buf = num;
++	memcpy(buf, &num, sizeof(num));
+ 	return;
+ }
+ 
+diff --git a/src/liblzma/common/memcmplen.h b/src/liblzma/common/memcmplen.h
+index c1efc9e..049b7c8 100644
+--- a/src/liblzma/common/memcmplen.h
++++ b/src/liblzma/common/memcmplen.h
+@@ -61,8 +61,10 @@ lzma_memcmplen(const uint8_t *buf1, const uint8_t *buf2,
+ 	// to __builtin_clzll().
+ #define LZMA_MEMCMPLEN_EXTRA 8
+ 	while (len < limit) {
+-		const uint64_t x = *(const uint64_t *)(buf1 + len)
+-				- *(const uint64_t *)(buf2 + len);
++	    uint64_t x, t;
++	    memcpy(&x, buf1 + len, sizeof(x));
++	    memcpy(&t, buf2 + len, sizeof(t));
++	    x -= t;
+ 		if (x != 0) {
+ #	if defined(_M_X64) // MSVC or Intel C compiler on Windows
+ 			unsigned long tmp;
+diff --git a/src/liblzma/lz/lz_decoder.c b/src/liblzma/lz/lz_decoder.c
+index c708644..3d00bdc 100644
+--- a/src/liblzma/lz/lz_decoder.c
++++ b/src/liblzma/lz/lz_decoder.c
+@@ -94,9 +94,12 @@ decode_buffer(lzma_coder *coder,
+ 		// buffer.
+ 		const size_t copy_size = coder->dict.pos - dict_start;
+ 		assert(copy_size <= out_size - *out_pos);
+-		memcpy(out + *out_pos, coder->dict.buf + dict_start,
++		if (out + *out_pos != NULL)
++		{
++		    memcpy(out + *out_pos, coder->dict.buf + dict_start,
+ 				copy_size);
+-		*out_pos += copy_size;
++		    *out_pos += copy_size;
++		}
+ 
+ 		// Reset the dictionary if so requested by coder->lz.code().
+ 		if (coder->dict.need_reset) {
+diff --git a/src/liblzma/lzma/lzma_encoder_private.h b/src/liblzma/lzma/lzma_encoder_private.h
+index a2da969..8ee946f 100644
+--- a/src/liblzma/lzma/lzma_encoder_private.h
++++ b/src/liblzma/lzma/lzma_encoder_private.h
+@@ -26,7 +26,7 @@
+ // reason to not use it when it is supported.
+ #ifdef TUKLIB_FAST_UNALIGNED_ACCESS
+ #	define not_equal_16(a, b) \
+-		(*(const uint16_t *)(a) != *(const uint16_t *)(b))
++		((a)[0] != (b)[0] || (a)[1] != (b)[1])
+ #else
+ #	define not_equal_16(a, b) \
+ 		((a)[0] != (b)[0] || (a)[1] != (b)[1])
+diff --git a/src/liblzma/simple/simple_coder.c b/src/liblzma/simple/simple_coder.c
+index 13ebabc..91242b7 100644
+--- a/src/liblzma/simple/simple_coder.c
++++ b/src/liblzma/simple/simple_coder.c
+@@ -118,8 +118,11 @@ simple_code(void *coder_ptr, const lzma_allocator *allocator,
+ 		// coder->pos and coder->size yet. This way the coder can be
+ 		// restarted if the next filter in the chain returns e.g.
+ 		// LZMA_MEM_ERROR.
+-		memcpy(out + *out_pos, coder->buffer + coder->pos, buf_avail);
+-		*out_pos += buf_avail;
++		if (out + *out_pos)
++		{
++		    memcpy(out + *out_pos, coder->buffer + coder->pos, buf_avail);
++		    *out_pos += buf_avail;
++		}
+ 
+ 		// Copy/Encode/Decode more data to out[].
+ 		{
