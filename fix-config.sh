@@ -37,12 +37,28 @@ do
     touch -t 197001010000 "$file"
 done
 
-if [[ -d build/ ]]
+if [[ -e build/config.guess ]]
 then
     echo "patching config.guess..."
     cp ../patch/config.guess build/
+fi
+
+if [[ -e build/config.sub ]]
+then
     echo "patching config.sub..."
     cp ../patch/config.sub build/
+fi
+
+if [[ -e config/config.guess ]]
+then
+    echo "patching config.guess..."
+    cp ../patch/config.guess config/
+fi
+
+if [[ -e config/config.sub ]]
+then
+    echo "patching config.sub..."
+    cp ../patch/config.sub config/
 fi
 
 if [[ -e config.guess ]]
