@@ -7,7 +7,7 @@ index b1e84d5..1bbc72e 100644
  read16be(const uint8_t *buf)
  {
 -	uint16_t num = *(const uint16_t *)buf;
-+    uint16_t num; memcpy(&num, buf, sizeof(num));
++	uint16_t num; memcpy(&num, buf, sizeof(num));
  	return conv16be(num);
  }
  
@@ -16,7 +16,7 @@ index b1e84d5..1bbc72e 100644
  read16le(const uint8_t *buf)
  {
 -	uint16_t num = *(const uint16_t *)buf;
-+    uint16_t num; memcpy(&num, buf, sizeof(num));
++	uint16_t num; memcpy(&num, buf, sizeof(num));
  	return conv16le(num);
  }
  
@@ -25,7 +25,7 @@ index b1e84d5..1bbc72e 100644
  read32be(const uint8_t *buf)
  {
 -	uint32_t num = *(const uint32_t *)buf;
-+    uint32_t num; memcpy(&num, buf, sizeof(num));
++	uint32_t num; memcpy(&num, buf, sizeof(num));
  	return conv32be(num);
  }
  
@@ -34,7 +34,7 @@ index b1e84d5..1bbc72e 100644
  read32le(const uint8_t *buf)
  {
 -	uint32_t num = *(const uint32_t *)buf;
-+    uint32_t num; memcpy(&num, buf, sizeof(num));
++	uint32_t num; memcpy(&num, buf, sizeof(num));
  	return conv32le(num);
  }
  
@@ -43,7 +43,7 @@ index b1e84d5..1bbc72e 100644
  read64be(const uint8_t *buf)
  {
 -	uint64_t num = *(const uint64_t *)buf;
-+    uint64_t num; memcpy(&num, buf, sizeof(num));
++	uint64_t num; memcpy(&num, buf, sizeof(num));
  	return conv64be(num);
  }
  
@@ -52,7 +52,7 @@ index b1e84d5..1bbc72e 100644
  read64le(const uint8_t *buf)
  {
 -	uint64_t num = *(const uint64_t *)buf;
-+    uint64_t num; memcpy(&num, buf, sizeof(num));
++	uint64_t num; memcpy(&num, buf, sizeof(num));
  	return conv64le(num);
  }
  
@@ -93,10 +93,10 @@ index c1efc9e..049b7c8 100644
  	while (len < limit) {
 -		const uint64_t x = *(const uint64_t *)(buf1 + len)
 -				- *(const uint64_t *)(buf2 + len);
-+	    uint64_t x, t;
-+	    memcpy(&x, buf1 + len, sizeof(x));
-+	    memcpy(&t, buf2 + len, sizeof(t));
-+	    x -= t;
++		uint64_t x, t;
++		memcpy(&x, buf1 + len, sizeof(x));
++		memcpy(&t, buf2 + len, sizeof(t));
++		x -= t;
  		if (x != 0) {
  #	if defined(_M_X64) // MSVC or Intel C compiler on Windows
  			unsigned long tmp;
@@ -111,10 +111,10 @@ index c708644..3d00bdc 100644
 -		memcpy(out + *out_pos, coder->dict.buf + dict_start,
 +		if (out + *out_pos != NULL)
 +		{
-+		    memcpy(out + *out_pos, coder->dict.buf + dict_start,
++			memcpy(out + *out_pos, coder->dict.buf + dict_start,
  				copy_size);
 -		*out_pos += copy_size;
-+		    *out_pos += copy_size;
++			*out_pos += copy_size;
 +		}
  
  		// Reset the dictionary if so requested by coder->lz.code().
@@ -144,8 +144,8 @@ index 13ebabc..91242b7 100644
 -		*out_pos += buf_avail;
 +		if (out + *out_pos)
 +		{
-+		    memcpy(out + *out_pos, coder->buffer + coder->pos, buf_avail);
-+		    *out_pos += buf_avail;
++			memcpy(out + *out_pos, coder->buffer + coder->pos, buf_avail);
++			*out_pos += buf_avail;
 +		}
  
  		// Copy/Encode/Decode more data to out[].
