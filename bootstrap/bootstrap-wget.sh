@@ -37,10 +37,6 @@ if ! $CC $CFLAGS bitness.c -o /dev/null &>/dev/null; then
     INSTX_BITNESS=32
 fi
 
-if $CC $CFLAGS comptest.c -static $LDFLAGS -o /dev/null &>/dev/null; then
-    STATIC_LDFLAGS=-static
-fi
-
 IS_DARWIN=$(echo -n $(uname -s 2>&1) | grep -i -c 'darwin')
 IS_SOLARIS=$(echo -n $(uname -s 2>&1) | grep -i -c 'sunos')
 IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
