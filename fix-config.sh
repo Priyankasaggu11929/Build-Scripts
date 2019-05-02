@@ -34,3 +34,20 @@ do
 	# Keep the filetime old so Autoconf does not re-configure
 	touch -t 197001010000 "$file"
 done
+
+if [[ -d build/ ]]
+then
+	cp ../patch/config.guess build/
+	cp ../patch/config.sub build/
+fi
+
+if [[ -e config.guess ]]
+then
+	cp ../patch/config.guess .
+fi
+
+if [[ -e config.sub ]]
+then
+	cp ../patch/config.sub .
+fi
+

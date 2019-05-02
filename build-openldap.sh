@@ -93,10 +93,6 @@ sed 's|0x060014|0x060300|g' configure > configure.new
 mv configure.new configure
 chmod +x configure
 
-"$WGET" --ca-certificate="$CACERT_ZOO" 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD' -O build/config.guess
-
-"$WGET" --ca-certificate="$CACERT_ZOO" 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD' -O build/config.sub
-
 CONFIG_OPTIONS=()
 CONFIG_OPTIONS+=("--prefix=$INSTX_PREFIX")
 CONFIG_OPTIONS+=("--libdir=$INSTX_LIBDIR")
