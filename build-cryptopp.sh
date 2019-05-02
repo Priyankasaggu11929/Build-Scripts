@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Crypto++ library from sources.
 
-CRYPTOPP_TAR=CRYPTOPP_8_0_0.tar.gz
-CRYPTOPP_DIR=CRYPTOPP_8_0_0
+CRYPTOPP_ZIP=cryptopp820.zip
+CRYPTOPP_DIR=cryptopp820
 PKG_NAME=cryptopp
 
 ###############################################################################
@@ -53,7 +53,7 @@ echo
 echo "********** Crypto++ **********"
 echo
 
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/weidai11/cryptopp/archive/$CRYPTOPP_TAR" -O "$CRYPTOPP_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.cryptopp.com/$CRYPTOPP_ZIP" -O "$CRYPTOPP_ZIP"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Crypto++"
@@ -61,8 +61,7 @@ if [[ "$?" -ne 0 ]]; then
 fi
 
 rm -rf "$CRYPTOPP_DIR" &>/dev/null
-gzip -d < "$CRYPTOPP_TAR" | tar xf -
-mv "cryptopp-$CRYPTOPP_DIR" "$CRYPTOPP_DIR"
+unzip "$CRYPTOPP_ZIP" -d "$CRYPTOPP_DIR"
 cd "$CRYPTOPP_DIR"
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
@@ -116,7 +115,7 @@ echo "**************************************************************************
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$CRYPTOPP_TAR" "$CRYPTOPP_DIR")
+    ARTIFACTS=("$CRYPTOPP_ZIP" "$CRYPTOPP_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
