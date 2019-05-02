@@ -59,7 +59,7 @@ fi
 # PSL may be skipped if Python is too old. libpsl requires Python 2.7
 # Also see https://stackoverflow.com/a/40950971/608639
 SKIP_LIBPSL=1
-if [[ ! -z $(command -v python) ]]; then
+if [[ -n $(command -v python) ]]; then
     ver=$(python -V 2>&1 | sed 's/.* \([0-9]\).\([0-9]\).*/\1\2/')
     if [ "$ver" -ge 27 ]; then
         SKIP_LIBPSL=0

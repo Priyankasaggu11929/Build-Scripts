@@ -119,10 +119,10 @@ if [[ "$IS_FREEBSD" -eq 1 ]]; then
     CONFIG_FLAGS+=("-Wno-error")
 fi
 
-if [[ ! -z "$SH_RPATH" ]]; then
+if [[ -n "$SH_RPATH" ]]; then
     CONFIG_FLAGS+=("$SH_RPATH")
 fi
-if [[ ! -z "$SH_DTAGS" ]]; then
+if [[ -n "$SH_DTAGS" ]]; then
     CONFIG_FLAGS+=("$SH_DTAGS")
 fi
 

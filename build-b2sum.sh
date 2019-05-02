@@ -86,7 +86,7 @@ else
 fi
 
 # Add OpenMP if available
-if [[ ! -z "$SH_OPENMP" ]]; then
+if [[ -n "$SH_OPENMP" ]]; then
     B2SUM_CFLAGS="$B2SUM_CFLAGS $SH_OPENMP"
 fi
 

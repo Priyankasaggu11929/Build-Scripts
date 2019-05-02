@@ -83,13 +83,13 @@ fi
     --enable-shared
 
 # Fix broken Linux dynamic linker. tinfow or tinfo from ncurses
-if [[ ! -z $(find /usr/local/lib64 -name '*tinfow*') ]]; then
+if [[ -n $(find /usr/local/lib64 -name '*tinfow*') ]]; then
     SH_TINFO="-ltinfow"
-elif [[ ! -z $(find /usr/local/lib64 -name '*tinfo*') ]]; then
+elif [[ -n $(find /usr/local/lib64 -name '*tinfo*') ]]; then
     SH_TINFO="-ltinfo"
 fi
 
-if [[ ! -z "$SH_TINFO" ]]; then
+if [[ -n "$SH_TINFO" ]]; then
     for mfile in $(find "$PWD" -name 'Makefile'); do
         sed -e "s|SHLIB_LIBS =|SHLIB_LIBS = $SH_TINFO|g" "$mfile" > "$mfile.fixed"
         mv "$mfile.fixed" "$mfile"

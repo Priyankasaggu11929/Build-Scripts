@@ -86,7 +86,7 @@ fi
 ../fix-config.sh
 
 # https://bugs.launchpad.net/ubuntu/+source/binutils/+bug/1340250
-if [[ ! -z $(command -v ld) ]]; then
+if [[ -n $(command -v ld) ]]; then
 	BUILD_LIBS+=("-Wl,--no-as-needed")
 fi
 

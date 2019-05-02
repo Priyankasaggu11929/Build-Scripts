@@ -114,7 +114,7 @@ if [[ -z "$WGET" ]]; then
         WGET="$HOME/bootstrap/bin/wget"
     elif [[ -e "/usr/local/bin/wget" ]]; then
         WGET="/usr/local/bin/wget"
-    elif [[ ! -z $(command -v wget) ]]; then
+    elif [[ -n $(command -v wget) ]]; then
         WGET=$(command -v wget)
     else
         WGET=wget
@@ -165,7 +165,7 @@ IS_CLANG=$("$CC" --version 2>&1 | grep -i -c -E 'clang|llvm')
 # Try to determine 32 vs 64-bit, /usr/local/lib, /usr/local/lib32,
 # /usr/local/lib64 and /usr/local/lib/64. We drive a test compile
 # using the supplied compiler and flags.
-if $CC $CFLAGS bootstrap/bitness.c -o /dev/null &>/dev/null; then
+if "$CC" "$CFLAGS" bootstrap/bitness.c -o /dev/null &>/dev/null; then
     IS_64BIT=1
     IS_32BIT=0
     INSTX_BITNESS=64
@@ -216,14 +216,14 @@ if [[ "$NATIVE_ERROR" -eq 0 ]]; then
 fi
 
 # Switch from -march=native to something more appropriate
-if [[ $(cat /proc/cpuinfo 2>&1 | grep -i -c -E 'armv7') -ne 0 ]]; then
+if [[ $(grep -i -c -E 'armv7' /proc/cpuinfo 2>&1) -ne 0 ]]; then
     ARMV7_ERROR=$($CC -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$ARMV7_ERROR" -eq 0 ]]; then
         SH_ARMV7="-march=armv7-a"
     fi
 fi
 # See if we can upgrade to ARMv7+NEON
-if [[ $(cat /proc/cpuinfo 2>&1 | grep -i -c -E 'neon') -ne 0 ]]; then
+if [[ $(grep -i -c -E 'neon' /proc/cpuinfo 2>&1) -ne 0 ]]; then
     ARMV7_ERROR=$($CC -march=armv7-a -mfpu=neon -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$ARMV7_ERROR" -eq 0 ]]; then
         SH_ARMV7="-march=armv7-a -mfpu=neon"
@@ -322,50 +322,50 @@ BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT")
 BUILD_LDFLAGS=("-L$INSTX_LIBDIR")
 BUILD_LIBS=()
 
-if [[ ! -z "$INSTX_UBSAN" ]]; then
+if [[ -n "$INSTX_UBSAN" ]]; then
     BUILD_CFLAGS+=("-fsanitize=undefined")
     BUILD_CXXFLAGS+=("-fsanitize=undefined")
     BUILD_LDFLAGS+=("-fsanitize=undefined")
-elif [[ ! -z "$INSTX_ASAN" ]]; then
+elif [[ -n "$INSTX_ASAN" ]]; then
     BUILD_CFLAGS+=("-fsanitize=address")
     BUILD_CXXFLAGS+=("-fsanitize=address")
     BUILD_LDFLAGS+=("-fsanitize=address")
 fi
 
-if [[ ! -z "$SH_ARMV8" ]]; then
+if [[ -n "$SH_ARMV8" ]]; then
     BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_ARMV8"
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_ARMV8"
-elif [[ ! -z "$SH_ARMV7" ]]; then
+elif [[ -n "$SH_ARMV7" ]]; then
     BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_ARMV7"
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_ARMV7"
-elif [[ ! -z "$SH_NATIVE" ]]; then
+elif [[ -n "$SH_NATIVE" ]]; then
     BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_NATIVE"
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_NATIVE"
 fi
 
-if [[ ! -z "$SH_PIC" ]]; then
+if [[ -n "$SH_PIC" ]]; then
     BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_PIC"
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_PIC"
 fi
 
-if [[ ! -z "$SH_RPATH" ]]; then
+if [[ -n "$SH_RPATH" ]]; then
     BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_RPATH"
 fi
 
-if [[ ! -z "$SH_DTAGS" ]]; then
+if [[ -n "$SH_DTAGS" ]]; then
     BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_DTAGS"
 fi
 
-if [[ ! -z "$SH_DL" ]]; then
+if [[ -n "$SH_DL" ]]; then
     BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_DL"
 fi
 
-if [[ ! -z "$SH_PTHREAD" ]]; then
+if [[ -n "$SH_PTHREAD" ]]; then
     #BUILD_LIBS+=("$SH_PTHREAD")
     BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_PTHREAD"
 fi
 
-#if [[ "$IS_DARWIN" -ne 0 ]] && [[ ! -z "$SH_INSTNAME" ]]; then
+#if [[ "$IS_DARWIN" -ne 0 ]] && [[ -n "$SH_INSTNAME" ]]; then
 #    BUILD_LDFLAGS+=("$SH_INSTNAME")
 #    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_INSTNAME"
 #fi
@@ -426,10 +426,10 @@ if [[ -z "$PRINT_ONCE" ]]; then
     echo ""
 
     echo " WGET: $WGET"
-    if [[ ! -z "$SH_CACERT_PATH" ]]; then
+    if [[ -n "$SH_CACERT_PATH" ]]; then
         echo " SH_CACERT_PATH: $SH_CACERT_PATH"
     fi
-    if [[ ! -z "$SH_CACERT_FILE" ]]; then
+    if [[ -n "$SH_CACERT_FILE" ]]; then
         echo " SH_CACERT_FILE: $SH_CACERT_FILE"
     fi
 

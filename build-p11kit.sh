@@ -78,7 +78,7 @@ cd "$P11KIT_DIR"
 P11KIT_CONFIG_OPTS=("--enable-shared" "--prefix=$INSTX_PREFIX" "--libdir=$INSTX_LIBDIR")
 
 # Use the path if available
-if [[ ! -z "$SH_CACERT_PATH" ]]; then
+if [[ -n "$SH_CACERT_PATH" ]]; then
     P11KIT_CONFIG_OPTS+=("--with-trust-paths=$SH_CACERT_PATH")
 else
     P11KIT_CONFIG_OPTS+=("--without-trust-paths")
