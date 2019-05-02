@@ -67,16 +67,9 @@ rm -rf "$XZ_DIR" &>/dev/null
 gzip -d < "$XZ_TAR" | tar xf -
 cd "$XZ_DIR"
 
-echo "patching file src/common/tuklib_integer.h"
-echo "patching file src/liblzma/common/memcmplen.h"
-echo "patching file src/liblzma/lz/lz_decoder.c"
-echo "patching file src/liblzma/lzma/lzma_encoder_private.h"
-
 cp ../patch/xz.patch .
-if ! git apply xz.patch;
-then
-    echo "Failed to patch xz"
-fi
+patch -p0 < xz.patch
+echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
