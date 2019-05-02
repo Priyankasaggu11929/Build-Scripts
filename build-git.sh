@@ -133,11 +133,11 @@ echo ""
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Git. Attempting to skip validation checks."
-	"$WGET" --no-check-certificate "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
-	if [[ "$?" -ne 0 ]]; then
-		echo "Failed to download Git."
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    "$WGET" --no-check-certificate "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
+    if [[ "$?" -ne 0 ]]; then
+        echo "Failed to download Git."
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 rm -rf "$GIT_DIR" &>/dev/null
@@ -208,10 +208,16 @@ fi
     LIBS="-lssl -lcrypto -lz ${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" \
     --with-lib=$(basename "$INSTX_LIBDIR") \
-    --enable-pthreads --with-openssl="$INSTX_PREFIX" \
-    --with-curl="$INSTX_PREFIX" --with-libpcre="$INSTX_PREFIX" \
-    --with-zlib="$INSTX_PREFIX" --with-iconv="$INSTX_PREFIX" \
-    --with-perl="$SH_PERL"
+    --with-sane-tool-path="$INSTX_PREFIX/bin" \
+    --enable-pthreads \
+    --with-openssl="$INSTX_PREFIX" \
+    --with-curl="$INSTX_PREFIX" \
+    --with-libpcre="$INSTX_PREFIX" \
+    --with-zlib="$INSTX_PREFIX" \
+    --with-iconv="$INSTX_PREFIX" \
+    --with-expat="$INSTX_PREFIX" \
+    --with-perl="$SH_PERL" \
+    --without-tcltk
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Git"
@@ -223,11 +229,11 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 
 # Disables message translation if msgfmt is missing.
 if [[ -z $(command -v msgfmt) ]]; then
-	MAKE_FLAGS+=("NO_GETTEXT=Yes")
+    MAKE_FLAGS+=("NO_GETTEXT=Yes")
 fi
 # Disables GUI if TCL is missing.
 if [[ -z $(command -v tclsh) ]]; then
-	MAKE_FLAGS+=("NO_TCLTK=Yes")
+    MAKE_FLAGS+=("NO_TCLTK=Yes")
 fi
 
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
@@ -238,27 +244,27 @@ fi
 
 if [[ "$IS_DARWIN" -ne 0 ]];
 then
-	MAKE_FLAGS=("test" "V=1")
-	if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test Git"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("test" "V=1")
+    if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test Git"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 elif [[ "$IS_LINUX" -ne 0 ]];
 then
-	MAKE_FLAGS=("test" "V=1")
-	if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test Git"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("test" "V=1")
+    if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test Git"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 else
-	MAKE_FLAGS=("test" "V=1")
-	if ! "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test Git"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("test" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test Git"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"
@@ -286,17 +292,17 @@ cd "$CURR_DIR"
 
 if [[ -z $(git config --get http.sslCAInfo) ]];
 then
-	echo ""
-	echo "*****************************************************************************"
-	echo "Configuring Git to use CA store at $SH_CACERT_PATH/cacert.pem"
-	echo "*****************************************************************************"
+    echo ""
+    echo "*****************************************************************************"
+    echo "Configuring Git to use CA store at $SH_CACERT_PATH/cacert.pem"
+    echo "*****************************************************************************"
 
-	git config --global http.sslCAInfo "$SH_CACERT_FILE"
+    git config --global http.sslCAInfo "$SH_CACERT_FILE"
 else
-	echo ""
-	echo "*****************************************************************************"
-	echo "Git already configured to use CA store at $(git config --get http.sslCAInfo)"
-	echo "*****************************************************************************"
+    echo ""
+    echo "*****************************************************************************"
+    echo "Git already configured to use CA store at $(git config --get http.sslCAInfo)"
+    echo "*****************************************************************************"
 fi
 
 ###############################################################################
