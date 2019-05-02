@@ -73,3 +73,4 @@ then
     cp ../patch/config.sub .
 fi
 
+echo ""
