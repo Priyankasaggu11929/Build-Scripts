@@ -153,27 +153,6 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Various Solaris 11 workarounds
-if [[ "$IS_SOLARIS" -eq 1 ]]; then
-    for file in $(find "$PWD" -iname 'Makefile*')
-    do
-        sed -e 's|-lsocket|-lnsl -lsocket|g' "$file" > "$file.fixed"
-        mv "$file.fixed" "$file"
-        sed -e 's|/usr/ucb/install|install|g' "$file" > "$file.fixed"
-        mv "$file.fixed" "$file"
-        touch -t 197001010000 "$file"
-    done
-    for file in $(find "$PWD" -name 'config*')
-    do
-        sed -e 's|-lsocket|-lnsl -lsocket|g' "$file" > "$file.fixed"
-        mv "$file.fixed" "$file"
-        sed -e 's|/usr/ucb/install|install|g' "$file" > "$file.fixed"
-        mv "$file.fixed" "$file"
-        chmod +x "$file"
-        touch -t 197001010000 "$file"
-    done
-fi
-
 if [[ -e /usr/local/bin/perl ]]; then
     SH_PERL=/usr/local/bin/perl
 elif [[ -e /usr/bin/perl ]]; then
