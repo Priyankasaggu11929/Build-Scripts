@@ -78,7 +78,7 @@ then
     echo "Failed to patch xz"
 fi
 
-for file in $(find "$PWD" -name 'tests/*.sh')
+for file in $(find "$PWD" -name '*.sh')
 do
     sed -e 's|#!/bin/sh|#!/usr/bin/env bash|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
