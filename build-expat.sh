@@ -36,7 +36,7 @@ fi
 
 # The password should die when this subshell goes out of scope
 if [[ -z "$SUDO_PASSWORD" ]]; then
-    source ./build-password.sh
+    source ./setup-password.sh
 fi
 
 ###############################################################################
@@ -53,7 +53,7 @@ echo
 echo "********** libexpat **********"
 echo
 # https://github.com/libexpat/libexpat/releases/download/R_2_2_6/expat-2.2.6.tar.bz2
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/libexpat/libexpat/releases/download/R_2_2_6/$EXPAT_TAR" -O "$EXPAT_TAR"
+"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/libexpat/libexpat/releases/download/R_2_2_6/$EXPAT_TAR" -O "$EXPAT_TAR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download libexpat"

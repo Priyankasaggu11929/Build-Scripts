@@ -28,7 +28,7 @@ fi
 
 # The password should die when this subshell goes out of scope
 if [[ -z "$SUDO_PASSWORD" ]]; then
-    source ./build-password.sh
+    source ./setup-password.sh
 fi
 
 ###############################################################################
