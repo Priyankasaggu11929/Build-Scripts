@@ -151,7 +151,7 @@ fi
 # Needed for OpenSSL and make jobs
 IS_GMAKE=$($MAKE -v 2>&1 | grep -i -c 'gnu make')
 
-# If CC and CXX is not set, then use default or assume GCC
+# If CC and CXX are not set, then use default or assume GCC
 if [[ (-z "$CC" && $(command -v cc 2>/dev/null) ) ]]; then CC=$(command -v cc); fi
 if [[ (-z "$CC" && $(command -v gcc 2>/dev/null) ) ]]; then CC=$(command -v gcc); fi
 if [[ (-z "$CXX" && $(command -v CC 2>/dev/null) ) ]]; then CXX=$(command -v CC); fi
