@@ -78,6 +78,14 @@ then
     echo "Failed to patch xz"
 fi
 
+for file in $(find "$PWD" -name 'tests/*.sh')
+do
+    sed -e 's|#!/bin/sh|#!/usr/bin/env bash|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    chmod +x "$file"
+    #touch -t 197001010000 "$file"
+done
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
