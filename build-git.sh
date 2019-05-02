@@ -132,8 +132,8 @@ echo ""
 "$WGET" --ca-certificate="$CA_ZOO" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
 
 if [[ "$?" -ne 0 ]]; then
-	echo "Failed to download Git."
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    echo "Failed to download Git."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 rm -rf "$GIT_DIR" &>/dev/null
@@ -161,6 +161,15 @@ do
     touch -t 197001010000 "$file"
 done
 
+# Solaris 11.3 no longer has /usr/ucb/install
+for file in $(find "$PWD" -name 'config*')
+do
+    sed -e 's|/usr/ucb/install|install|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    chmod +x "$file"
+    touch -t 197001010000 "$file"
+done
+
 if [[ -e /usr/local/bin/perl ]]; then
     SH_PERL=/usr/local/bin/perl
 elif [[ -e /usr/bin/perl ]]; then
@@ -169,10 +178,7 @@ else
     SH_PERL=perl
 fi
 
-    PERL="$SH_PERL" \
-    EXPATDIR="$INSTX_PREFIX" \
     CURLDIR="$INSTX_PREFIX" \
-    SANE_TOOL_PATH="$INSTX_PREFIX/bin" \
     CURL_CONFIG="$INSTX_PREFIX/bin/curl-config" \
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
