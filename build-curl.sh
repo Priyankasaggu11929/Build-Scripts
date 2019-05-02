@@ -123,13 +123,8 @@ echo "Attempting download cURL using HTTPS."
 "$WGET" --ca-certificate="$CA_ZOO" "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
 
 if [[ "$?" -ne 0 ]]; then
-    echo "Attempting download cURL using insecure channel."
-    "$WGET" --no-check-certificate "https://curl.haxx.se/download/$CURL_TAR" -O "$CURL_TAR"
-
-    if [[ "$?" -ne 0 ]]; then
-        echo "Failed to download cURL"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
+	echo "Failed to download cURL"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 rm -rf "$CURL_DIR" &>/dev/null
