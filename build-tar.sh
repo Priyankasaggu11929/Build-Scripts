@@ -72,6 +72,14 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+# Add missing pthread library
+for file in $(find "$PWD" -iname 'Makefile*')
+do
+    sed -e 's|-std=gnu99|-std=c99|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    touch -t 197001010000 "$file"
+done
+
 MAKE_FLAGS=(V=1 "-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
