@@ -153,18 +153,6 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Add missing pthread library
-if [[ -n "$SH_LIBPTHREAD" ]]
-then
-    for file in $(find "$PWD" -iname 'Makefile*')
-    do
-        echo "patching $file"
-        sed -e 's|-lrt|-lrt -lpthread|g' "$file" > "$file.fixed"
-        mv "$file.fixed" "$file"
-        touch -t 197001010000 "$file"
-    done
-fi
-
 # Solaris 11.3 no longer has /usr/ucb/install
 for file in $(find "$PWD" -name 'config*')
 do
