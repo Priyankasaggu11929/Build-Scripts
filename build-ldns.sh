@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
-# This script builds SSH and its dependencies from sources.
+# This script builds LDNS from sources.
 
-OPENSSH_TAR=openssh-8.0p1.tar.gz
-OPENSSH_DIR=openssh-8.0p1
+LDNS_TAR=ldns-1.7.0.tar.gz
+LDNS_DIR=ldns-1.7.0
+PKG_NAME=ldns
 
 ###############################################################################
 
@@ -41,46 +42,32 @@ fi
 
 ###############################################################################
 
-if ! ./build-zlib.sh
-then
-    echo "Failed to build zLib"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if ! ./build-ldns.sh
-then
-    echo "Failed to build LDNS"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if ! ./build-openssl.sh
-then
-    echo "Failed to build OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+#if ! ./build-iconv.sh
+#then
+#    echo "Failed to build iConv"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
 
 ###############################################################################
 
 echo
-echo "********** OpenSSH **********"
+echo "********** LDNS **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "http://ftp4.usa.openbsd.org/pub/OpenBSD/OpenSSH/portable/$OPENSSH_TAR" -O "$OPENSSH_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.nlnetlabs.nl/downloads/ldns/$LDNS_TAR" -O "$LDNS_TAR"
 
 if [[ "$?" -ne 0 ]]; then
-    echo "Failed to download SSH"
+    echo "Failed to download LDNS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-rm -rf "$OPENSSH_DIR" &>/dev/null
-gzip -d < "$OPENSSH_TAR" | tar xf -
-cd "$OPENSSH_DIR"
+rm -rf "$LDNS_DIR" &>/dev/null
+gzip -d < "$LDNS_TAR" | tar xf -
+cd "$LDNS_DIR"
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#cp ../patch/ldns.patch .
+#patch -u -p0 < ldns.patch
+#echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -89,37 +76,34 @@ cd "$OPENSSH_DIR"
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
-    LDFLAGS="${BUILD_CFLAGS[*]} ${BUILD_LDFLAGS[*]}" \
+    LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --with-cppflags="${BUILD_CPPFLAGS[*]}" \
-    --with-cflags="${BUILD_CFLAGS[*]}" \
-    --with-ldflags="${BUILD_CFLAGS[*]} ${BUILD_LDFLAGS[*]}" \
-    --with-libs="-lz ${BUILD_LIBS[*]}"\
-    --with-zlib="$INSTX_PREFIX" \
-    --with-ssl-dir="$INSTX_PREFIX" \
-    --with-ldns="$INSTX_PREFIX" \
-    --with-pie \
-    --disable-strip
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
+    --with-ssl="$INSTX_PREFIX" \
+    --with-ca-file="$SH_CACERT_FILE" \
+    --with-ca-path="$SH_CACERT_PATH" \
+    --with-trust-anchor="$SH_UNBOUND_ROOT_KEY_FILE" \
+    --disable-dane-ta-usage
 
 if [[ "$?" -ne 0 ]]; then
-    echo "Failed to configure SSH"
+    echo "Failed to configure LDNS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Failed to build SSH"
+    echo "Failed to build LDNS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# No way to test OpenSSH after build...
-# https://groups.google.com/forum/#!topic/mailing.unix.openssh-dev/srdwaPQQ_Aw
-#MAKE_FLAGS=("check" "V=1")
+# 'make test' fails for 1.7.0
+#MAKE_FLAGS=("test")
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
-#    echo "Failed to test SSH"
+#    echo "Failed to test LDNS"
 #    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 #fi
 
@@ -127,7 +111,7 @@ echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-    echo "Failed to test SSH"
+    echo "Failed to test LDNS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -139,6 +123,9 @@ else
 fi
 
 cd "$CURR_DIR"
+
+# Set package status to installed. Delete the file to rebuild the package.
+touch "$INSTX_CACHE/$PKG_NAME"
 
 ###############################################################################
 
@@ -152,14 +139,14 @@ echo "**************************************************************************
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$OPENSSH_TAR" "$OPENSSH_DIR")
+    ARTIFACTS=("$LDNS_TAR" "$LDNS_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
 
-    # ./build-openssh.sh 2>&1 | tee build-openssh.log
-    if [[ -e build-openssh.log ]]; then
-        rm -f build-openssh.log
+    # ./build-ldns.sh 2>&1 | tee build-ldns.log
+    if [[ -e build-ldns.log ]]; then
+        rm -f build-ldns.log
     fi
 fi
 

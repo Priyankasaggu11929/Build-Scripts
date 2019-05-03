@@ -322,7 +322,7 @@ fi
 
 SH_CACERT_PATH="$INSTX_PREFIX/etc/pki"
 SH_CACERT_FILE="$INSTX_PREFIX/etc/pki/cacert.pem"
-SH_UNBOUND_KEY_PATH="$INSTX_PREFIX/etc/unbound"
+SH_UNBOUND_ROOT_KEY_FILE="$INSTX_PREFIX/etc/unbound/root.key"
 
 ###############################################################################
 

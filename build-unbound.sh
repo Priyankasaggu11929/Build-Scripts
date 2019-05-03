@@ -181,7 +181,7 @@ echo "Verified root.key"
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
-    echo "$SUDO_PASSWORD" | sudo -S cp "root.key" "$INSTX_PREFIX/etc/unbound/root.key"
+    echo "$SUDO_PASSWORD" | sudo -S cp "root.key" "$SH_UNBOUND_ROOT_KEY_FILE"
 else
     "$MAKE" "${MAKE_FLAGS[@]}"
     cp "root.key" "$INSTX_PREFIX/etc/unbound/root.key"
