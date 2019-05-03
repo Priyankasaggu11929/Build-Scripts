@@ -113,12 +113,12 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Uninstall the existing copy first. Ncurses does not install over top of itself
-MAKE_FLAGS=("uninstall")
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
-    echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
-else
-    "$MAKE" "${MAKE_FLAGS[@]}"
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+	echo "Failed to test ncurses"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("install")

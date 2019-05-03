@@ -89,6 +89,14 @@ then
    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test tinyxml2"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 # TODO... fix this simple copy
 echo "Installing TinyXML2"
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then

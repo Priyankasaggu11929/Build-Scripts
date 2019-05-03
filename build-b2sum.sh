@@ -111,6 +111,14 @@ fi
 #    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 #fi
 
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test b2sum"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "PREFIX=$INSTX_PREFIX" "$MAKE" "${MAKE_FLAGS[@]}"

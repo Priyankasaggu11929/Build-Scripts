@@ -100,6 +100,14 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+	echo "Failed to test TUN/TAP"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
@@ -158,16 +166,16 @@ fi
 MAKE_FLAGS=("check")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Failed to build zLib"
+    echo "Failed to build OpenVPN"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error:' | wc -l)
+COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-    echo "Failed to test libksba"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	echo "Failed to test OpenVPN"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("install")

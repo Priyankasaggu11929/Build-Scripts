@@ -87,25 +87,33 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-BASH_FLAGS=("-j" "$INSTX_JOBS")
-if ! "$MAKE" "${BASH_FLAGS[@]}"
+MAKE_FLAGS=("-j" "$INSTX_JOBS")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bash"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# BASH_FLAGS=("PERL_USE_UNSAFE_INC=1" "check")
-#if ! "$MAKE" "${BASH_FLAGS[@]}"
+# MAKE_FLAGS=("PERL_USE_UNSAFE_INC=1" "check")
+#if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
 #    echo "Failed to test Bash"
 #    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 #fi
 
-BASH_FLAGS=("install")
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test Bash"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
-    echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${BASH_FLAGS[@]}"
+    echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
-    "$MAKE" "${BASH_FLAGS[@]}"
+    "$MAKE" "${MAKE_FLAGS[@]}"
 fi
 
 cd "$CURR_DIR"

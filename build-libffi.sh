@@ -97,11 +97,11 @@ then
 fi
 
 echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error:' | grep -v msvcc.sh | wc -l)
+COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-    echo "Failed to test libffi"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	echo "Failed to test libffi"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("install")

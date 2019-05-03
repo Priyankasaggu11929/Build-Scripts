@@ -137,11 +137,11 @@ then
 fi
 
 echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error:' | wc -l)
+COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-    echo "Runtime errors detected in Unbound"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	echo "Failed to test Unbound"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 rm -f root.key 2>/dev/null
