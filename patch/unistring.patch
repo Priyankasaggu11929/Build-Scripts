@@ -654,15 +654,15 @@
 -          /* Deal with spaces and combining characters.  */
 -          q = p;
 -          if (prop == LBP_SP)
-+          if (prop == LBP_BK)
-             {
+-            {
 -              /* Don't break just before a space.  */
 -              *p = UC_BREAK_PROHIBITED;
 -              seen_space2 = seen_space;
 -              seen_space = p;
 -            }
 -          else if (prop == LBP_ZW)
--            {
++          if (prop == LBP_BK)
+             {
 -              /* Don't break just before a zero-width space.  */
 -              *p = UC_BREAK_PROHIBITED;
 -              last_prop = LBP_ZW;
