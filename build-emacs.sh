@@ -94,8 +94,8 @@ EMACS_OPTS=('--with-xml2' '--without-x' '--without-sound' '--without-xpm'
     '--without-gpm' '--without-dbus' '--without-gconf' '--without-gsettings'
     '--without-makeinfo' '--without-compress-install' '--with-gnutls=no')
 
-if [[ ! -e "/usr/include/selinux/context.h" ]] &&
-   [[ ! -e "/usr/local/include/selinux/context.h" ]]; then
+if [[ -e "/usr/include/selinux/context.h" ]] ||
+   [[ -e "/usr/local/include/selinux/context.h" ]]; then
     EMACS_OPTS+=('--without-selinux')
 fi
 
@@ -111,16 +111,6 @@ fi
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure emacs"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-if [[ -n "$SH_PTHREAD" ]]
-then
-    for file in $(find "$PWD" -iname 'Makefile')
-    do
-        sed -e 's|-lrt|-lrt -lpthread|g' "$file" > "$file.fixed"
-        mv "$file.fixed" "$file"
-        touch -t 197001010000 "$file"
-    done
 fi
 
 MAKE_FLAGS=("V=1")

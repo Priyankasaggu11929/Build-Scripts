@@ -154,10 +154,11 @@ then
 fi
 
 # Add missing pthread library
-if [[ -n "$SH_PTHREAD" ]]
+if [[ -n "$SH_LIBPTHREAD" ]]
 then
     for file in $(find "$PWD" -iname 'Makefile*')
     do
+        echo "patching $file"
         sed -e 's|-lrt|-lrt -lpthread|g' "$file" > "$file.fixed"
         mv "$file.fixed" "$file"
         touch -t 197001010000 "$file"

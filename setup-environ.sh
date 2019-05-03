@@ -215,6 +215,11 @@ if [[ "$NATIVE_ERROR" -eq 0 ]]; then
     SH_NATIVE="-march=native"
 fi
 
+PTHREAD_ERROR=$("$CC" -pthread -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$PTHREAD_ERROR" -eq 0 ]]; then
+    SH_PTHREAD="-pthread"
+fi
+
 # Switch from -march=native to something more appropriate
 if [[ $(grep -i -c -E 'armv7' /proc/cpuinfo 2>/dev/null) -ne 0 ]]; then
     ARMV7_ERROR=$("$CC" -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
@@ -303,10 +308,10 @@ if [[ -z "$SH_DL" ]]; then
     fi
 fi
 
-if [[ -z "$SH_PTHREAD" ]]; then
+if [[ -z "$SH_LIBPTHREAD" ]]; then
     SH_ERROR=$("$CC" -o "$outfile" "$infile" -lpthread 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq 0 ]]; then
-        SH_PTHREAD="-lpthread"
+        SH_LIBPTHREAD="-lpthread"
     fi
 fi
 
@@ -353,6 +358,11 @@ if [[ -n "$SH_PIC" ]]; then
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_PIC"
 fi
 
+if [[ -n "$SH_PTHREAD" ]]; then
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$SH_PTHREAD"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_PTHREAD"
+fi
+
 if [[ -n "$SH_RPATH" ]]; then
     BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_RPATH"
 fi
@@ -365,9 +375,9 @@ if [[ -n "$SH_DL" ]]; then
     BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_DL"
 fi
 
-if [[ -n "$SH_PTHREAD" ]]; then
-    #BUILD_LIBS+=("$SH_PTHREAD")
-    BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_PTHREAD"
+if [[ -n "$SH_LIBPTHREAD" ]]; then
+    #BUILD_LIBS+=("$SH_LIBPTHREAD")
+    BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_LIBPTHREAD"
 fi
 
 #if [[ "$IS_DARWIN" -ne 0 ]] && [[ -n "$SH_INSTNAME" ]]; then
