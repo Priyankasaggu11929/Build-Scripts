@@ -92,7 +92,7 @@ EMACS_OPTS=('--with-xml2' '--without-x' '--without-sound' '--without-xpm'
     '--without-rsvg' '--without-imagemagick' '--without-xft' '--without-libotf'
     '--without-m17n-flt' '--without-xaw3d' '--without-toolkit-scroll-bars'
     '--without-gpm' '--without-dbus' '--without-gconf' '--without-gsettings'
-    '--without-makeinfo' '--without-compress-install')
+    '--without-makeinfo' '--without-compress-install' '--with-gnutls=no')
 
 if [[ ! -e "/usr/include/selinux/context.h" ]] &&
    [[ ! -e "/usr/local/include/selinux/context.h" ]]; then
