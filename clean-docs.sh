@@ -16,15 +16,15 @@ function finish {
 trap finish EXIT
 
 PACKAGES=(
-	automake b2sum bzip cacert clamav
-	cryptopp curl emacs environ expat
-	gettext git gmp gnutls guile
-	gzip iconv icu idn idn2 less
-	libffi libtool mawk ncurses nettle
-	openssl openvpn p11kit pcre	perl
-	psl readline sed ssh tar
-	tasn1 termcap tinyxml2 unbound
-	unistr wget xz zlib
+    automake b2sum bzip cacert clamav
+    cryptopp curl emacs environ expat
+    gettext git gmp gnutls guile
+    gzip iconv icu idn idn2 less
+    libffi libtool mawk ncurses nettle
+    openssl openvpn p11kit pcre    perl
+    psl readline sed ssh tar
+    tasn1 termcap tinyxml2 unbound
+    unistr wget xz zlib
 )
 
 # Straglers

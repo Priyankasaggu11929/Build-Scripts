@@ -84,27 +84,27 @@ fi
 
 if [[ "$IS_DARWIN" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! DYLD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test Gnulib"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! DYLD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test Gnulib"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 elif [[ "$IS_LINUX" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! LD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test Gnulib"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! LD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test Gnulib"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 else
-	MAKE_FLAGS=("check" "V=1")
-	if ! "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test Gnulib"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test Gnulib"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"

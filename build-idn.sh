@@ -106,7 +106,7 @@ fi
 
 # https://bugs.launchpad.net/ubuntu/+source/binutils/+bug/1340250
 if [[ -n "$SH_NO_AS_NEEDED" ]]; then
-	BUILD_LIBS+=("$SH_NO_AS_NEEDED")
+    BUILD_LIBS+=("$SH_NO_AS_NEEDED")
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
@@ -133,28 +133,28 @@ fi
 
 if [[ "$IS_DARWIN" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test IDN"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test IDN"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 elif [[ "$IS_LINUX" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test IDN"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test IDN"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-	echo "Failed to test IDN"
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    echo "Failed to test IDN"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("install")
@@ -222,28 +222,28 @@ fi
 
 if [[ "$IS_DARWIN" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test IDN2"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test IDN2"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 elif [[ "$IS_LINUX" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test IDN2"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test IDN2"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-	echo "Failed to test IDN2"
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    echo "Failed to test IDN2"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("install")

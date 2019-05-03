@@ -118,12 +118,12 @@ then
 fi
 
 if [[ "$IS_LINUX" -ne 0 ]]; then
-	MAKE_FLAGS=("check" "V=1")
-	if ! "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test PCRE"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test PCRE"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 # https://bugs.exim.org/show_bug.cgi?id=2380
@@ -131,8 +131,8 @@ echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-	echo "Failed to test PCRE"
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    echo "Failed to test PCRE"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("install")
@@ -196,20 +196,20 @@ then
 fi
 
 if [[ "$IS_LINUX" -ne 0 ]]; then
-	MAKE_FLAGS=("check" "V=1")
-	if ! "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test PCRE"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test PCRE"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-	echo "Failed to test PCRE2"
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    echo "Failed to test PCRE2"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("install")

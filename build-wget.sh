@@ -206,23 +206,23 @@ fi
 
 if [[ "$SKIP_WGET_TESTS" -eq 0 ]]
 then
-	# Perl IPv6 may be broken and cause Wget self tests to fail.
-	# Ignore failures about Socket::inet_itoa and incorrect sizes.
-	# https://rt.cpan.org/Public/Bug/Display.html?id=91699
-	MAKE_FLAGS=("check" "V=1")
-	if ! "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test Wget"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    # Perl IPv6 may be broken and cause Wget self tests to fail.
+    # Ignore failures about Socket::inet_itoa and incorrect sizes.
+    # https://rt.cpan.org/Public/Bug/Display.html?id=91699
+    MAKE_FLAGS=("check" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test Wget"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 
-	echo "Searching for errors hidden in log files"
-	COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
-	if [[ "${COUNT}" -ne 0 ]];
-	then
-		echo "Failed to test Wget"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    echo "Searching for errors hidden in log files"
+    COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+    if [[ "${COUNT}" -ne 0 ]];
+    then
+        echo "Failed to test Wget"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 MAKE_FLAGS=("install")

@@ -167,7 +167,7 @@ cd "$GNUPG_DIR"
     --disable-dirmngr \
     --disable-wks-tools \
     --disable-doc \
-	--with-libgpg-error-prefix="$INSTX_PREFIX" \
+    --with-libgpg-error-prefix="$INSTX_PREFIX" \
     --with-libgcrypt-prefix="$INSTX_PREFIX" \
     --with-libassuan-prefix="$INSTX_PREFIX" \
     --with-ksba-prefix=PFX="$INSTX_PREFIX" \
@@ -195,20 +195,20 @@ fi
 
 if [[ "$IS_DARWIN" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test GnuPG"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test GnuPG"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 elif [[ "$IS_LINUX" -ne 0 ]];
 then
-	MAKE_FLAGS=("check" "V=1")
-	if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-	then
-		echo "Failed to test GnuPG"
-		[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-	fi
+    MAKE_FLAGS=("check" "V=1")
+    if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test GnuPG"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"

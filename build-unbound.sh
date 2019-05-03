@@ -113,9 +113,9 @@ echo ""
 ./configure --enable-shared \
     --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-static-exe \
-	--with-ssl="$INSTX_PREFIX" \
-	--with-libexpat="$INSTX_PREFIX" \
-	--with-libhiredis="$INSTX_PREFIX"
+    --with-ssl="$INSTX_PREFIX" \
+    --with-libexpat="$INSTX_PREFIX" \
+    --with-libhiredis="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Unbound"
@@ -140,8 +140,8 @@ echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-	echo "Failed to test Unbound"
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    echo "Failed to test Unbound"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 rm -f root.key 2>/dev/null

@@ -74,8 +74,8 @@ cd "$EXPAT_DIR"
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --enable-shared \
-	--prefix="$INSTX_PREFIX" \
-	--libdir="$INSTX_LIBDIR" \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
     --without-docbook \
     --without-xmlwf
 
