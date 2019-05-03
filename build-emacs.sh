@@ -120,13 +120,6 @@ then
    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Emacs version 24 or 25
-#echo "Fixing CHAR_WIDTH macro"
-#for file in $(grep -IR 'CHAR_WIDTH' * | cut -f 1 -d ':' | uniq); do
-#    sed -e 's|CHAR_WIDTH|CHARACTER_WIDTH|g' "$file" > "$file.fixed"
-#    mv "$file.fixed" "$file"
-#done
-
 #MAKE_FLAGS=("check" "V=1")
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
