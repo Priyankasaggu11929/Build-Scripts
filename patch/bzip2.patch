@@ -1,0 +1,37 @@
+--- Makefile
++++ Makefile
+@@ -54,7 +54,6 @@
+ 
+ check: test
+ test: bzip2
+-	@cat words1
+ 	./bzip2 -1  < sample1.ref > sample1.rb2
+ 	./bzip2 -2  < sample2.ref > sample2.rb2
+ 	./bzip2 -3  < sample3.ref > sample3.rb2
+@@ -67,7 +66,6 @@
+ 	cmp sample1.tst sample1.ref
+ 	cmp sample2.tst sample2.ref
+ 	cmp sample3.tst sample3.ref
+-	@cat words3
+ 
+ install: bzip2 bzip2recover
+ 	if ( test ! -d $(BINDIR) ) ; then mkdir -p $(BINDIR) ; fi
+@@ -114,7 +112,6 @@
+ 	sample1.tst sample2.tst sample3.tst
+ 
+ blocksort.o: blocksort.c
+-	@cat words0
+ 	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c blocksort.c
+ huffman.o: huffman.c
+ 	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c huffman.c
+@@ -158,10 +155,6 @@
+ 	   $(DISTNAME)/bzip2.1 \
+ 	   $(DISTNAME)/bzip2.1.preformatted \
+ 	   $(DISTNAME)/bzip2.txt \
+-	   $(DISTNAME)/words0 \
+-	   $(DISTNAME)/words1 \
+-	   $(DISTNAME)/words2 \
+-	   $(DISTNAME)/words3 \
+ 	   $(DISTNAME)/sample1.ref \
+ 	   $(DISTNAME)/sample2.ref \
+ 	   $(DISTNAME)/sample3.ref \

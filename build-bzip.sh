@@ -71,6 +71,10 @@ gzip -d < "$BZIP2_TAR" | tar xf -
 mv "bzip2-noloader-${BZIP2_DIR}" "${BZIP2_DIR}"
 cd "$BZIP2_DIR"
 
+cp ../patch/bzip2.patch .
+patch -u -p0 < bzip2.patch
+echo ""
+
 # Fix format specifier.
 # TODO: fix this in the source code.
 if [[ "$IS_64BIT" -ne 0 ]]; then
