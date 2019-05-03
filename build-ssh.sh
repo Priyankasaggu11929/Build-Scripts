@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds SSH and its dependencies from sources.
 
-OPENSSH_TAR=openssh-7.9p1.tar.gz
-OPENSSH_DIR=openssh-7.9p1
+OPENSSH_TAR=openssh-8.0p1.tar.gz
+OPENSSH_DIR=openssh-8.0p1
 
 ###############################################################################
 
