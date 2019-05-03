@@ -80,8 +80,6 @@ rm -rf "$OPENSSH_DIR" &>/dev/null
 gzip -d < "$OPENSSH_TAR" | tar xf -
 cd "$OPENSSH_DIR"
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
