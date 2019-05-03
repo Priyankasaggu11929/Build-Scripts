@@ -3,7 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds grep from sources.
 
-GREP_TAR=grep-3.3.tar.xz
+GREP_XZ=grep-3.3.tar.xz
+GREP_TAR=grep-3.3.tar
 GREP_DIR=grep-3.3
 
 ###############################################################################
@@ -57,11 +58,28 @@ fi
 
 ###############################################################################
 
+if false; then
+
 # For libint.h, https://stackoverflow.com/q/11370684/608639
 if ! ./build-gettext.sh
 then
     echo "Failed to build GetText"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+fi
+
+###############################################################################
+
+if false; then
+
+# For libint.h, https://stackoverflow.com/q/11370684/608639
+if ! ./build-gnulib.sh
+then
+    echo "Failed to build GnuLib"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 fi
 
 ###############################################################################
@@ -70,8 +88,7 @@ echo
 echo "********** Grep **********"
 echo
 
-# grep-8.29.tar.xz
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/grep/$GREP_TAR" -O "$GREP_TAR"
+"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/grep/$GREP_XZ" -O "$GREP_XZ"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Grep"
@@ -79,7 +96,7 @@ if [[ "$?" -ne 0 ]]; then
 fi
 
 rm -rf "$GREP_DIR" &>/dev/null
-xz -d < "$GREP_TAR" | tar xf -
+unxz "$GREP_XZ" && tar -xf "$GREP_TAR"
 cd "$GREP_DIR"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
@@ -144,7 +161,7 @@ echo "**************************************************************************
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$GREP_TAR" "$GREP_DIR")
+    ARTIFACTS=("$GREP_XZ" "$GREP_TAR" "$GREP_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
