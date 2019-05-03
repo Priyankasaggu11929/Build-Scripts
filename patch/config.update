@@ -3,5 +3,6 @@
 wget -O config.guess 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.guess;hb=HEAD'
 wget -O config.sub 'http://git.savannah.gnu.org/gitweb/?p=config.git;a=blob_plain;f=config.sub;hb=HEAD'
 wget -O ../bootstrap/cacert.pem 'https://curl.haxx.se/ca/cacert.pem'
+wget -O ../bootstrap/icannbundle.pem 'https://data.iana.org/root-anchors/icannbundle.pem'
 
 [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
