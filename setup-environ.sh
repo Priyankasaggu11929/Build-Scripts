@@ -248,7 +248,7 @@ if [[ "$RPATH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-R,$INSTX_LIBDIR"
 fi
 
-OPENMP_ERROR=$("$CC" -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$("$CC" -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_OPENMP="-fopenmp"
 fi
@@ -256,6 +256,11 @@ fi
 SH_ERROR=$("$CC" -Wl,--enable-new-dtags -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_DTAGS="-Wl,--enable-new-dtags"
+fi
+
+SH_ERROR=$("$CC" -Wl,--no-as-needed -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$SH_ERROR" -eq 0 ]]; then
+    SH_NO_AS_NEEDED="-Wl,--no-as-needed"
 fi
 
 # OS X linker and install names

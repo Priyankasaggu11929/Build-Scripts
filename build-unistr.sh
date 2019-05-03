@@ -86,8 +86,8 @@ fi
 ../fix-config.sh
 
 # https://bugs.launchpad.net/ubuntu/+source/binutils/+bug/1340250
-if [[ -n $(command -v ld) ]]; then
-	BUILD_LIBS+=("-Wl,--no-as-needed")
+if [[ -n "$SH_NO_AS_NEEDED" ]]; then
+	BUILD_LIBS+=("$SH_NO_AS_NEEDED")
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
