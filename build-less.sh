@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Less from sources.
 
-LESS_TAR=less-487.tar.gz
-LESS_DIR=less-487
+LESS_TAR=less-530.tar.gz
+LESS_DIR=less-530
 
 ###############################################################################
 
