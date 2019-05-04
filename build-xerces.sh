@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Xerces from sources.
 
-XERCES_TAR=xerces-c-3.2.0.tar.gz
-XERCES_DIR=xerces-c-3.2.0
+XERCES_TAR=xerces-c-3.2.2.tar.gz
+XERCES_DIR=xerces-c-3.2.2
 PKG_NAME=xerces
 
 ###############################################################################
@@ -70,9 +70,8 @@ echo
 echo "********** Xerces **********"
 echo
 
-# http://apache.cs.utah.edu/xerces/c/3/sources/xerces-c-3.2.0.tar.gz
 echo "Attempting Xerces download using insecure channel."
-"$WGET" "http://apache.cs.utah.edu/xerces/c/3/sources/$XERCES_TAR" -O "$XERCES_TAR"
+"$WGET" -q "http://apache.mirrors.tds.net/xerces/c/3/sources/$XERCES_TAR" -O "$XERCES_TAR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download xerces"
@@ -103,14 +102,14 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS")
+MAKE_FLAGS=("V=1" "-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build xerces"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("check")
+MAKE_FLAGS=("V=1" "check")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to test xerces"
