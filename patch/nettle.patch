@@ -13,42 +13,40 @@
      }
 --- testsuite/rsa-sec-decrypt-test.c
 +++ testsuite/rsa-sec-decrypt-test.c
-@@ -68,7 +68,8 @@
+@@ -68,6 +68,7 @@
    unsigned n_size = 1024;
    mpz_t gibberish;
    mpz_t garbage;
--
 +  size_t size;
-+
+ 
    rsa_private_key_init(&key);
    rsa_public_key_init(&pub);
-   mpz_init(gibberish);
 @@ -78,7 +79,7 @@
-
+ 
    memset(verifybad, 'A', PAYLOAD_SIZE);
-
+ 
 -  for (size_t size = 1; size < 51; size++)
 +  for (size = 1; size < 51; size++)
      {
        ASSERT (rsa_generate_keypair(&pub, &key, &random_ctx,
-                                   (nettle_random_func *) knuth_lfib_random,
+ 			           (nettle_random_func *) knuth_lfib_random,
 --- testsuite/rsa-compute-root-test.c
 +++ testsuite/rsa-compute-root-test.c
-@@ -86,6 +86,7 @@ generate_keypair (gmp_randstate_t rands,
+@@ -86,6 +86,7 @@
    mpz_t q1;
    mpz_t phi;
    mpz_t tmp;
 +  int res;
-
+ 
    mpz_init (p1);
    mpz_init (q1);
-@@ -124,7 +125,8 @@ generate_keypair (gmp_randstate_t rands,
-    }
-
+@@ -124,7 +125,8 @@
+     }
+ 
    mpz_mul(phi, p1, q1);
 -  assert (mpz_invert(key->d, pub->e, phi));
 +  res = mpz_invert(key->d, pub->e, phi);
 +  assert (res);
-
+ 
    mpz_fdiv_r (key->a, key->d, p1);
    mpz_fdiv_r (key->b, key->d, q1);
