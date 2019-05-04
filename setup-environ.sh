@@ -75,8 +75,9 @@ echo "" >> "$infile"
 
 function finish {
   cd "$CURR_DIR"
-  rm -f "$infile"* 2>/dev/null
-  rm -f "$outfile"* 2>/dev/null
+  rm -f "$infile" 2>/dev/null
+  rm -f "$outfile" 2>/dev/null
+  rm -f "$outfile.dSYM" 2>/dev/null
 }
 trap finish EXIT
 
