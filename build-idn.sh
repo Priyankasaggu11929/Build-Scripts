@@ -68,41 +68,8 @@ rm -rf "$IDN_DIR" &>/dev/null
 gzip -d < "$IDN_TAR" | tar xf -
 cd "$IDN_DIR"
 
-# Avoid reconfiguring.
-if [[ ! -e "configure" ]]; then
-    ./bootstrap.sh
-    if [[ "$?" -ne 0 ]]; then
-        echo "Failed to reconfigure IDN"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-fi
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
-
-if [[ "$IS_SOLARIS" -eq 1 ]]; then
-  if [[ (-f src/idn2.c) ]]; then
-    sed -e '/^#include "error.h"/d' src/idn2.c > src/idn2.c.fixed
-    mv src/idn2.c.fixed src/idn2.c
-    sed -e '43istatic void error (int status, int errnum, const char *format, ...);' src/idn2.c > src/idn2.c.fixed
-    mv src/idn2.c.fixed src/idn2.c
-
-    {
-      echo ""
-      echo "static void"
-      echo "error (int status, int errnum, const char *format, ...)"
-      echo "{"
-      echo "  va_list args;"
-      echo "  va_start(args, format);"
-      echo "  vfprintf(stderr, format, args);"
-      echo "  va_end(args);"
-      echo "  exit(status);"
-      echo "}"
-      echo ""
-    } >> src/idn2.c
-    touch -t 197001010000 src/idn2.c
-  fi
-fi
 
 # https://bugs.launchpad.net/ubuntu/+source/binutils/+bug/1340250
 if [[ -n "$SH_NO_AS_NEEDED" ]]; then
