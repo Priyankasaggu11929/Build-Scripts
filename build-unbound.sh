@@ -5,7 +5,6 @@
 
 UNBOUND_TAR=unbound-1.9.1.tar.gz
 UNBOUND_DIR=unbound-1.9.1
-ROOT_KEY=root.key
 PKG_NAME=unbound
 
 ###############################################################################
