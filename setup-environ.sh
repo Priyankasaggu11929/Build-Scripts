@@ -322,7 +322,10 @@ fi
 
 SH_CACERT_PATH="$INSTX_PREFIX/etc/pki"
 SH_CACERT_FILE="$INSTX_PREFIX/etc/pki/cacert.pem"
-SH_UNBOUND_ROOT_KEY_FILE="$INSTX_PREFIX/etc/unbound/root.key"
+SH_UNBOUND_ROOTKEY_PATH="$INSTX_PREFIX/etc/unbound"
+SH_UNBOUND_ROOTKEY_FILE="$INSTX_PREFIX/etc/unbound/root.key"
+SH_UNBOUND_CACERT_PATH="$INSTX_PREFIX/etc/unbound"
+SH_UNBOUND_CACERT_FILE="$INSTX_PREFIX/etc/unbound/icannbundle.pem"
 
 ###############################################################################
 

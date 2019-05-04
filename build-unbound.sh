@@ -5,6 +5,7 @@
 
 UNBOUND_TAR=unbound-1.9.1.tar.gz
 UNBOUND_DIR=unbound-1.9.1
+ROOT_KEY=root.key
 PKG_NAME=unbound
 
 ###############################################################################
@@ -144,61 +145,17 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-rm -f root.key 2>/dev/null
-UNBOUND_ANCHOR_PROG=$(find "$PWD" -name unbound-anchor | head -n 1)
-if [[ -z "$UNBOUND_ANCHOR_PROG" ]]; then
-    echo "Failed to locate unbound-anchor tool"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-echo "Creating root key from data.iana.org"
-touch root.key
-
-#if ! "$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
-#then
-#    echo "Failed to create root.key"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
-
-# Can't check error codes because they are ambiguous.
-# https://www.nlnetlabs.nl/bugs-script/show_bug.cgi?id=4134
-"$UNBOUND_ANCHOR_PROG" -a ./root.key -u data.iana.org
-
-# Use https://www.icann.org/dns-resolvers-checking-current-trust-anchors
-COUNT=$(grep -i -c -E 'id = 20326' root.key)
-if [[ "$COUNT" -ne 1 ]]; then
-    echo "Failed to verify root.key"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-COUNT=$(grep -i -c 'state=2 \[  VALID  \]' root.key)
-if [[ "$COUNT" -ne 1 ]]; then
-    echo "Failed to verify root.key"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-echo "Verified root.key"
-
 MAKE_FLAGS=("install")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
-    echo "$SUDO_PASSWORD" | sudo -S cp "root.key" "$SH_UNBOUND_ROOT_KEY_FILE"
 else
     "$MAKE" "${MAKE_FLAGS[@]}"
-    cp "root.key" "$INSTX_PREFIX/etc/unbound/root.key"
 fi
 
 cd "$CURR_DIR"
 
 # Set package status to installed. Delete the file to rebuild the package.
 touch "$INSTX_CACHE/$PKG_NAME"
-
-###############################################################################
-
-echo ""
-echo "*****************************************************************************"
-echo "You should create a cron job that runs unbound-anchor on a"
-echo "regular basis to update $INSTX_PREFIX/etc/unbound/root.key"
-echo "*****************************************************************************"
 
 ###############################################################################
 
@@ -215,5 +172,17 @@ if true; then
         rm -f build-unbound.log
     fi
 fi
+
+###############################################################################
+
+# Now that Unbound is built and unbound-anchor is available
+# we can update the ICANN bundle and root key
+if ! ./build-rootkey.sh
+then
+    echo "Failed to update Unbound Root Key"
+    #[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
 
 [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0

@@ -49,11 +49,19 @@ fi
 
 ###############################################################################
 
-#if ! ./build-iconv.sh
-#then
-#    echo "Failed to build iConv"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
+if ! ./build-openssl.sh
+then
+    echo "Failed to build OpenSSL"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-unbound.sh
+then
+    echo "Failed to build Unbound"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 ###############################################################################
 
@@ -91,7 +99,7 @@ cd "$LDNS_DIR"
     --with-ssl="$INSTX_PREFIX" \
     --with-ca-file="$SH_CACERT_FILE" \
     --with-ca-path="$SH_CACERT_PATH" \
-    --with-trust-anchor="$SH_UNBOUND_ROOT_KEY_FILE" \
+    --with-trust-anchor="$SH_UNBOUND_ROOTKEY_FILE" \
     --disable-dane-ta-usage
 
 if [[ "$?" -ne 0 ]]; then

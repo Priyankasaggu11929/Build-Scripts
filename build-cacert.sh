@@ -27,7 +27,7 @@ fi
 # setup-cacert.sh writes the certs locally for the user so
 # we can download cacerts.pem from cURL. build-cacert.sh
 # installs cacerts.pem in ${SH_CACERT_PATH}. Programs like
-# cURL, Git and Wget will use cacerts.pem.
+# cURL, Git and Wget use cacerts.pem.
 if [[ ! -f "$HOME/.cacert/cacert.pem" ]]; then
     # Hide output to cut down on noise.
     ./setup-cacerts.sh &>/dev/null
@@ -49,29 +49,33 @@ if [[ -z "$SUDO_PASSWORD" ]]; then
 fi
 
 ###############################################################################
-
-"$WGET" -q --ca-certificate="$GLOBALSIGN_ROOT" https://curl.haxx.se/ca/cacert.pem -O cacert.pem
+CACERT_FILE=$(basename "$SH_CACERT_FILE")
+"$WGET" -q --ca-certificate="$GLOBALSIGN_ROOT" https://curl.haxx.se/ca/cacert.pem -O "$CACERT_FILE"
 
 if [[ "$?" -ne 0 ]]; then
-    echo "Failed to download cacert.pem"
+    echo "Failed to download $CACERT_FILE"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
-    echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_CACERT_PATH"
-    echo "$SUDO_PASSWORD" | sudo -S cp cacert.pem "$SH_CACERT_FILE"
-    echo "$SUDO_PASSWORD" | sudo -S chmod 644 "$SH_CACERT_FILE"
-else
-    mkdir -p "$SH_CACERT_PATH"
-    cp cacert.pem "$SH_CACERT_FILE"
-    chmod 644 "$SH_CACERT_FILE"
+if [[ -s "$CACERT_FILE" ]]
+then
+    if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+        echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_CACERT_PATH"
+        echo "$SUDO_PASSWORD" | sudo -S mv cacert.pem "$SH_CACERT_FILE"
+        echo "$SUDO_PASSWORD" | sudo -S chown root:root "$SH_CACERT_PATH"
+        echo "$SUDO_PASSWORD" | sudo -S chmod 644 "$SH_CACERT_FILE"
+        echo "$SUDO_PASSWORD" | sudo -S chown root:root "$SH_CACERT_FILE"
+    else
+        mkdir -p "$SH_CACERT_PATH"
+        cp "$CACERT_FILE" "$SH_CACERT_FILE"
+        chmod 644 "$SH_CACERT_FILE"
+    fi
 fi
 
 ###############################################################################
 
 # Set package status to installed. Delete the file to rebuild the package.
 touch "$INSTX_CACHE/$PKG_NAME"
-
 echo ""
 
 [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
