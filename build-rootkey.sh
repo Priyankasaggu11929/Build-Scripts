@@ -70,10 +70,12 @@ then
     echo "Installing $SH_UNBOUND_ROOTKEY_FILE"
     if [[ ! (-z "$SUDO_PASSWORD") ]]
     then
-        if [[ "%IS_DARWIN" -ne 0 ]]
-        then
+        if [[ "%IS_DARWIN" -ne 0 ]]; then
             ROOT_USR=root
             ROOT_GRP=wheel
+        elif [[ "%IS_SOLARIS" -ne 0 ]]; then
+            ROOT_USR=root
+            ROOT_GRP=sys
         else
             ROOT_USR=root
             ROOT_GRP=root
