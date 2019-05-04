@@ -69,11 +69,10 @@ cp ../patch/make.patch .
 patch -u -p0 < make.patch
 echo ""
 
-if ! autoreconf
-then
-    echo "Failed to reconfigure Make"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+# Autoreconf does not work on Solaris. Fortunately the Makr folks supplied
+# an updated configure file. We only need to keep it in the past.
+touch -t 197001010000 "configure.ac"
+touch -t 197001010000 "configure"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
