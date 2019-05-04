@@ -49,6 +49,18 @@ then
     cp ../patch/config.sub build/
 fi
 
+if [[ -e build-aux/config.guess ]]
+then
+    echo "patching config.guess..."
+    cp ../patch/config.guess build-aux/
+fi
+
+if [[ -e build-aux/config.sub ]]
+then
+    echo "patching config.sub..."
+    cp ../patch/config.sub build-aux/
+fi
+
 if [[ -e config/config.guess ]]
 then
     echo "patching config.guess..."
