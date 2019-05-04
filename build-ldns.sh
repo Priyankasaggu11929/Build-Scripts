@@ -97,8 +97,8 @@ cd "$LDNS_DIR"
     --prefix="$INSTX_PREFIX" \
     --libdir="$INSTX_LIBDIR" \
     --with-ssl="$INSTX_PREFIX" \
-    --with-ca-file="$SH_CACERT_FILE" \
-    --with-ca-path="$SH_CACERT_PATH" \
+    --with-ca-file="$SH_UNBOUND_CACERT_FILE" \
+    --with-ca-path="$SH_UNBOUND_CACERT_PATH" \
     --with-trust-anchor="$SH_UNBOUND_ROOTKEY_FILE" \
     --disable-dane-ta-usage
 
