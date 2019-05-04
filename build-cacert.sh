@@ -59,12 +59,21 @@ fi
 
 if [[ -s "$CACERT_FILE" ]]
 then
+    if [[ "%IS_DARWIN" -ne 0 ]]
+    then
+        ROOT_USR=root
+        ROOT_GRP=wheel
+    else
+        ROOT_USR=root
+        ROOT_GRP=root
+    fi
+
     if [[ ! (-z "$SUDO_PASSWORD") ]]; then
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_CACERT_PATH"
         echo "$SUDO_PASSWORD" | sudo -S mv cacert.pem "$SH_CACERT_FILE"
-        echo "$SUDO_PASSWORD" | sudo -S chown root:root "$SH_CACERT_PATH"
+        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR:$ROOT_GRP" "$SH_CACERT_PATH"
         echo "$SUDO_PASSWORD" | sudo -S chmod 644 "$SH_CACERT_FILE"
-        echo "$SUDO_PASSWORD" | sudo -S chown root:root "$SH_CACERT_FILE"
+        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR:$ROOT_GRP" "$SH_CACERT_FILE"
     else
         mkdir -p "$SH_CACERT_PATH"
         cp "$CACERT_FILE" "$SH_CACERT_FILE"

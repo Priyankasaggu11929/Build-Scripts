@@ -70,11 +70,20 @@ then
     echo "Installing $SH_UNBOUND_ROOTKEY_FILE"
     if [[ ! (-z "$SUDO_PASSWORD") ]]
     then
+        if [[ "%IS_DARWIN" -ne 0 ]]
+        then
+            ROOT_USR=root
+            ROOT_GRP=wheel
+        else
+            ROOT_USR=root
+            ROOT_GRP=root
+        fi
+
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_UNBOUND_ROOTKEY_PATH"
         echo "$SUDO_PASSWORD" | sudo -S mv "$ROOT_KEY" "$SH_UNBOUND_ROOTKEY_FILE"
-        echo "$SUDO_PASSWORD" | sudo -S chown root:root "$SH_UNBOUND_ROOTKEY_PATH"
+        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR:$ROOT_GRP" "$SH_UNBOUND_ROOTKEY_PATH"
         echo "$SUDO_PASSWORD" | sudo -S chmod 644 "$SH_UNBOUND_ROOTKEY_FILE"
-        echo "$SUDO_PASSWORD" | sudo -S chown root:root "$SH_UNBOUND_ROOTKEY_FILE"
+        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR:$ROOT_GRP" "$SH_UNBOUND_ROOTKEY_FILE"
     else
         mkdir -p "$SH_UNBOUND_ROOTKEY_PATH"
         cp "$ROOT_KEY" "$SH_UNBOUND_ROOTKEY_FILE"
