@@ -59,10 +59,10 @@ fi
 
 if [[ -s "$CACERT_FILE" ]]
 then
-    if [[ "%IS_DARWIN" -ne 0 ]]; then
+    if [[ "$IS_DARWIN" -ne 0 ]]; then
         ROOT_USR=root
         ROOT_GRP=wheel
-    elif [[ "%IS_SOLARIS" -ne 0 ]]; then
+    elif [[ "$IS_SOLARIS" -ne 0 ]]; then
         ROOT_USR=root
         ROOT_GRP=sys
     else
