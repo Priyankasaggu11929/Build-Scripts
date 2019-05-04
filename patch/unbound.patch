@@ -1,6 +1,6 @@
 --- config.h.in
 +++ config.h.in
-@@ -963,7 +963,9 @@
+@@ -966,7 +966,9 @@
  
  
  #ifndef UNBOUND_DEBUG
@@ -12,7 +12,7 @@
  /** Use small-ldns codebase */
 --- configure.ac
 +++ configure.ac
-@@ -1650,7 +1650,9 @@
+@@ -1652,7 +1652,9 @@
  dnl includes
  [
  #ifndef UNBOUND_DEBUG
