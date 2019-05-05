@@ -101,7 +101,7 @@ CONFIG_OPTIONS+=("--with-tls=openssl")
 # https://trac.macports.org/ticket/46236
 if [[ "$IS_OLD_DARWIN" -ne 0 ]]
 then
-    CONFIG_OPTIONS+=("--disable-mdb ")
+    CONFIG_OPTIONS+=("--enable-mdb=no")
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
