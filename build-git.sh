@@ -219,19 +219,23 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("test" "V=1")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+# Skip self tests on OS X 10.5 for the moment.
+if [[ "$IS_OLD_DARWIN" -eq 0 ]]
 then
-	echo "Failed to test Git"
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+    MAKE_FLAGS=("test" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test Git"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 
-echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
-if [[ "${COUNT}" -ne 0 ]];
-then
-    echo "Failed to test Git"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    echo "Searching for errors hidden in log files"
+    COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+    if [[ "${COUNT}" -ne 0 ]];
+    then
+        echo "Failed to test Git"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 # See INSTALL for the formats and the requirements
