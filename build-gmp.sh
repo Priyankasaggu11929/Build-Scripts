@@ -39,10 +39,6 @@ if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./setup-password.sh
 fi
 
-# Fix decades old compile and link errors on early Darwin.
-# https://gmplib.org/list-archives/gmp-bugs/2009-May/001423.html
-IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c -E "OS X 10\.[0-5]")
-
 ###############################################################################
 
 if ! ./build-cacert.sh

@@ -98,6 +98,12 @@ CONFIG_OPTIONS+=("--prefix=$INSTX_PREFIX")
 CONFIG_OPTIONS+=("--libdir=$INSTX_LIBDIR")
 CONFIG_OPTIONS+=("--with-tls=openssl")
 
+# https://trac.macports.org/ticket/46236
+if [[ "$IS_OLD_DARWIN" -ne 0 ]]
+then
+    CONFIG_OPTIONS+=("--disable-mdb ")
+fi
+
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \

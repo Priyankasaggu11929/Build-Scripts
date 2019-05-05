@@ -143,7 +143,6 @@ if [[ "$IS_DARWIN" -ne 0 ]]; then
 fi
 
 # Try to make depend...
-IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
 if [[ "$IS_OLD_DARWIN" -ne 0 ]]; then
     "$MAKE" MAKEDEPPROG="gcc -M" depend
 elif [[ "$IS_SOLARIS" -ne 0 ]]; then

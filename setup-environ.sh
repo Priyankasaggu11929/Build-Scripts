@@ -135,6 +135,10 @@ IS_FREEBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'freebsd')
 IS_NETBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'netbsd')
 IS_BSD=$(echo -n "$THIS_SYSTEM" | grep -i -c -E 'freebsd|netbsd|openbsd')
 
+# Fix decades old compile and link errors on early Darwin.
+# https://gmplib.org/list-archives/gmp-bugs/2009-May/001423.html
+IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c -E "OS X 10\.[0-5]")
+
 THIS_MACHINE=$(uname -m 2>&1)
 IS_IA32=$(echo -n "$THIS_MACHINE" | grep -E -i -c 'i86pc|i.86|amd64|x86_64')
 IS_X86_64=$(echo -n "$THIS_MACHINE" | grep -E -i -c 'amd64|x86_64')
