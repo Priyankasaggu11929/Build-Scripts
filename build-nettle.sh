@@ -107,9 +107,7 @@ if [[ "$IS_SOLARIS" -eq 1 ]]; then
 fi
 
 # This scares me, but it is necessary...
-autoreconf
-
-if [[ "$?" -ne 0 ]]; then
+if ! autoreconf; then
     echo "Failed to reconfigure Nettle"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
