@@ -39,7 +39,7 @@ fi
 
 IS_DARWIN=$(echo -n $(uname -s 2>&1) | grep -i -c 'darwin')
 IS_SOLARIS=$(echo -n $(uname -s 2>&1) | grep -i -c 'sunos')
-IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c "OS X 10.5")
+IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c -E "OS X 10\.[0-6]")
 
 if [[ "$IS_DARWIN" -ne "0" ]]; then
     DARWIN_CFLAGS="-force_cpusubtype_ALL"
