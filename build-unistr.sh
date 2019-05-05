@@ -75,6 +75,13 @@ cd "$UNISTR_DIR"
 
 cp ../patch/unistring.patch .
 patch -u -p0 < unistring.patch
+
+if [[ "$IS_OLD_DARWIN" -ne 0 ]]
+then
+    cp ../patch/unistring-darwin.patch .
+    patch -u -p0 < unistring-darwin.patch
+fi
+
 echo ""
 
 if [[ "$?" -ne 0 ]]; then
@@ -109,7 +116,7 @@ MAKE_FLAGS=("check" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
 	echo "Failed to test Unistring"
-	#[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 echo "Searching for errors hidden in log files"
