@@ -76,12 +76,6 @@ cd "$UNISTR_DIR"
 cp ../patch/unistring.patch .
 patch -u -p0 < unistring.patch
 
-if [[ "$IS_OLD_DARWIN" -ne 0 ]]
-then
-    cp ../patch/unistring-darwin.patch .
-    patch -u -p0 < unistring-darwin.patch
-fi
-
 echo ""
 
 if [[ "$?" -ne 0 ]]; then
