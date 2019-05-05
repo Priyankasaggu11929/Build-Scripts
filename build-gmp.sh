@@ -3,6 +3,9 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds GMP from sources.
 
+# GMP is untested and broken on PowerMac.
+# https://gmplib.org/list-archives/gmp-bugs/2009-May/001423.html
+
 GMP_TAR=gmp-6.1.2.tar.bz2
 GMP_DIR=gmp-6.1.2
 PKG_NAME=gmp
@@ -73,8 +76,11 @@ cd "$GMP_DIR"
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --enable-shared \
-    --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
+    --enable-static \
+    --enable-shared \
     ABI="$INSTX_BITNESS"
 
 if [[ "$?" -ne 0 ]]; then
