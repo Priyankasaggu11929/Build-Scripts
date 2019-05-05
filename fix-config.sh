@@ -40,49 +40,49 @@ done
 if [[ -e build/config.guess ]]
 then
     echo "patching config.guess..."
-    cp ../patch/config.guess build/
+    cp -p ../patch/config.guess build/
 fi
 
 if [[ -e build/config.sub ]]
 then
     echo "patching config.sub..."
-    cp ../patch/config.sub build/
+    cp -p ../patch/config.sub build/
 fi
 
 if [[ -e build-aux/config.guess ]]
 then
     echo "patching config.guess..."
-    cp ../patch/config.guess build-aux/
+    cp -p ../patch/config.guess build-aux/
 fi
 
 if [[ -e build-aux/config.sub ]]
 then
     echo "patching config.sub..."
-    cp ../patch/config.sub build-aux/
+    cp -p ../patch/config.sub build-aux/
 fi
 
 if [[ -e config/config.guess ]]
 then
     echo "patching config.guess..."
-    cp ../patch/config.guess config/
+    cp -p ../patch/config.guess config/
 fi
 
 if [[ -e config/config.sub ]]
 then
     echo "patching config.sub..."
-    cp ../patch/config.sub config/
+    cp -p ../patch/config.sub config/
 fi
 
 if [[ -e config.guess ]]
 then
     echo "patching config.guess..."
-    cp ../patch/config.guess .
+    cp -p ../patch/config.guess .
 fi
 
 if [[ -e config.sub ]]
 then
     echo "patching config.sub..."
-    cp ../patch/config.sub .
+    cp -p ../patch/config.sub .
 fi
 
 echo ""
