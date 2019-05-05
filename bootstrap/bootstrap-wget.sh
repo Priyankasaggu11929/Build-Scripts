@@ -191,6 +191,8 @@ echo "ca_directory = $PREFIX/cacert/" >> "$PREFIX/etc/wgetrc"
 echo "ca_certificate = $PREFIX/cacert/cacert.pem" >> "$PREFIX/etc/wgetrc"
 echo "" >> "$PREFIX/etc/wgetrc"
 
+cp ../cacert.pem "$PREFIX/cacert/cacert.pem"
+
 # Cleanup
 if true; then
     cd "$CURR_DIR"
