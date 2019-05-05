@@ -98,6 +98,9 @@ CONFIG_OPTIONS+=("--prefix=$INSTX_PREFIX")
 CONFIG_OPTIONS+=("--libdir=$INSTX_LIBDIR")
 CONFIG_OPTIONS+=("--with-tls=openssl")
 
+# Should this be used everywhere? MDB is dirty and cannot
+# pass acceptance testing due to undefined behavior. In
+# fact we disabled the self tests because of MDB.
 # https://trac.macports.org/ticket/46236
 if [[ "$IS_OLD_DARWIN" -ne 0 ]]
 then

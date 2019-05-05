@@ -69,8 +69,9 @@ cp ../patch/make.patch .
 patch -u -p0 < make.patch
 echo ""
 
-# Autoreconf does not work on Solaris. Fortunately the Makr folks supplied
-# an updated configure file. We only need to keep it in the past.
+# Autoreconf does not work on Solaris. Fortunately the
+# Make folks supplied an updated configure file. We only
+# need to keep the file time in the past.
 touch -t 197001010000 "configure.ac"
 touch -t 197001010000 "configure"
 
