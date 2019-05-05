@@ -3,9 +3,6 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds GMP from sources.
 
-# GMP is untested and broken on PowerMac.
-# https://gmplib.org/list-archives/gmp-bugs/2009-May/001423.html
-
 GMP_TAR=gmp-6.1.2.tar.bz2
 GMP_DIR=gmp-6.1.2
 PKG_NAME=gmp
@@ -42,7 +39,8 @@ if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./setup-password.sh
 fi
 
-# http://git.savannah.gnu.org/gitweb/?p=guile.git;a=commitdiff;h=7dc9ae7179b8
+# Fix decades old compile and link errors on early Darwin.
+# https://gmplib.org/list-archives/gmp-bugs/2009-May/001423.html
 IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c -E "OS X 10\.[0-6]")
 
 ###############################################################################
@@ -70,6 +68,8 @@ rm -rf "$GMP_DIR" &>/dev/null
 bzip2 -d < "$GMP_TAR" | tar xf -
 cd "$GMP_DIR"
 
+# Fix decades old compile and link errors on early Darwin.
+# https://gmplib.org/list-archives/gmp-bugs/2009-May/001423.html
 if [[ "$IS_OLD_DARWIN" -ne 0 ]]
 then
     cp ../patch/gmp-darwin.patch .
