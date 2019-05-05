@@ -60,7 +60,7 @@ cd "$BOOTSTRAP_DIR"
 
 # Copy our copy of cacerts to bootstrap
 mkdir -p "$PREFIX/cacert/"
-cp cacert.pem "$PREFIX/cacert/"
+cp cacert.pem "$PREFIX/cacert/cacert.pem"
 
 ############################## OpenSSL ##############################
 
@@ -185,13 +185,14 @@ if ! make install; then
     exit 1
 fi
 
+mkdir -p "$PREFIX/cacert/"
+cp ../cacert.pem "$PREFIX/cacert/cacert.pem"
+
 echo "" >> "$PREFIX/etc/wgetrc"
 echo "# cacert.pem location" >> "$PREFIX/etc/wgetrc"
 echo "ca_directory = $PREFIX/cacert/" >> "$PREFIX/etc/wgetrc"
 echo "ca_certificate = $PREFIX/cacert/cacert.pem" >> "$PREFIX/etc/wgetrc"
 echo "" >> "$PREFIX/etc/wgetrc"
-
-cp ../cacert.pem "$PREFIX/cacert/cacert.pem"
 
 # Cleanup
 if true; then
