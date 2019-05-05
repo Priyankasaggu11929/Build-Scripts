@@ -42,6 +42,9 @@ if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./setup-password.sh
 fi
 
+# http://git.savannah.gnu.org/gitweb/?p=guile.git;a=commitdiff;h=7dc9ae7179b8
+IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c -E "OS X 10\.[0-6]")
+
 ###############################################################################
 
 if ! ./build-cacert.sh
@@ -67,6 +70,13 @@ rm -rf "$GMP_DIR" &>/dev/null
 bzip2 -d < "$GMP_TAR" | tar xf -
 cd "$GMP_DIR"
 
+if [[ "$IS_OLD_DARWIN" -ne 0 ]]
+then
+    cp ../patch/gmp-darwin.patch .
+    patch -u -p0 < gmp-darwin.patch
+    echo ""
+fi
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -81,23 +91,12 @@ cd "$GMP_DIR"
     --libdir="$INSTX_LIBDIR" \
     --enable-static \
     --enable-shared \
+    --enable-assert=no \
     ABI="$INSTX_BITNESS"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure GMP"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-# http://git.savannah.gnu.org/gitweb/?p=guile.git;a=commitdiff;h=7dc9ae7179b8
-IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c -E "OS X 10\.[0-6]")
-if [[ "$IS_OLD_DARWIN" -ne 0 ]]
-then
-    echo "patching old Darwin installation"
-    for file in $(find "$PWD" -name '*.h')
-    do
-        sed 's/extern __inline__ __attribute__ ((__gnu_inline__))/extern __inline__/g' "$file" > "$file.fixed"
-        mv "$file.fixed" "$file"
-    done
 fi
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
@@ -107,14 +106,11 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ "$IS_OLD_DARWIN" -eq 0 ]]
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    MAKE_FLAGS=("check" "V=1")
-    if ! "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test GMP"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
+    echo "Failed to test GMP"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 echo "Searching for errors hidden in log files"
