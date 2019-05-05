@@ -1,24 +1,22 @@
 --- tests/test-float.c
 +++ tests/test-float.c
-@@ -359,6 +359,13 @@
-   test_float ();
-   test_double ();
+@@ -315,6 +315,11 @@
+     volatile long double m = LDBL_MAX;
+     int n;
  
-+  /* Added by JW. PowerMacs fail the long double self test.  */
-+  /* I did not follow what was being tested with the loop    */
-+  /* over 2*LDBL_MANT_MAX. Considering the library is stable */
-+  /* any bugs should have been fixed long ago. It is of no   */
-+  /* surprise most folks don't run self tests. Folks seem to */
-+  /* think someone else is doing it (or don't care).         */
++    /* The library source code handles the case LDBL_MANT_DIG=106.   */
++    /* It appears the library's tests don't reflect the changes      */
++    /* made to the library proper. What I am not sure about is, are  */
++    /* the changes in the library applicable to Apple PPC platforms. */
 +#if !defined(__APPLE__) || !defined(_ARCH_PPC)
-   {
-     DECL_LONG_DOUBLE_ROUNDING
- 
-@@ -368,6 +375,7 @@
- 
-     END_LONG_DOUBLE_ROUNDING ();
-   }
+     ASSERT (m + m > m);
+     for (n = 0; n <= 2 * LDBL_MANT_DIG; n++)
+       {
+@@ -325,6 +330,7 @@
+         else
+           ASSERT (!(x + x == x));
+       }
 +#endif
+   }
  
-   return 0;
- }
+   /* Check the value of LDBL_MIN.  */
