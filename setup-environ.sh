@@ -349,6 +349,10 @@ elif [[ -n "$INSTX_ASAN" ]]; then
     BUILD_CFLAGS+=("-fsanitize=address")
     BUILD_CXXFLAGS+=("-fsanitize=address")
     BUILD_LDFLAGS+=("-fsanitize=address")
+elif [[ -n "$INSTX_MSAN" ]]; then
+    BUILD_CFLAGS+=("-fsanitize=memory")
+    BUILD_CXXFLAGS+=("-fsanitize=memory")
+    BUILD_LDFLAGS+=("-fsanitize=memory")
 fi
 
 if [[ -n "$SH_ARMV8" ]]; then
