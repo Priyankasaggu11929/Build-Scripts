@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds iConv from sources.
 
-ICONV_TAR=libiconv-1.15.tar.gz
-ICONV_DIR=libiconv-1.15
+ICONV_TAR=libiconv-1.16.tar.gz
+ICONV_DIR=libiconv-1.16
 PKG_NAME=iconv
 
 ###############################################################################
@@ -64,9 +64,9 @@ rm -rf "$ICONV_DIR" &>/dev/null
 gzip -d < "$ICONV_TAR" | tar xf -
 cd "$ICONV_DIR"
 
-cp ../patch/iconv.patch .
-patch -u -p0 < iconv.patch
-echo ""
+#cp ../patch/iconv.patch .
+#patch -u -p0 < iconv.patch
+#echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
