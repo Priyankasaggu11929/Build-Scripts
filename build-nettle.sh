@@ -69,9 +69,9 @@ echo
 echo "********** Nettle **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/nettle/$NETTLE_TAR" -O "$NETTLE_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$NETTLE_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/nettle/$NETTLE_TAR"
+then
     echo "Failed to download Nettle"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

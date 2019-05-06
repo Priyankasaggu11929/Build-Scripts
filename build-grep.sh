@@ -88,9 +88,9 @@ echo
 echo "********** Grep **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/grep/$GREP_XZ" -O "$GREP_XZ"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$GREP_XZ" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/grep/$GREP_XZ"
+then
     echo "Failed to download Grep"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

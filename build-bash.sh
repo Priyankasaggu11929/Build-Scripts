@@ -61,7 +61,8 @@ echo
 echo "********** Bash **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/bash/$BASH_TAR" -O "$BASH_TAR"
+if ! "$WGET" -O "$BASH_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/bash/$BASH_TAR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to download Bash"
@@ -71,6 +72,9 @@ fi
 rm -rf "$BASH_DIR" &>/dev/null
 gzip -d < "$BASH_TAR" | tar xf -
 cd "$BASH_DIR"
+
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \

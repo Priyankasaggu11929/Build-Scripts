@@ -6,8 +6,8 @@
 TUNTAP_TAR=v1.3.3.tar.gz
 TUNTAP_DIR=tuntap-1.3.3
 
-OPENVPN_TAR=openvpn-2.4.6.tar.gz
-OPENVPN_DIR=openvpn-2.4.6
+OPENVPN_TAR=openvpn-2.4.7.tar.gz
+OPENVPN_DIR=openvpn-2.4.7
 
 ###############################################################################
 
@@ -66,9 +66,9 @@ echo
 echo "********** Solaris TUN/TAP Driver **********"
 echo
 
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/kaizawa/tuntap/archive/$TUNTAP_TAR" -O "$TUNTAP_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$TUNTAP_TAR" --ca-certificate="$DIGICERT_ROOT" \
+     "https://github.com/kaizawa/tuntap/archive/$TUNTAP_TAR"
+then
     echo "Failed to download TUN/TAP driver"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -125,9 +125,9 @@ echo
 echo "********** OpenVPN **********"
 echo
 
-"$WGET" --ca-certificate="$ADDTRUST_ROOT" "https://swupdate.openvpn.org/community/releases/$OPENVPN_TAR" -O "$OPENVPN_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$OPENVPN_TAR" --ca-certificate="$ADDTRUST_ROOT" \
+     "https://swupdate.openvpn.org/community/releases/$OPENVPN_TAR"
+then
     echo "Failed to download OpenVPN"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -139,10 +139,8 @@ cd "$OPENVPN_DIR"
 cp ../patch/openvpn.patch .
 patch -u -p0 < openvpn.patch
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \

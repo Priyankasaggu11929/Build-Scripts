@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds coreutils from sources.
 
-CORE_TAR=coreutils-8.29.tar.xz
-CORE_DIR=coreutils-8.29
+CORE_TAR=coreutils-8.31.tar.xz
+CORE_DIR=coreutils-8.31
 
 ###############################################################################
 
@@ -71,9 +71,9 @@ echo "********** Core Utilities **********"
 echo
 
 # coreutils-8.29.tar.xz
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/coreutils/$CORE_TAR" -O "$CORE_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$CORE_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/coreutils/$CORE_TAR"
+then
     echo "Failed to download Core Utilities"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

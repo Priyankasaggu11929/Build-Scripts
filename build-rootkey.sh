@@ -98,9 +98,13 @@ fi
 
 ###############################################################################
 
-"$WGET" -q --ca-certificate="$CA_ZOO" https://data.iana.org/root-anchors/icannbundle.pem -O "$ICANN_BUNDLE"
+echo
+echo "********** ICANN Root Certs **********"
+echo
 
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$ICANN_BUNDLE" --ca-certificate="$CA_ZOO" \
+     "https://data.iana.org/root-anchors/icannbundle.pem"
+then
     echo "Failed to download icannbundle.pem"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

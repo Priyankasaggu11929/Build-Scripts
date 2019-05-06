@@ -53,10 +53,9 @@ echo
 echo "********** Flex **********"
 echo
 
-# https://github.com/westes/flex/releases/download/v2.6.4/flex-2.6.4.tar.gz
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/westes/flex/releases/download/v2.6.4/$FLEX_TAR" -O "$FLEX_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$FLEX_TAR" --ca-certificate="$DIGICERT_ROOT" \
+     "https://github.com/westes/flex/releases/download/v2.6.4/$FLEX_TAR"
+then
     echo "Failed to download Flex"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

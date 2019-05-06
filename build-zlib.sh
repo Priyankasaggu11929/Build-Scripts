@@ -54,9 +54,9 @@ echo
 echo "********** zLib **********"
 echo
 
-wget "http://www.zlib.net/$ZLIB_TAR" -O "$ZLIB_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$ZLIB_TAR" \
+     "http://www.zlib.net/$ZLIB_TAR"
+then
     echo "Failed to download zLib"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

@@ -56,9 +56,9 @@ echo
 echo "********** M4 **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/m4/$M4_TAR" -O "$M4_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$M4_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/m4/$M4_TAR"
+then
     echo "Failed to download M4"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -108,9 +108,9 @@ echo
 echo "********** Autoconf **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/autoconf/$AUTOCONF_TAR" -O "$AUTOCONF_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$AUTOCONF_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/autoconf/$AUTOCONF_TAR"
+then
     echo "Failed to download libtool"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -119,10 +119,8 @@ rm -rf "$AUTOCONF_DIR" &>/dev/null
 gzip -d < "$AUTOCONF_TAR" | tar xf -
 cd "$AUTOCONF_DIR"
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
@@ -160,9 +158,9 @@ echo
 echo "********** Automake **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR" -O "$AUTOMAKE_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$AUTOMAKE_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR"
+then
     echo "Failed to download Automake"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -171,10 +169,8 @@ rm -rf "$AUTOMAKE_DIR" &>/dev/null
 gzip -d < "$AUTOMAKE_TAR" | tar xf -
 cd "$AUTOMAKE_DIR"
 
-# http://pkgs.fedoraproject.org/cgit/rpms/gnutls.git/tree/gnutls.spec; thanks NM.
-# AIX needs the execute bit reset on the file.
-sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' configure > configure.fixed
-mv configure.fixed configure; chmod +x configure
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \

@@ -53,9 +53,9 @@ echo
 echo "********** Gzip **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/gzip/$GZIP_TAR" -O "$GZIP_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$GZIP_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/gzip/$GZIP_TAR"
+then
     echo "Failed to download Gzip"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

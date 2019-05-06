@@ -54,9 +54,9 @@ echo
 echo "********** libtasn1 **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/libtasn1/$TASN1_TAR" -O "$TASN1_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$TASN1_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/libtasn1/$TASN1_TAR"
+then
     echo "Failed to download libtasn1"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

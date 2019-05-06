@@ -46,9 +46,9 @@ echo
 echo "********** Automake **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR" -O "$AUTOMAKE_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$AUTOMAKE_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/automake/$AUTOMAKE_TAR"
+then
     echo "Failed to download Automake"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

@@ -78,19 +78,9 @@ echo
 echo "********** libpsl **********"
 echo
 
-# This fails when Wget < 1.14
-echo "Attempting download PSL using HTTPS."
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
-
-# This is due to the way Wget calls OpenSSL. The OpenSSL context
-# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
-# trust in this certificate; and not a self-signed CA root."
-if [[ "$?" -ne 0 ]]; then
-    echo "Attempting download PSL using insecure channel."
-    "$WGET" --no-check-certificate "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR" -O "$PSL_TAR"
-fi
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$PSL_TAR" --ca-certificate="$DIGICERT_ROOT" \
+     "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR"
+then
     echo "Failed to download libpsl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -131,17 +121,10 @@ fi
 # Update the PSL data file
 echo "Updating Public Suffix List (PSL) data file"
 mkdir -p list
-"$WGET" --ca-certificate="$CA_ZOO" https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat -O list/public_suffix_list.dat
 
-# This is due to the way Wget calls OpenSSL. The OpenSSL context
-# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
-# trust in this certificate; and not a self-signed CA root."
-if [[ "$?" -ne 0 ]]; then
-    echo "Attempting update PSL using insecure channel."
-    "$WGET" --no-check-certificate https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat -O list/public_suffix_list.dat
-fi
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" --ca-certificate="$CA_ZOO" -O "list/public_suffix_list.dat"
+     "https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat"
+then
     echo "Failed to update Public Suffix List (PSL)"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -155,12 +138,12 @@ fi
 
 # libpsl is failing its self tests at the moment
 # https://github.com/rockdaboot/libpsl/issues/87
-# MAKE_FLAGS=("check")
-# if ! "$MAKE" "${MAKE_FLAGS[@]}"
-# then
-#    echo "Failed to test libpsl"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-# fi
+MAKE_FLAGS=("check")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+   echo "Failed to test libpsl"
+   [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)

@@ -62,9 +62,9 @@ echo
 echo "********** libassuan **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://gnupg.org/ftp/gcrypt/libassuan/$LIBASSUAN_TAR" -O "$LIBASSUAN_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$LIBASSUAN_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://gnupg.org/ftp/gcrypt/libassuan/$LIBASSUAN_TAR"
+then
     echo "Failed to download libassuan"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

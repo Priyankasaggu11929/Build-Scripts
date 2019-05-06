@@ -65,19 +65,9 @@ echo
 echo "********** PCRE **********"
 echo
 
-# This fails when Wget < 1.14
-echo "Attempting download PCRE using HTTPS."
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.pcre.org/pub/pcre/$PCRE_TAR" -O "$PCRE_TAR"
-
-# This is due to the way Wget calls OpenSSL. The OpenSSL context
-# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
-# trust in this certificate; and not a self-signed CA root."
-if [[ "$?" -ne 0 ]]; then
-    echo "Attempting download PCRE using insecure channel."
-    "$WGET" --no-check-certificate "https://ftp.pcre.org/pub/pcre/$PCRE_TAR" -O "$PCRE_TAR"
-fi
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$PCRE_TAR" --ca-certificate="$IDENTRUST_ROOT" \
+     "https://ftp.pcre.org/pub/pcre/$PCRE_TAR"
+then
     echo "Failed to download PCRE"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -89,9 +79,6 @@ cd "$PCRE_DIR"
 cp ../patch/pcre.patch .
 patch -u -p0 < pcre.patch
 echo ""
-
-# Our grep catches 'runtime error' and signals failure.
-# rm pcre.patch
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -153,19 +140,9 @@ echo
 echo "********** PCRE2 **********"
 echo
 
-# This fails when Wget < 1.14
-echo "Attempting download PCRE2 using HTTPS."
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "https://ftp.pcre.org/pub/pcre/$PCRE2_TAR" -O "$PCRE2_TAR"
-
-# This is due to the way Wget calls OpenSSL. The OpenSSL context
-# needs OPT_V_PARTIAL_CHAIN option. The option says "Root your
-# trust in this certificate; and not a self-signed CA root."
-if [[ "$?" -ne 0 ]]; then
-    echo "Attempting download PCRE2 using insecure channel."
-    "$WGET" --no-check-certificate "https://ftp.pcre.org/pub/pcre/$PCRE2_TAR" -O "$PCRE2_TAR"
-fi
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$PCRE2_TAR" --ca-certificate="$IDENTRUST_ROOT" \
+     "https://ftp.pcre.org/pub/pcre/$PCRE2_TAR"
+then
     echo "Failed to download PCRE2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -173,6 +150,9 @@ fi
 rm -rf "$PCRE2_DIR" &>/dev/null
 gzip -d < "$PCRE2_TAR" | tar xf -
 cd "$PCRE2_DIR"
+
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \

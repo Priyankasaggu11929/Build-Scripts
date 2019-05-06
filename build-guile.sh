@@ -121,9 +121,9 @@ echo
 echo "********** Guile **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/guile/$GUILE_TAR" -O "$GUILE_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$GUILE_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/guile/$GUILE_TAR"
+then
     echo "Failed to download Guile"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

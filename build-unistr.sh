@@ -62,9 +62,9 @@ echo
 echo "********** Unistring **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/libunistring/$UNISTR_TAR" -O "$UNISTR_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$UNISTR_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/libunistring/$UNISTR_TAR"
+then
     echo "Failed to download Unistring"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -75,13 +75,7 @@ cd "$UNISTR_DIR"
 
 cp ../patch/unistring.patch .
 patch -u -p0 < unistring.patch
-
 echo ""
-
-if [[ "$?" -ne 0 ]]; then
-    echo "Failed to patch Unistring"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -109,8 +103,8 @@ fi
 MAKE_FLAGS=("check" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-	echo "Failed to test Unistring"
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    echo "Failed to test Unistring"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 echo "Searching for errors hidden in log files"

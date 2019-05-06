@@ -54,9 +54,9 @@ echo
 echo "********** c-ares **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://c-ares.haxx.se/download/$CARES_TAR" -O "$CARES_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$CARES_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://c-ares.haxx.se/download/$CARES_TAR"
+then
     echo "Failed to download c-ares"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

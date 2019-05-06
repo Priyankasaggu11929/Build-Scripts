@@ -4,8 +4,8 @@
 # This script builds ClamAV and its dependencies from sources.
 # Also see https://bugzilla.clamav.net/show_bug.cgi?id=11929
 
-CLAMAV_TAR=clamav-0.100.1.tar.gz
-CLAMAV_DIR=clamav-0.100.1
+CLAMAV_TAR=clamav-0.101.2.tar.gz
+CLAMAV_DIR=clamav-0.101.2
 
 ###############################################################################
 
@@ -78,9 +78,9 @@ echo
 echo "********** ClamAV **********"
 echo
 
-"$WGET" --ca-certificate="$CA_ZOO" "https://www.clamav.net/downloads/production/$CLAMAV_TAR" -O "$CLAMAV_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! -O "$CLAMAV_TAR" "$WGET" --ca-certificate="$CA_ZOO" \
+     "https://www.clamav.net/downloads/production/$CLAMAV_TAR"
+then
     echo "Failed to download ClamAV"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

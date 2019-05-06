@@ -141,9 +141,9 @@ echo
 echo "********** GnuTLS **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/$GNUTLS_TAR" -O "$GNUTLS_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$GNUTLS_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/$GNUTLS_TAR"
+then
     echo "Failed to download GnuTLS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -192,8 +192,6 @@ if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure GnuTLS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
-
-#[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 
 for file in $(find "$PWD/tests" -iname 'Makefile')
 do

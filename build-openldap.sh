@@ -71,9 +71,9 @@ echo
 echo "********** OpenLDAP **********"
 echo
 
-"$WGET" --ca-certificate="$GO_DADDY_ROOT" "https://gpl.savoirfairelinux.net/pub/mirrors/openldap/openldap-release/$LDAP_TAR" -O "$LDAP_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" --ca-certificate="$GO_DADDY_ROOT" -O "$LDAP_TAR" \
+     "https://gpl.savoirfairelinux.net/pub/mirrors/openldap/openldap-release/$LDAP_TAR"
+then
     echo "Failed to download OpenLDAP"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

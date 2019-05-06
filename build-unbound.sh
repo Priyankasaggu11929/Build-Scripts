@@ -86,9 +86,9 @@ echo
 echo "********** Unbound **********"
 echo
 
-"$WGET" -q --ca-certificate="$IDENTRUST_ROOT" "https://unbound.net/downloads/$UNBOUND_TAR" -O "$UNBOUND_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$UNBOUND_TAR" --ca-certificate="$IDENTRUST_ROOT" \
+     "https://unbound.net/downloads/$UNBOUND_TAR"
+then
     echo "Failed to download Unbound"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

@@ -53,9 +53,9 @@ echo
 echo "********** GMP **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/gmp/$GMP_TAR" -O "$GMP_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$GMP_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/gmp/$GMP_TAR"
+then
     echo "Failed to download GMP"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

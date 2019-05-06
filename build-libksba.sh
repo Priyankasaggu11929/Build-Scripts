@@ -62,9 +62,9 @@ echo
 echo "********** libksba **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.gnupg.org/ftp/gcrypt/libksba/$LIBKSBA_TAR" -O "$LIBKSBA_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$LIBKSBA_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://www.gnupg.org/ftp/gcrypt/libksba/$LIBKSBA_TAR"
+then
     echo "Failed to download libksba"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

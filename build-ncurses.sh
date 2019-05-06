@@ -53,9 +53,9 @@ echo
 echo "********** ncurses **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/pub/gnu/ncurses/$NCURSES_TAR" -O "$NCURSES_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$NCURSES_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/pub/gnu/ncurses/$NCURSES_TAR"
+then
     echo "Failed to download Ncurses"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -66,16 +66,6 @@ cd "$NCURSES_DIR"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
-
-# Ncurses fails to configure if an old version is present.
-# Configure will attempt to use old headers, which are missing symbols.
-# This seems to be the only reliable way to delete the old version
-# since we can't 'configure' and then 'make uninstall'.
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
-    echo "$SUDO_PASSWORD" | sudo -S find "$INSTX_PREFIX" -name '*curse*' -exec rm -rf {} 2>/dev/null \;
-else
-    find "$INSTX_PREFIX" -name '*curse*' -exec rm -rf {} \;
-fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \

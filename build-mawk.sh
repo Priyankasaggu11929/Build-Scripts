@@ -46,9 +46,9 @@ echo
 echo "********** mawk **********"
 echo
 
-"$WGET" --ca-certificate="$IDENTRUST_ROOT" "http://invisible-island.net/datafiles/release/$MAWK_TAR" -O "$MAWK_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$MAWK_TAR" --ca-certificate="$IDENTRUST_ROOT" \
+     "http://invisible-island.net/datafiles/release/$MAWK_TAR"
+then
     echo "Failed to download mawk"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

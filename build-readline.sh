@@ -4,8 +4,8 @@
 # This script builds Readline from sources. Ncurses should
 # be built first. If it is built, then tinfo will be used.
 
-READLN_TAR=readline-7.0.tar.gz
-READLN_DIR=readline-7.0
+READLN_TAR=readline-8.0.tar.gz
+READLN_DIR=readline-8.0
 PKG_NAME=readline
 
 ###############################################################################
@@ -51,13 +51,21 @@ fi
 
 ###############################################################################
 
+if ! ./build-ncurses.sh
+then
+    echo "Failed to build ncurses"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 echo
 echo "********** Readline **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/readline/$READLN_TAR" -O "$READLN_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$READLN_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/readline/$READLN_TAR"
+then
     echo "Failed to download Readline"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -81,20 +89,6 @@ fi
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
     --enable-shared
-
-# Fix broken Linux dynamic linker. tinfow or tinfo from ncurses
-if [[ -n $(find /usr/local/lib64 -name '*tinfow*') ]]; then
-    SH_TINFO="-ltinfow"
-elif [[ -n $(find /usr/local/lib64 -name '*tinfo*') ]]; then
-    SH_TINFO="-ltinfo"
-fi
-
-if [[ -n "$SH_TINFO" ]]; then
-    for mfile in $(find "$PWD" -name 'Makefile'); do
-        sed -e "s|SHLIB_LIBS =|SHLIB_LIBS = $SH_TINFO|g" "$mfile" > "$mfile.fixed"
-        mv "$mfile.fixed" "$mfile"
-    done
-fi
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Readline"

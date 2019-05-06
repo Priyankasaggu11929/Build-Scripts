@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds P11-Kit from sources.
 
-P11KIT_TAR=p11-kit-0.23.12.tar.gz
-P11KIT_DIR=p11-kit-0.23.12
+P11KIT_TAR=p11-kit-0.23.15.tar.gz
+P11KIT_DIR=p11-kit-0.23.15
 PKG_NAME=p11-kit
 
 ###############################################################################
@@ -61,9 +61,9 @@ echo
 echo "********** p11-kit **********"
 echo
 
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/p11-glue/p11-kit/releases/download/0.23.12/$P11KIT_TAR" -O "$P11KIT_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$P11KIT_TAR" --ca-certificate="$DIGICERT_ROOT" \
+     "https://github.com/p11-glue/p11-kit/releases/download/0.23.12/$P11KIT_TAR"
+then
     echo "Failed to download p11-kit"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

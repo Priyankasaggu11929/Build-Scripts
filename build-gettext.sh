@@ -53,9 +53,9 @@ echo
 echo "********** GetText **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/pub/gnu/gettext/$GETTEXT_TAR" -O "$GETTEXT_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$GETTEXT_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/pub/gnu/gettext/$GETTEXT_TAR"
+then
     echo "Failed to download GetText"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

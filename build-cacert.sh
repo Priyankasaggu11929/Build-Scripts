@@ -50,9 +50,9 @@ fi
 
 ###############################################################################
 CACERT_FILE=$(basename "$SH_CACERT_FILE")
-"$WGET" -q --ca-certificate="$GLOBALSIGN_ROOT" https://curl.haxx.se/ca/cacert.pem -O "$CACERT_FILE"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$CACERT_FILE" --ca-certificate="$GLOBALSIGN_ROOT" \
+     "https://curl.haxx.se/ca/cacert.pem"
+then
     echo "Failed to download $CACERT_FILE"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

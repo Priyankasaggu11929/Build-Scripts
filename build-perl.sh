@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Perl from sources.
 
-PERL_TAR=perl-5.26.2.tar.gz
-PERL_DIR=perl-5.26.2
+PERL_TAR=perl-5.28.2.tar.gz
+PERL_DIR=perl-5.28.2
 
 ###############################################################################
 
@@ -23,12 +23,6 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-GLOBALSIGN_ROOT="$HOME/.cacert/globalsign-root-r1.pem"
-if [[ ! -f "$GLOBALSIGN_ROOT" ]]; then
-    echo "Perl requires several CA roots. Please run build-cacert.sh."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -51,9 +45,9 @@ echo
 echo "********** Perl **********"
 echo
 
-"$WGET" --ca-certificate="$GLOBALSIGN_ROOT" "http://www.cpan.org/src/5.0/$PERL_TAR" -O "$PERL_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$PERL_TAR" --ca-certificate="$GLOBALSIGN_ROOT" \
+     "http://www.cpan.org/src/5.0/$PERL_TAR"
+then
     echo "Failed to download Perl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -62,9 +56,8 @@ rm -rf "$PERL_DIR" &>/dev/null
 gzip -d < "$PERL_TAR" | tar xf -
 cd "$PERL_DIR"
 
-./Configure -des -Dextras="HTTP::Daemon HTTP::Request Test::More Text::Template"
-
-if [[ "$?" -ne 0 ]]; then
+if ! ./Configure -des -Dextras="HTTP::Daemon HTTP::Request Test::More Text::Template"
+then
     echo "Failed to configure Perl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

@@ -53,10 +53,9 @@ echo
 echo "********** TinyXML2 **********"
 echo
 
-# https://github.com/leethomason/tinyxml2/archive/6.0.0.tar.gz
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/leethomason/tinyxml2/archive/$TXML2_TAR" -O "$TXML2_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$TXML2_TAR" --ca-certificate="$DIGICERT_ROOT" \
+     "https://github.com/leethomason/tinyxml2/archive/$TXML2_TAR"
+then
     echo "Failed to download tinyxml2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

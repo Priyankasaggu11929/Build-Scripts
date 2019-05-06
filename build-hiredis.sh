@@ -70,9 +70,9 @@ echo
 echo "********** Hiredis **********"
 echo
 
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/redis/hiredis/archive/$HIREDIS_TAR" -O "$HIREDIS_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$HIREDIS_TAR" --ca-certificate="$DIGICERT_ROOT" \
+     "https://github.com/redis/hiredis/archive/$HIREDIS_TAR"
+then
     echo "Failed to download Hiredis"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -84,6 +84,9 @@ cd "$HIREDIS_DIR"
 cp ../patch/hiredis.patch .
 patch -u -p0 < hiredis.patch
 echo ""
+
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
@@ -97,33 +100,13 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# TODO
-if false; then
-if [[ "$IS_DARWIN" -ne 0 ]];
-then
-    MAKE_FLAGS=("check" "V=1")
-    if ! DYLD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test Hidredis"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-elif [[ "$IS_LINUX" -ne 0 ]];
-then
-    MAKE_FLAGS=("check" "V=1")
-    if ! LD_LIBRARY_PATH="lib/.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test Hidredis"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-else
-    MAKE_FLAGS=("check" "V=1")
-    if ! "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test Hidredis"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-fi
-fi
+# Need redis-server
+#MAKE_FLAGS=("check" "V=1")
+#if ! "$MAKE" "${MAKE_FLAGS[@]}"
+#then
+#    echo "Failed to test Hidredis"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)

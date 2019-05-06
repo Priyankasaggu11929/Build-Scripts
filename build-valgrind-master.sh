@@ -54,9 +54,8 @@ echo
 
 rm -rf "$VALGRIND_DIR" 2>/dev/null
 
-git clone git://sourceware.org/git/valgrind.git "$VALGRIND_DIR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! git clone git://sourceware.org/git/valgrind.git "$VALGRIND_DIR";
+then
     echo "Failed to checkout Valgrind"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

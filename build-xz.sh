@@ -56,9 +56,9 @@ echo "********** xz **********"
 echo
 
 # Redirect to Sourceforge.
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://tukaani.org/xz/$XZ_TAR" -O "$XZ_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$XZ_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://tukaani.org/xz/$XZ_TAR"
+then
     echo "Failed to download xz"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -68,7 +68,7 @@ gzip -d < "$XZ_TAR" | tar xf -
 cd "$XZ_DIR"
 
 cp ../patch/xz.patch .
-patch -p0 < xz.patch
+patch -u -p0 < xz.patch
 echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past

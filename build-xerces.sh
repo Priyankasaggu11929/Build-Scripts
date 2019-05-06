@@ -70,10 +70,9 @@ echo
 echo "********** Xerces **********"
 echo
 
-echo "Attempting Xerces download using insecure channel."
-"$WGET" -q "http://apache.mirrors.tds.net/xerces/c/3/sources/$XERCES_TAR" -O "$XERCES_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$XERCES_TAR" \
+     "http://apache.mirrors.tds.net/xerces/c/3/sources/$XERCES_TAR"
+then
     echo "Failed to download xerces"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

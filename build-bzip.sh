@@ -59,9 +59,9 @@ echo
 
 # https://github.com/noloader/bzip2-noloader/archive/BZIP2_1_0_6_1.tar.gz
 
-"$WGET" --ca-certificate="$DIGICERT_ROOT" "https://github.com/noloader/bzip2-noloader/archive/$BZIP2_TAR" -O "$BZIP2_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$BZIP2_TAR" --ca-certificate="$DIGICERT_ROOT" \
+     "https://github.com/noloader/bzip2-noloader/archive/$BZIP2_TAR"
+then
     echo "Failed to download Bzip"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

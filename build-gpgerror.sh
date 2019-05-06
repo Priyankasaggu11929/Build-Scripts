@@ -54,9 +54,9 @@ echo
 echo "********** libgpg-error **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://gnupg.org/ftp/gcrypt/libgpg-error/$LIBERR_TAR" -O "$LIBERR_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$LIBERR_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://gnupg.org/ftp/gcrypt/libgpg-error/$LIBERR_TAR"
+then
     echo "Failed to download libgpg-error"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

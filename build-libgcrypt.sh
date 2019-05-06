@@ -62,9 +62,9 @@ echo
 echo "********** libgcrypt **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://gnupg.org/ftp/gcrypt/libgcrypt/$GCRYPT_TAR" -O "$GCRYPT_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$GCRYPT_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://gnupg.org/ftp/gcrypt/libgcrypt/$GCRYPT_TAR"
+then
     echo "Failed to download libgcrypt"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

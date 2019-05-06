@@ -52,10 +52,10 @@ fi
 echo
 echo "********** libexpat **********"
 echo
-# https://github.com/libexpat/libexpat/releases/download/R_2_2_6/expat-2.2.6.tar.bz2
-"$WGET" --ca-certificate="$CA_ZOO" "https://github.com/libexpat/libexpat/releases/download/R_2_2_6/$EXPAT_TAR" -O "$EXPAT_TAR"
 
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$EXPAT_TAR" --ca-certificate="$CA_ZOO" \
+     "https://github.com/libexpat/libexpat/releases/download/R_2_2_6/$EXPAT_TAR"
+then
     echo "Failed to download libexpat"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

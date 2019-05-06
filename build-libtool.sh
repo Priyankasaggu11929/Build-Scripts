@@ -45,9 +45,9 @@ echo
 echo "********** libtool and libltdl **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/libtool/$LIBTOOL_TAR" -O "$LIBTOOL_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$LIBTOOL_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/libtool/$LIBTOOL_TAR"
+then
     echo "Failed to download libtool and libltdl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

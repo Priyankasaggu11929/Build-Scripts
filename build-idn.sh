@@ -57,9 +57,9 @@ echo
 echo "********** IDN **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/libidn/$IDN_TAR" -O "$IDN_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$IDN_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/libidn/$IDN_TAR"
+then
     echo "Failed to download IDN"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
@@ -68,13 +68,13 @@ rm -rf "$IDN_DIR" &>/dev/null
 gzip -d < "$IDN_TAR" | tar xf -
 cd "$IDN_DIR"
 
-# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
-../fix-config.sh
-
 # https://bugs.launchpad.net/ubuntu/+source/binutils/+bug/1340250
 if [[ -n "$SH_NO_AS_NEEDED" ]]; then
     BUILD_LIBS+=("$SH_NO_AS_NEEDED")
 fi
+
+# Fix sys_lib_dlsearch_path_spec and keep the file time in the past
+../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
@@ -142,9 +142,9 @@ echo
 echo "********** IDN2 **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/gnu/libidn/$IDN2_TAR" -O "$IDN2_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$IDN2_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/libidn/$IDN2_TAR"
+then
     echo "Failed to download IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

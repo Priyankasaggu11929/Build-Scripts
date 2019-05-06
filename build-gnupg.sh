@@ -136,9 +136,9 @@ echo
 echo "********** GnuPG **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://gnupg.org/ftp/gcrypt/gnupg/$GNUPG_TAR" -O "$GNUPG_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$GNUPG_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://gnupg.org/ftp/gcrypt/gnupg/$GNUPG_TAR"
+then
     echo "Failed to download GnuPG"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
