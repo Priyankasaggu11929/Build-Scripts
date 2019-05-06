@@ -64,10 +64,6 @@ rm -rf "$ICONV_DIR" &>/dev/null
 gzip -d < "$ICONV_TAR" | tar xf -
 cd "$ICONV_DIR"
 
-#cp ../patch/iconv.patch .
-#patch -u -p0 < iconv.patch
-#echo ""
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
