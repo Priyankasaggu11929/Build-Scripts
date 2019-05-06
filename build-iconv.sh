@@ -53,9 +53,9 @@ echo
 echo "********** iConv **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://ftp.gnu.org/pub/gnu/libiconv/$ICONV_TAR" -O "$ICONV_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$ICONV_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/pub/gnu/libiconv/$ICONV_TAR"
+then
     echo "Failed to download iConv"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

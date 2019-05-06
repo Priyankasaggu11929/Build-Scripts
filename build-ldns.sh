@@ -69,9 +69,9 @@ echo
 echo "********** LDNS **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.nlnetlabs.nl/downloads/ldns/$LDNS_TAR" -O "$LDNS_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$LDNS_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://www.nlnetlabs.nl/downloads/ldns/$LDNS_TAR"
+then
     echo "Failed to download LDNS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

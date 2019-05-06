@@ -129,9 +129,9 @@ echo "   sed: $(command -v sed)"
 echo "   awk: $(command -v awk)"
 echo ""
 
-"$WGET" --ca-certificate="$CA_ZOO" "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR" -O "$GIT_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$GIT_TAR" --ca-certificate="$CA_ZOO" \
+     "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
+then
     echo "Failed to download Git."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi

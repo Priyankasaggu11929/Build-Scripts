@@ -78,9 +78,9 @@ echo
 echo "********** OpenSSL **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.openssl.org/source/$OPENSSL_TAR" -O "$OPENSSL_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$OPENSSL_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://www.openssl.org/source/$OPENSSL_TAR"
+then
     echo "Failed to download OpenSSL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
