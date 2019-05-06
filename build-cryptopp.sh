@@ -61,11 +61,16 @@ if [[ "$?" -ne 0 ]]; then
 fi
 
 rm -rf "$CRYPTOPP_DIR" &>/dev/null
-unzip "$CRYPTOPP_ZIP" -d "$CRYPTOPP_DIR"
+unzip -aoq "$CRYPTOPP_ZIP" -d "$CRYPTOPP_DIR"
 cd "$CRYPTOPP_DIR"
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+MAKE_FLAGS=("all" "-j" "$INSTX_JOBS")
+if ! CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
+     CFLAGS="${BUILD_CFLAGS[*]}" \
+     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
+     LDFLAGS="${BUILD_LDFLAGS[*]}" \
+     LIBS="${BUILD_LIBS[*]}" \
+     "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Crypto++"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
@@ -92,7 +97,7 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-MAKE_FLAGS=("install")
+MAKE_FLAGS=("install" "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
 if [[ ! (-z "$SUDO_PASSWORD") ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
