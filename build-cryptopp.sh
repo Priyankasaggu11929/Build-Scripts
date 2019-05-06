@@ -53,9 +53,9 @@ echo
 echo "********** Crypto++ **********"
 echo
 
-"$WGET" --ca-certificate="$LETS_ENCRYPT_ROOT" "https://www.cryptopp.com/$CRYPTOPP_ZIP" -O "$CRYPTOPP_ZIP"
-
-if [[ "$?" -ne 0 ]]; then
+if ! "$WGET" -O "$CRYPTOPP_ZIP" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://www.cryptopp.com/$CRYPTOPP_ZIP"
+then
     echo "Failed to download Crypto++"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
