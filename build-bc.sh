@@ -122,7 +122,7 @@ cd "$CURR_DIR"
 
 echo ""
 echo "*****************************************************************************"
-echo "Please run BC's 'hash -r' to update program cache in the current shell"
+echo "Please run Bash's 'hash -r' to update program cache in the current shell"
 echo "*****************************************************************************"
 
 ###############################################################################
