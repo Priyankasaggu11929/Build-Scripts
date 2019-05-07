@@ -102,7 +102,7 @@ patch -u -p0 < openssl.patch
 echo ""
 
 # Fix the twisted library paths used by OpenSSL
-for file in $(find . -iname '*makefile*')
+for file in $(find . -iname '*Makefile*')
 do
     sed 's|$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)|$(LIBDIR)|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
