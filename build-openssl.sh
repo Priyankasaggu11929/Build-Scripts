@@ -74,6 +74,14 @@ fi
 
 ###############################################################################
 
+if ! ./build-zlib.sh
+then
+    echo "Failed to build zLib"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 echo
 echo "********** OpenSSL **********"
 echo
@@ -93,8 +101,6 @@ cp ../patch/openssl.patch .
 patch -u -p0 < openssl.patch
 echo ""
 
-#[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-
 # Fix the twisted library paths used by OpenSSL
 for file in $(find . -iname '*makefile*')
 do
@@ -107,7 +113,7 @@ done
 CONFIG_FLAGS=("no-ssl2" "no-ssl3" "no-comp" "shared" "$SH_SYM" "$SH_OPT")
 CONFIG_FLAGS+=("${BUILD_CPPFLAGS[*]}")
 CONFIG_FLAGS+=("${BUILD_CFLAGS[*]}")
-CONFIG_FLAGS+=("${BUILD_LDFLAGS[*]}")
+CONFIG_FLAGS+=("${BUILD_LIBS[*]} ${BUILD_LDFLAGS[*]}")
 
 # This clears a fair amount of UBsan findings
 CONFIG_FLAGS+=("-DPEDANTIC")
@@ -135,8 +141,17 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+# Fix makefiles
+if [[ "$IS_GCC" -eq 0 ]]; then
+    for mfile in $(find "$PWD" -iname 'Makefile*'); do
+        sed -e 's|-Wno-invalid-offsetof||g' -e 's|-Wno-extended-offsetof||g' "$mfile" > "$mfile.fixed"
+        mv "$mfile.fixed" "$mfile"
+    done
+fi
+
+# Fix makefiles
 if [[ "$IS_DARWIN" -ne 0 ]]; then
-    for mfile in $(find "$PWD" -name 'Makefile'); do
+    for mfile in $(find "$PWD" -iname 'Makefile*'); do
         sed -e 's|LD_LIBRARY_PATH|DYLD_LIBRARY_PATH|g' "$mfile" > "$mfile.fixed"
         mv "$mfile.fixed" "$mfile"
     done

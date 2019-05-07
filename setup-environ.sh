@@ -346,13 +346,13 @@ if [[ -n "$INSTX_UBSAN" ]]; then
     BUILD_CXXFLAGS+=("-fsanitize=undefined")
     BUILD_LDFLAGS+=("-fsanitize=undefined")
 elif [[ -n "$INSTX_ASAN" ]]; then
-    BUILD_CFLAGS+=("-fsanitize=address")
-    BUILD_CXXFLAGS+=("-fsanitize=address")
+    BUILD_CFLAGS+=("-fsanitize=address -fno-omit-frame-pointer")
+    BUILD_CXXFLAGS+=("-fsanitize=address -fno-omit-frame-pointer")
     BUILD_LDFLAGS+=("-fsanitize=address")
 elif [[ -n "$INSTX_MSAN" ]]; then
-    BUILD_CFLAGS+=("-fsanitize=memory")
-    BUILD_CXXFLAGS+=("-fsanitize=memory")
-    BUILD_LDFLAGS+=("-fsanitize=memory")
+    BUILD_CFLAGS+=("-fsanitize=memory -fsanitize-memory-track-origins -fno-omit-frame-pointer")
+    BUILD_CXXFLAGS+=("-fsanitize=memory -fsanitize-memory-track-origins -fno-omit-frame-pointer")
+    BUILD_LDFLAGS+=("-fsanitize=memory -fsanitize-memory-track-origins")
 fi
 
 if [[ -n "$SH_ARMV8" ]]; then
