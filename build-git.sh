@@ -201,6 +201,9 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+# Fix LD_LIBRARY_PATH and DYLD_LIBRARY_PATH
+../fix-library-path.sh
+
 # See INSTALL for the formats and the requirements
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 
