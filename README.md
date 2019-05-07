@@ -1,18 +1,14 @@
 # Build-Scripts
 
-This GitHub is a collection of build scripts useful when building and testing programs and libraries on downlevel clients and clients where program updates are not freely available. It should result in working SSH, Wget, cURL and Git clients on systems like PowerMac G5, Fedora 3, CentOS 5 and Solaris 11. The scripts should mostly work on AIX, Android, BSDs, Cygwin, iOS, Linux, OS X and Solaris.
+This GitHub is a collection of build scripts useful for building and testing programs and libraries on downlevel clients and clients where program updates are not freely available. It should result in working SSH, Wget, cURL and Git clients on systems like PowerMac G5, Fedora 1, CentOS 5 and Solaris 11.
 
 The general idea of the scripts are, you run `./build-wget.sh`, `./build-ssh.sh`, `./build-git.sh` or some other program build script to get a fresh tool. The script for the program will download and build the dependent libraries for the program. When the script completes you have a working tool in `/usr/local`.
-
-Adding a new library script is mostly copy and paste. Start with `build-gzip.sh`, copy/paste it to a new file, and then add the necessary pieces for the library. Program scripts are copy and paste too, but they are also more involved because you have to include dependent libraries. See `build-ssh.sh` as an example because it is small. Be sure to run `./configure --help` to look for interesting options.
 
 ## Output Artifacts
 
 All artifacts are placed in `/usr/local` by default with runtime paths and dtags set to the proper library location. The library location on 32-bit machines is `/usr/local/lib`; while 64-bit systems use `/usr/local/lib` (Debian and derivatives) or `/usr/local/lib64` (Red Hat and derivatives).
 
 You can override the install locations with `INSTX_PREFIX` and `INSTX_LIBDIR`. `INSTX_PREFIX` is passed as `--prefix` to Autotools projects, and `INSTX_LIBDIR` is passed as `--libdir` to Autotools projects. Non-Autotools projects get patched after unpacking (see `build-bzip.sh` for an example).
-
-The `INSTX_` prefix was chosen to avoid collisions with other shell variables. Previously, both the scripts and OpenSSL used `INSTALL_LIBDIR`, and OpenSSL installed libraries into into `/usr/local/lib/usr/local/lib/lib`.
 
 Examples of running the scripts and changing variables are shown below:
 
@@ -38,7 +34,7 @@ INSTX_JOBS=2 ./build-curl.sh
 
 ## Boot strapping
 
-Generally speaking you need some CA certificates, a modern Wget and a modern Bash. Older systems like Fedora 3 and CentOS 5 are more sensitive than newer systems, but it is OK to bootstrap a modern system  too. To install the CA certificates and modern Wget perform the following.
+Generally speaking you need some CA certificates and a modern Wget. Older systems like Fedora 1 and CentOS 5 are more sensitive than newer systems, but it is OK to bootstrap a modern system  too. To install the CA certificates and build a modern Wget perform the following.
 
 ```
 ./setup-cacerts.sh
@@ -46,9 +42,9 @@ Generally speaking you need some CA certificates, a modern Wget and a modern Bas
 ./setup-wget.sh
 ```
 
-The CA certificates are written to `$HOME/.cacerts`. The CAs are public/commercial issuers, and there are about six of them. They are used to connect to sites like `gnu.org` and `github.com`. The script that call Wget usually use a `--ca-certificate=<exact-ca-for-site>` option. Sometimes the CA Zoo is used when a lot of redirects are used.
+The CA certificates are written to `$HOME/.cacerts`. The CAs are public/commercial issuers, and there are about eight of them. They are used to connect to sites like `gnu.org` and `github.com`. The script that call Wget usually use a `--ca-certificate=<exact-ca-for-site>` option. Sometimes the CA Zoo is used when a lot of redirects happen.
 
-The bootstrapped Wget is located in `$HOME/bootstrap`. The bootstrapped version of Wget uses static linking to avoid Linux path problems. You can export the WGET variable to build the rest of the tools with `export WGET="$HOME/bootstrap/bin/wget"`.
+The bootstrapped Wget is located in `$HOME/bootstrap`. The bootstrapped version of Wget uses static linking to avoid Linux path problems.
 
 If you are working on an antique system, like Fedora 1, then your next step is build Bash. Fedora 1 provides Bash 2.05b and it can't handle the scripts. The pain point is `[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1`. The command to build and use Bash in the current session is:
 
@@ -71,13 +67,13 @@ You can delete `$HOME/bootstrap` at any time, but be sure you have an updated Wg
 
 ## Runtime Paths
 
-The build scripts attempt to set runtime paths in everything it builds. For example, on Fedora x86_64 the  options include `-L/usr/local/lib64 -m64 -Wl,-R,/usr/local/lib64 -Wl,--enable-new-dtags`. If all goes well you will not suffer the stupid Linux path problems that have existed for the last 25 years or so.
+The build scripts attempt to set runtime paths in everything it builds. For example, on Fedora x86_64 the  options include `-L/usr/local/lib64 -Wl,-R,/usr/local/lib64 -Wl,--enable-new-dtags`. If all goes well you will not suffer the stupid path problems that have plagued Linux for the last 25 years or so.
 
 ## Dependencies
 
 Dependent libraries are minimally tracked. Once a library is built a file with the library name is `touch`'d in `$HOME/.build-scripts`. If the file is older than 7 days then the library is automatically rebuilt. Automatic rebuilding ensures newer versions of a library are used when available and sidesteps problems with trying to track version numbers.
 
-Programs are not tracked. When a script like `build-git.sh` or `build-ssh.sh` is run then the program is always built or rebuilt. The dependently libraries may (or may not) be built based the age as detailed in tracking, but the program is always rebuilt.
+Programs are not tracked. When a script like `build-git.sh` or `build-ssh.sh` is run then the program is always built or rebuilt. The dependently libraries may (or may not) be built based the age, but the program is always rebuilt.
 
 You can delete `$HOME/.build-scripts` and all dependent libraries will be rebuilt on the next run of a build script.
 
@@ -130,36 +126,24 @@ One of the benefits of using the build scripts is, you can somewhat easily build
 First, decide on a directory to sandbox the build. As an example, `/var/sanitize`:
 
 ```
-# In the shell
-export INSTX_PREFIX=/var/sanitize
+INSTX_PREFIX=/var/sanitize
 ```
 
-Second, open `build-environ.sh`, and add `-fsanitize=undefined` around line 270:
+Second, use one of the following variables to enable a sanitizer:
+
+* `INSTX_UBSAN=1`
+* `INSTX_ASAN=1`
+* `INSTX_MSAN=1`
+
+Finally, build and test the program or library as usual. For example, to build OpenSSL, perform:
 
 ```
-BUILD_PKGCONFIG=("$INSTX_LIBDIR/pkgconfig")
-BUILD_CPPFLAGS=("-I$INSTX_PREFIX/include" "-DNDEBUG")
-BUILD_CFLAGS=("$SH_SYM" "$SH_OPT -fsanitize=undefined")
-BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT -fsanitize=undefined")
-BUILD_LDFLAGS=("-L$INSTX_LIBDIR -fsanitize=undefined")
-BUILD_LIBS=()
+INSTX_UBSAN=1 INSTX_PREFIX=/var/sanitize ./build-openssl.sh
 ```
 
-Next, remove `~/.build-scripts` so everything is rebuilt:
+Many programs and libraries feel it is OK to leak resources, and it screws up a lot testing. If you are using Asan or Msan and encounter too many `ERROR: LeakSanitizer: detected memory leaks`, then you may need `LSAN_OPTIONS=detect_leaks=0`. Also see [Issue 719, Suppress leak checking on exit](https://github.com/google/sanitizers/issues/719).
 
-```
-rm -rf ~/.build-scripts/
-```
-
-Finally, build and test the program or library as usual. If the program or library swallows `stdout` or `stderr`, then `cd` into the package directory and `grep` for `runtime error`. For example, for iConv:
-
-```
-$ grep -oIR 'runtime error'
-viscii.h:127:56: runtime error: left shift of 1 by 31 places cannot be represented in type 'int'
-tcvn.h:220:56: runtime error: left shift of 1 by 31 places cannot be represented in type 'int'
-```
-
-Once finished with testing remove `~/.build-scripts` so everything is rebuilt and close the shell.
+Once finished with testing remove `~/.build-scripts` so everything is rebuilt.
 
 ## Self Tests
 
