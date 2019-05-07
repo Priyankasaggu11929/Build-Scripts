@@ -349,10 +349,12 @@ elif [[ -n "$INSTX_ASAN" ]]; then
     BUILD_CFLAGS+=("-fsanitize=address -fno-omit-frame-pointer")
     BUILD_CXXFLAGS+=("-fsanitize=address -fno-omit-frame-pointer")
     BUILD_LDFLAGS+=("-fsanitize=address")
+    BUILD_LIBS+=("-lasan")
 elif [[ -n "$INSTX_MSAN" ]]; then
     BUILD_CFLAGS+=("-fsanitize=memory -fsanitize-memory-track-origins -fno-omit-frame-pointer")
     BUILD_CXXFLAGS+=("-fsanitize=memory -fsanitize-memory-track-origins -fno-omit-frame-pointer")
     BUILD_LDFLAGS+=("-fsanitize=memory -fsanitize-memory-track-origins")
+    BUILD_LIBS+=("-lmsan")
 fi
 
 if [[ -n "$SH_ARMV8" ]]; then
