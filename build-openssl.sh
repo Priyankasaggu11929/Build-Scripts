@@ -196,7 +196,7 @@ fi
 
 # Install the software only
 MAKE_FLAGS=(install_sw)
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
     "$MAKE" "${MAKE_FLAGS[@]}"

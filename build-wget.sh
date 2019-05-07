@@ -226,7 +226,7 @@ then
 fi
 
 MAKE_FLAGS=("install")
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
     "$MAKE" "${MAKE_FLAGS[@]}"
@@ -241,7 +241,7 @@ echo "# Default CA zoo file added by Build-Scripts" >> "./wgetrc"
 echo "ca_directory = $SH_CACERT_PATH" >> "./wgetrc"
 echo "ca_certificate = $SH_CACERT_FILE" >> "./wgetrc"
 
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$INSTX_PREFIX/etc"
     echo "$SUDO_PASSWORD" | sudo -S cp "./wgetrc" "$INSTX_PREFIX/etc/"
 else

@@ -242,7 +242,7 @@ fi
 MAKE_FLAGS=("install")
 
 # Git builds things during install, and they end up root:root.
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
     echo "$SUDO_PASSWORD" | sudo -S chmod -R 0777 ./*
 else

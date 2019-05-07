@@ -70,7 +70,7 @@ then
         ROOT_GRP=root
     fi
 
-    if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+    if [[ -n "$SUDO_PASSWORD" ]]; then
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_CACERT_PATH"
         echo "$SUDO_PASSWORD" | sudo -S mv cacert.pem "$SH_CACERT_FILE"
         echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR:$ROOT_GRP" "$SH_CACERT_PATH"

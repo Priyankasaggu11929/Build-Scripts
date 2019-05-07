@@ -121,7 +121,7 @@ MAKE_FLAGS+=("PREFIX=$INSTX_PREFIX")
 MAKE_FLAGS+=("LIBDIR=$INSTX_LIBDIR")
 MAKE_FLAGS+=("PKGLIBDIR=${BUILD_PKGCONFIG[*]}")
 
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
     "$MAKE" "${MAKE_FLAGS[@]}"

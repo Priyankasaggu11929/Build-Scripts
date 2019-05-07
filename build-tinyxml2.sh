@@ -98,7 +98,7 @@ fi
 
 # TODO... fix this simple copy
 echo "Installing TinyXML2"
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S cp tinyxml2.h "$INSTX_PREFIX/include"
     echo "$SUDO_PASSWORD" | sudo -S cp libtinyxml2.a "$INSTX_LIBDIR"
     echo ""

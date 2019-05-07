@@ -68,7 +68,7 @@ if [[ -s "$ROOT_KEY" ]]
 then
     echo ""
     echo "Installing $SH_UNBOUND_ROOTKEY_FILE"
-    if [[ ! (-z "$SUDO_PASSWORD") ]]
+    if [[ -n "$SUDO_PASSWORD" ]]
     then
         if [[ "$IS_DARWIN" -ne 0 ]]; then
             ROOT_USR=root
@@ -113,7 +113,7 @@ if [[ -s "$ICANN_BUNDLE" ]]
 then
     echo ""
     echo "Installing $SH_UNBOUND_CACERT_FILE"
-    if [[ ! (-z "$SUDO_PASSWORD") ]]
+    if [[ -n "$SUDO_PASSWORD" ]]
     then
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_UNBOUND_CACERT_PATH"
         echo "$SUDO_PASSWORD" | sudo -S mv "$ICANN_BUNDLE" "$SH_UNBOUND_CACERT_FILE"

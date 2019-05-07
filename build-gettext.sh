@@ -104,7 +104,7 @@ then
 fi
 
 MAKE_FLAGS=("install")
-if [[ ! (-z "$SUDO_PASSWORD") ]]; then
+if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
     echo "$SUDO_PASSWORD" | sudo -S rm -rf "$INSTX_PREFIX/share/doc/gettext"
 else
