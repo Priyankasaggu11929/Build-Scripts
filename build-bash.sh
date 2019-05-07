@@ -27,13 +27,6 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
-    # Already installed, return success
-    echo ""
-    echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
-fi
-
 # The password should die when this subshell goes out of scope
 if [[ -z "$SUDO_PASSWORD" ]]; then
     source ./setup-password.sh
@@ -53,6 +46,16 @@ if ! ./build-iconv.sh
 then
     echo "Failed to build iConv"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if false; then
+    if ! ./build-termcap.sh
+    then
+        echo "Failed to build Termcap"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 ###############################################################################
@@ -82,8 +85,8 @@ cd "$BASH_DIR"
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --with-libiconv-prefix="$INSTX_PREFIX" \
-    --with-libintl-prefix="$INSTX_PREFIX"
+    --with-included-gettext \
+    --with-libiconv-prefix="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Bash"
@@ -120,9 +123,6 @@ else
 fi
 
 cd "$CURR_DIR"
-
-# Set package status to installed. Delete the file to rebuild the package.
-touch "$INSTX_CACHE/$PKG_NAME"
 
 ###############################################################################
 

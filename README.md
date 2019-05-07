@@ -67,7 +67,9 @@ You can delete `$HOME/bootstrap` at any time, but be sure you have an updated Wg
 
 ## Runtime Paths
 
-The build scripts attempt to set runtime paths in everything it builds. For example, on Fedora x86_64 the  options include `-L/usr/local/lib64 -Wl,-R,/usr/local/lib64 -Wl,--enable-new-dtags`. If all goes well you will not suffer the stupid path problems that have plagued Linux for the last 25 years or so.
+The build scripts attempt to set runtime paths in everything it builds. For example, on Fedora x86_64 the  options include `-L/usr/local/lib64 -Wl,-R,/usr/local/lib64 -Wl,--enable-new-dtags`. `new-dtags` ensures a `RUNPATH` is used (as opposed to `RPATH`), and `RUNPATH` allows `LD_LIBRARY_PATH` overrides at runtime. The `LD_LIBRARY_PATH` support is important so self tests can run during `make check`.
+
+If all goes well you will not suffer the stupid path problems that have plagued Linux for the last 25 years or so.
 
 ## Dependencies
 
