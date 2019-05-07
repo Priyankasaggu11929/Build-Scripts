@@ -73,6 +73,18 @@ then
     cp -p ../patch/config.sub config/
 fi
 
+if [[ -e support/config.guess ]]
+then
+    echo "patching config.guess..."
+    cp -p ../patch/config.guess support/
+fi
+
+if [[ -e support/config.sub ]]
+then
+    echo "patching config.sub..."
+    cp -p ../patch/config.sub support/
+fi
+
 if [[ -e config.guess ]]
 then
     echo "patching config.guess..."
