@@ -65,17 +65,9 @@ rm -rf "$TERMCAP_DIR" &>/dev/null
 gzip -d < "$TERMCAP_TAR" | tar xf -
 cd "$TERMCAP_DIR"
 
-sed -e "s|^CPPFLAGS = *|CPPFLAGS = @CPPFLAGS@ |g" Makefile.in > Makefile.in.fixed
-mv Makefile.in.fixed Makefile.in
-sed -e "s|^CFLAGS = *|CFLAGS = @CFLAGS@ |g" Makefile.in > Makefile.in.fixed
-mv Makefile.in.fixed Makefile.in
-sed -e "s|^CXXFLAGS = *|CXXFLAGS = @CXXFLAGS@ |g" Makefile.in > Makefile.in.fixed
-mv Makefile.in.fixed Makefile.in
-sed -e 's|$(CC) -c $(CPPFLAGS)|$(CC) -c $(CPPFLAGS) $(CFLAGS) |g' Makefile.in > Makefile.in.fixed
-mv Makefile.in.fixed Makefile.in
-sed -e 's|oldincludedir|includedir|g' Makefile.in > Makefile.in.fixed
-mv Makefile.in.fixed Makefile.in
-touch -t 197001010000 Makefile.in
+cp ../patch/termcap.patch .
+patch -u -p0 < termcap.patch
+echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -95,19 +87,6 @@ if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Termcap"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
-
-sed -e '42i#include <unistd.h>' tparam.c > tparam.c.fixed
-mv tparam.c.fixed tparam.c
-sed -e "/^oldincludedir/d" Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
-sed -e "s|prefix =.*|prefix = $INSTX_PREFIX|g" Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
-sed -e "s|exec_prefix = .*|exec_prefix = $INSTX_PREFIX|g" Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
-sed -e "s|libdir =.*|libdir = $INSTX_LIBDIR|g" Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
-sed -e "s|includedir = .*|includedir = $INSTX_PREFIX/include|g" Makefile > Makefile.fixed
-mv Makefile.fixed Makefile
 
 ARFLAGS="cr"
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
