@@ -37,64 +37,8 @@ do
     touch -t 197001010000 "$file"
 done
 
-if [[ -e build/config.guess ]]
-then
-    echo "patching config.guess..."
-    cp -p ../patch/config.guess build/
-fi
-
-if [[ -e build/config.sub ]]
-then
-    echo "patching config.sub..."
-    cp -p ../patch/config.sub build/
-fi
-
-if [[ -e build-aux/config.guess ]]
-then
-    echo "patching config.guess..."
-    cp -p ../patch/config.guess build-aux/
-fi
-
-if [[ -e build-aux/config.sub ]]
-then
-    echo "patching config.sub..."
-    cp -p ../patch/config.sub build-aux/
-fi
-
-if [[ -e config/config.guess ]]
-then
-    echo "patching config.guess..."
-    cp -p ../patch/config.guess config/
-fi
-
-if [[ -e config/config.sub ]]
-then
-    echo "patching config.sub..."
-    cp -p ../patch/config.sub config/
-fi
-
-if [[ -e support/config.guess ]]
-then
-    echo "patching config.guess..."
-    cp -p ../patch/config.guess support/
-fi
-
-if [[ -e support/config.sub ]]
-then
-    echo "patching config.sub..."
-    cp -p ../patch/config.sub support/
-fi
-
-if [[ -e config.guess ]]
-then
-    echo "patching config.guess..."
-    cp -p ../patch/config.guess .
-fi
-
-if [[ -e config.sub ]]
-then
-    echo "patching config.sub..."
-    cp -p ../patch/config.sub .
-fi
-
+find "$PWD" -name config.sub -exec bash -c 'echo "patching config.sub..."' \
+                             -exec bash -c 'cp ../patch/config.sub "$1"' _ {} \;
+find "$PWD" -name config.guess -exec bash -c 'echo "patching config.guess..."' \
+                               -exec bash -c 'cp ../patch/config.guess "$1"' _ {} \;
 echo ""
