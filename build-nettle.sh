@@ -84,17 +84,6 @@ cp ../patch/nettle.patch .
 patch -u -p0 < nettle.patch
 echo ""
 
-# This works for all versions of Nettle on all Apple platforms
-if [[ "$IS_DARWIN" -ne 0 ]]; then
-    sed -e 's|LD_LIBRARY_PATH|DYLD_LIBRARY_PATH|g' examples/Makefile.in > examples/Makefile.in.fixed
-    mv examples/Makefile.in.fixed examples/Makefile.in
-    touch -t 197001010000 examples/Makefile.in
-
-    sed -e 's|LD_LIBRARY_PATH|DYLD_LIBRARY_PATH|g' testsuite/Makefile.in > testsuite/Makefile.in.fixed
-    mv testsuite/Makefile.in.fixed testsuite/Makefile.in
-    touch -t 197001010000 testsuite/Makefile.in
-fi
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -134,6 +123,9 @@ if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Nettle"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+# Fix LD_LIBRARY_PATH and DYLD_LIBRARY_PATH
+../fix-library-path.sh
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
