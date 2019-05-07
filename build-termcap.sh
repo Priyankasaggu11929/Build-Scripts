@@ -72,7 +72,6 @@ echo ""
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
-    # Termcap does not honor anything below. Its why we have so many sed's.
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
@@ -81,7 +80,8 @@ echo ""
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" \
     --enable-shared \
-    --enable-install-termcap --with-termcap="$INSTX_PREFIX/etc"
+    --enable-install-termcap \
+    --with-termcap="$INSTX_PREFIX/etc"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Termcap"
