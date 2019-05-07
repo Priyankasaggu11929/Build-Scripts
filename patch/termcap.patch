@@ -1,0 +1,83 @@
+--- Makefile.in
++++ Makefile.in
+@@ -31,7 +31,7 @@
+ 
+ DEFS = @DEFS@ -DTERMCAP_FILE=\"$(termcapfile)\"
+ 
+-CFLAGS = -g
++CFLAGS = @CFLAGS@ -g
+ 
+ prefix = @prefix@
+ exec_prefix = @exec_prefix@
+@@ -42,12 +42,6 @@
+ # Directory in which to install termcap.h.
+ includedir = $(prefix)/include
+ 
+-# Directory in which to optionally also install termcap.h,
+-# so compilers besides gcc can find it by default.
+-# If it is empty or not defined, termcap.h will only be installed in
+-# includedir. 
+-oldincludedir = /usr/include
+-
+ # Directory in which to install the documentation info files.
+ infodir = $(prefix)/info
+ 
+@@ -69,20 +63,20 @@
+ all:	libtermcap.a info
+ 
+ .c.o:
+-	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
++	$(CC) -c $(CPPFLAGS) $(CFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
+ 
+ install: all installdirs @installdata@
+ 	$(INSTALL_DATA) libtermcap.a $(libdir)/libtermcap.a
+ 	-$(RANLIB) $(libdir)/libtermcap.a
+ 	cd $(srcdir); $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
+-	-cd $(srcdir); test -z "$(oldincludedir)" || \
+-	  $(INSTALL_DATA) termcap.h $(oldincludedir)/termcap.h
++	-cd $(srcdir); test -z "$(includedir)" || \
++	  $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
+ 	cd $(srcdir); for f in termcap.info*; \
+ 	do $(INSTALL_DATA) $$f $(infodir)/$$f; done
+ 
+ uninstall: @uninstalldata@
+ 	rm -f $(libdir)/libtermcap.a $(includedir)/termcap.h
+-	test -z "$(oldincludedir)" || rm -f $(oldincludedir)/termcap.h
++	test -z "$(includedir)" || rm -f $(includedir)/termcap.h
+ 	rm -f $(infodir)/termcap.info*
+ 
+ # These are separate targets to avoid trashing the user's existing
+--- tparam.c
++++ tparam.c
+@@ -40,10 +40,12 @@
+ 
+ #endif /* not emacs */
+ 
++#include <unistd.h>
++
+ #ifndef NULL
+ #define NULL (char *) 0
+ #endif
+-
++
+ #ifndef emacs
+ static void
+ memory_out ()
+@@ -75,7 +77,7 @@
+   return tem;
+ }
+ #endif /* not emacs */
+-
++
+ /* Assuming STRING is the value of a termcap string entry
+    containing `%' constructs to expand parameters,
+    merge in parameter values and store result in block OUTSTRING points to.
+@@ -312,7 +314,7 @@
+     strcat (op, left);
+   return outstring;
+ }
+-
++
+ #ifdef DEBUG
+ 
+ main (argc, argv)
