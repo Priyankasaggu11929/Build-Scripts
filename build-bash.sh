@@ -63,8 +63,7 @@ echo
 
 if ! "$WGET" -O "$BASH_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "https://ftp.gnu.org/gnu/bash/$BASH_TAR"
-
-if [[ "$?" -ne 0 ]]; then
+then
     echo "Failed to download Bash"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
