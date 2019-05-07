@@ -5,7 +5,7 @@
  DEFS = @DEFS@ -DTERMCAP_FILE=\"$(termcapfile)\"
  
 -CFLAGS = -g
-+CFLAGS = @CFLAGS@ -g
++CFLAGS = @CFLAGS@
  
  prefix = @prefix@
  exec_prefix = @exec_prefix@
@@ -22,7 +22,7 @@
  # Directory in which to install the documentation info files.
  infodir = $(prefix)/info
  
-@@ -69,20 +63,20 @@
+@@ -69,20 +63,19 @@
  all:	libtermcap.a info
  
  .c.o:
@@ -43,7 +43,6 @@
  uninstall: @uninstalldata@
  	rm -f $(libdir)/libtermcap.a $(includedir)/termcap.h
 -	test -z "$(oldincludedir)" || rm -f $(oldincludedir)/termcap.h
-+	test -z "$(includedir)" || rm -f $(includedir)/termcap.h
  	rm -f $(infodir)/termcap.info*
  
  # These are separate targets to avoid trashing the user's existing
