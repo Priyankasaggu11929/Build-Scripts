@@ -109,7 +109,7 @@ echo "**************************************************************************
 ###############################################################################
 
 # Set to false to retain artifacts
-if false; then
+if true; then
 
     ARTIFACTS=("$CPUID_TAR" "$CPUID_DIR")
     for artifact in "${ARTIFACTS[@]}"; do

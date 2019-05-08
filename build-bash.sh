@@ -134,16 +134,16 @@ echo "**************************************************************************
 ###############################################################################
 
 # Set to false to retain artifacts
-if false; then
+if true; then
 
     ARTIFACTS=("$BASH_TAR" "$BASH_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
 
-    # ./build-make.sh 2>&1 | tee build-make.log
-    if [[ -e build-make.log ]]; then
-        rm -f build-make.log
+    # ./build-bash.sh 2>&1 | tee build-bash.log
+    if [[ -e build-bash.log ]]; then
+        rm -f build-bash.log
     fi
 fi
 
