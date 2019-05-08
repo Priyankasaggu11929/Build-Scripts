@@ -141,18 +141,21 @@
  	$(MAKE) -$(MAKEFLAGS) release
 --- cpuid.c
 +++ cpuid.c
-@@ -40,6 +40,10 @@
+@@ -40,6 +40,13 @@
  #include <regex.h>
  #include <getopt.h>
  
 +#ifdef __sun
++#include <sys/processor.h>
++#include <sys/procset.h>
 +#include <strings.h>
++#include <pthread.h>
 +#endif
 +
  #ifdef USE_CPUID_MODULE
  #include <linux/major.h>
  #endif
-@@ -66,8 +70,9 @@
+@@ -66,8 +73,9 @@
  #define STR(x)   #x
  #define XSTR(x)  STR(x)
  
@@ -163,3 +166,16 @@
  
  #define LENGTH(array, type) (sizeof(array) / sizeof(type))
  #define STRLEN(s)           (LENGTH(s,char) - 1)
+@@ -6850,6 +6858,12 @@
+ 
+          int  status;
+          status = syscall(__NR_sched_setaffinity, 0, sizeof(mask), &mask);
++#elif defined(__sun)
++         /*
++          ** https://www.oracle.com/technetwork/server-storage/solaris/solaris-linux-app-139382.html
++          */
++         pthread_t thread = pthread_self();
++		 int status = processor_bind(P_LWPID, thread, cpu, NULL);
+ #else
+          cpu_set_t  cpuset;
+          CPU_ZERO(&cpuset);
