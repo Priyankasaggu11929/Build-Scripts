@@ -218,13 +218,14 @@
  
  #define LENGTH(array, type) (sizeof(array) / sizeof(type))
  #define STRLEN(s)           (LENGTH(s,char) - 1)
-@@ -6850,6 +6858,12 @@
+@@ -6850,6 +6858,13 @@
  
           int  status;
           status = syscall(__NR_sched_setaffinity, 0, sizeof(mask), &mask);
 +#elif defined(__sun)
 +         /*
 +          ** https://www.oracle.com/technetwork/server-storage/solaris/solaris-linux-app-139382.html
++          ** https://docs.oracle.com/cd/E19455-01/806-0626/6j9vgh685/index.html
 +          */
 +         pthread_t thread = pthread_self();
 +         int status = processor_bind(P_LWPID, thread, cpu, NULL);
