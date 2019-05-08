@@ -13,7 +13,7 @@
  
  PACKAGE=cpuid
  VERSION=20180519
-@@ -12,172 +7,24 @@
+@@ -12,172 +7,26 @@
  
  PROG=$(PACKAGE)
  
@@ -40,7 +40,10 @@
  REL_DIR=../$(shell date +%Y-%m-%d)
  WEB_DIR=/toad2/apps.mine/www/www/$(PROG)
  
- BUILDROOT=
+-BUILDROOT=
++PREFIX ?= /usr/local
++LIBDIR ?= $(PREFIX)/lib
++BINDIR ?= $(PREFIX)/bin
  
 -default: $(PROG) $(PROG).man.gz cpuinfo2cpuid cpuinfo2cpuid.man.gz
 +default: $(PROG) cpuinfo2cpuid
@@ -64,9 +67,9 @@
 -	install -D    -m 755 cpuinfo2cpuid        $(BUILDROOT)/usr/bin/cpuinfo2cpuid
 -	install -D    -m 444 cpuinfo2cpuid.man.gz $(BUILDROOT)/usr/share/man/man1/cpuinfo2cpuid.1.gz
 +install: $(PROG) cpuinfo2cpuid
-+	install -d -m 755                    $(BUILDROOT)/usr/bin
-+	install -s -m 755 $(PROG)            $(BUILDROOT)/usr/bin/$(PROG)
-+	install -s -m 755 cpuinfo2cpuid      $(BUILDROOT)/usr/bin/cpuinfo2cpuid
++	install -d -m 755                    $(DESTDIR)$(BINDIR)
++	install -s -m 755 $(PROG)            $(DESTDIR)$(BINDIR)/$(PROG)
++	install -s -m 755 cpuinfo2cpuid      $(DESTDIR)$(BINDIR)/cpuinfo2cpuid
  
  clean:
 -	rm -f $(PROG) $(PROG).i386 $(PROG).x86_64
@@ -249,10 +252,10 @@
 -   char           transmeta_info[48];
 -   char           override_brand[48];
 -   char           soc_brand[48];
-+   char           brand[96];
-+   char           transmeta_info[96];
-+   char           override_brand[96];
-+   char           soc_brand[96];
++   char           brand[98];
++   char           transmeta_info[98];
++   char           override_brand[98];
++   char           soc_brand[98];
     hypervisor_t   hypervisor;
  
     struct mp {
