@@ -128,7 +128,7 @@ echo "**************************************************************************
 ###############################################################################
 
 # Set to false to retain artifacts
-if false; then
+if true; then
 
     ARTIFACTS=("$BC_TAR" "$BC_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
