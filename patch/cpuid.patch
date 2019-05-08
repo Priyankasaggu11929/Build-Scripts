@@ -259,13 +259,14 @@
     hypervisor_t   hypervisor;
  
     struct mp {
-@@ -6850,6 +6869,25 @@
+@@ -6850,6 +6869,26 @@
  
           int  status;
           status = syscall(__NR_sched_setaffinity, 0, sizeof(mask), &mask);
 +#elif defined(__APPLE__)
 +         /*
 +          ** https://developer.apple.com/library/archive/releasenotes/Performance/RN-AffinityAPI/
++          ** https://stackoverflow.com/a/39839919/608639
 +          */
 +         pthread_t thread = pthread_self();
 +         mach_port_t mthread = pthread_mach_thread_np(thread);
