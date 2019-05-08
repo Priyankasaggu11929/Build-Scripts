@@ -304,8 +304,8 @@
 +          ** https://stackoverflow.com/a/39839919/608639
 +          */
 +         pthread_t thread = pthread_self();
-+         thread_affinity_policy_data_t policy = { cpu };
 +         mach_port_t mthread = pthread_mach_thread_np(thread);
++         thread_affinity_policy_data_t policy = { cpu };
 +         int status = thread_policy_set(mthread, THREAD_AFFINITY_POLICY, (thread_policy_t)&policy, 1);
 +         if (status != KERN_SUCCESS) {
 +             errno = EINVAL;
