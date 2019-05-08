@@ -69,7 +69,7 @@
 +install: $(PROG) cpuinfo2cpuid
 +	install -d -m 755                    $(DESTDIR)$(BINDIR)
 +	install -s -m 755 $(PROG)            $(DESTDIR)$(BINDIR)/$(PROG)
-+	install -s -m 755 cpuinfo2cpuid      $(DESTDIR)$(BINDIR)/cpuinfo2cpuid
++	install    -m 755 cpuinfo2cpuid      $(DESTDIR)$(BINDIR)/cpuinfo2cpuid
  
  clean:
 -	rm -f $(PROG) $(PROG).i386 $(PROG).x86_64
