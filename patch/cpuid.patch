@@ -225,7 +225,7 @@
 +          ** https://www.oracle.com/technetwork/server-storage/solaris/solaris-linux-app-139382.html
 +          */
 +         pthread_t thread = pthread_self();
-+		 int status = processor_bind(P_LWPID, thread, cpu, NULL);
++         int status = processor_bind(P_LWPID, thread, cpu, NULL);
  #else
           cpu_set_t  cpuset;
           CPU_ZERO(&cpuset);
