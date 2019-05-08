@@ -152,3 +152,14 @@
  #ifdef USE_CPUID_MODULE
  #include <linux/major.h>
  #endif
+@@ -66,8 +70,9 @@
+ #define STR(x)   #x
+ #define XSTR(x)  STR(x)
+ 
+-
++#ifndef MAX
+ #define MAX(l,r)            ((l) > (r) ? (l) : (r))
++#endif
+ 
+ #define LENGTH(array, type) (sizeof(array) / sizeof(type))
+ #define STRLEN(s)           (LENGTH(s,char) - 1)
