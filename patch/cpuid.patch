@@ -199,7 +199,22 @@
 +	rm -f $(PROG)
 --- cpuid.c
 +++ cpuid.c
-@@ -31,7 +31,6 @@
+@@ -19,19 +19,18 @@
+ */
+ 
+ #ifdef __linux__
+-#define USE_CPUID_MODULE
+-#define USE_KERNEL_SCHED_SETAFFINITY
++#define USE_CPUID_MODULE 1
++#define USE_KERNEL_SCHED_SETAFFINITY 1
+ #endif
+ 
+ #if __GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ >= 40300
+-#define USE_CPUID_COUNT
++#define USE_CPUID_COUNT 1
+ #endif
+ 
+ #define _GNU_SOURCE
  #include <stdio.h>
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -207,7 +222,7 @@
  #include <fcntl.h>
  #include <errno.h>
  #include <unistd.h>
-@@ -40,6 +39,25 @@
+@@ -40,6 +39,20 @@
  #include <regex.h>
  #include <getopt.h>
  
@@ -225,15 +240,35 @@
 +#include <pthread.h>
 +#endif
 +
-+#ifdef __APPLE__
-+#define off64_t off_t
-+#define lseek64 lseek
-+#endif
-+
  #ifdef USE_CPUID_MODULE
  #include <linux/major.h>
  #endif
-@@ -66,8 +84,9 @@
+@@ -54,6 +67,24 @@
+ #include <sched.h>
+ #endif
+ 
++#ifdef __APPLE__
++#define OFF64_T off_t
++#define LSEEK64 lseek
++#else
++#define OFF64_T off64_t
++#define LSEEK64 lseek64
++#endif
++
++/* Commented out in current headers */
++#ifdef __APPLE__
++extern kern_return_t 
++thread_policy_set(
++    thread_t                thread,
++    thread_policy_flavor_t  flavor,
++    thread_policy_t         policy_info,
++    mach_msg_type_number_t  count);
++#endif
++
+ typedef int   boolean;
+ #define TRUE  1
+ #define FALSE 0
+@@ -66,8 +97,9 @@
  #define STR(x)   #x
  #define XSTR(x)  STR(x)
  
@@ -244,7 +279,7 @@
  
  #define LENGTH(array, type) (sizeof(array) / sizeof(type))
  #define STRLEN(s)           (LENGTH(s,char) - 1)
-@@ -273,10 +292,10 @@
+@@ -273,10 +305,10 @@
     unsigned int   val_80000001_edx;
     unsigned int   val_80000008_ecx;
     unsigned int   transmeta_proc_rev;
@@ -252,14 +287,14 @@
 -   char           transmeta_info[48];
 -   char           override_brand[48];
 -   char           soc_brand[48];
-+   char           brand[98];
-+   char           transmeta_info[98];
-+   char           override_brand[98];
-+   char           soc_brand[98];
++   char           brand[96];
++   char           transmeta_info[96];
++   char           override_brand[96];
++   char           soc_brand[96];
     hypervisor_t   hypervisor;
  
     struct mp {
-@@ -6850,6 +6869,26 @@
+@@ -6850,6 +6882,26 @@
  
           int  status;
           status = syscall(__NR_sched_setaffinity, 0, sizeof(mask), &mask);
@@ -286,3 +321,18 @@
  #else
           cpu_set_t  cpuset;
           CPU_ZERO(&cpuset);
+@@ -6978,11 +7030,11 @@
+             "c" (ecx));
+ #endif
+    } else {
+-      off64_t  result;
+-      off64_t  offset = ((off64_t)ecx << 32) + reg;
++      OFF64_T  result;
++      OFF64_T  offset = ((OFF64_T)ecx << 32) + reg;
+       int      status;
+ 
+-      result = lseek64(cpuid_fd, offset, SEEK_SET);
++      result = LSEEK64(cpuid_fd, offset, SEEK_SET);
+       if (result == -1) {
+          if (quiet) {
+             return FALSE;
