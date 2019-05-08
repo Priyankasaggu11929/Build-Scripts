@@ -13,7 +13,7 @@
  
  PACKAGE=cpuid
  VERSION=20180519
-@@ -12,172 +7,23 @@
+@@ -12,172 +7,24 @@
  
  PROG=$(PACKAGE)
  
@@ -53,17 +53,20 @@
 -
 -cpuinfo2cpuid.man: cpuinfo2cpuid Makefile
 -	pod2man -r "$(VERSION)" -c "" $< > $@
--
--cpuinfo2cpuid.man.gz: cpuinfo2cpuid.man
--	gzip < $< > $@
 +	$(CC) $(ALL_CFLAGS) $(LDFLAGS) -o $@ cpuid.c $(LIBS)
  
+-cpuinfo2cpuid.man.gz: cpuinfo2cpuid.man
+-	gzip < $< > $@
+-
 -install: $(PROG) $(PROG).man.gz cpuinfo2cpuid cpuinfo2cpuid.man.gz
-+install: $(PROG) cpuinfo2cpuid
- 	install -D -s -m 755 $(PROG)              $(BUILDROOT)/usr/bin/$(PROG)
+-	install -D -s -m 755 $(PROG)              $(BUILDROOT)/usr/bin/$(PROG)
 -	install -D    -m 444 $(PROG).man.gz       $(BUILDROOT)/usr/share/man/man1/$(PROG).1.gz
- 	install -D    -m 755 cpuinfo2cpuid        $(BUILDROOT)/usr/bin/cpuinfo2cpuid
+-	install -D    -m 755 cpuinfo2cpuid        $(BUILDROOT)/usr/bin/cpuinfo2cpuid
 -	install -D    -m 444 cpuinfo2cpuid.man.gz $(BUILDROOT)/usr/share/man/man1/cpuinfo2cpuid.1.gz
++install: $(PROG) cpuinfo2cpuid
++	install -d -m 755                    $(BUILDROOT)/usr/bin
++	install -s -m 755 $(PROG)            $(BUILDROOT)/usr/bin/$(PROG)
++	install -s -m 755 cpuinfo2cpuid      $(BUILDROOT)/usr/bin/cpuinfo2cpuid
  
  clean:
 -	rm -f $(PROG) $(PROG).i386 $(PROG).x86_64
