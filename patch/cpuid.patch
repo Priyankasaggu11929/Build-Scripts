@@ -193,10 +193,25 @@
 +	rm -f $(PROG)
 --- cpuid.c
 +++ cpuid.c
-@@ -40,6 +40,13 @@
+@@ -31,7 +31,6 @@
+ #include <stdio.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+-#include <sys/sysmacros.h>
+ #include <fcntl.h>
+ #include <errno.h>
+ #include <unistd.h>
+@@ -40,6 +39,25 @@
  #include <regex.h>
  #include <getopt.h>
  
++#ifdef __APPLE__
++#include <mach/thread_policy.h>
++#include <pthread.h>
++#else
++#include <sys/sysmacros.h>
++#endif
++
 +#ifdef __sun
 +#include <sys/processor.h>
 +#include <sys/procset.h>
@@ -204,10 +219,15 @@
 +#include <pthread.h>
 +#endif
 +
++#ifdef __APPLE__
++#define off64_t off_t
++#define lseek64 lseek
++#endif
++
  #ifdef USE_CPUID_MODULE
  #include <linux/major.h>
  #endif
-@@ -66,8 +73,9 @@
+@@ -66,8 +84,9 @@
  #define STR(x)   #x
  #define XSTR(x)  STR(x)
  
@@ -218,10 +238,37 @@
  
  #define LENGTH(array, type) (sizeof(array) / sizeof(type))
  #define STRLEN(s)           (LENGTH(s,char) - 1)
-@@ -6850,6 +6858,13 @@
+@@ -273,10 +292,10 @@
+    unsigned int   val_80000001_edx;
+    unsigned int   val_80000008_ecx;
+    unsigned int   transmeta_proc_rev;
+-   char           brand[48];
+-   char           transmeta_info[48];
+-   char           override_brand[48];
+-   char           soc_brand[48];
++   char           brand[96];
++   char           transmeta_info[96];
++   char           override_brand[96];
++   char           soc_brand[96];
+    hypervisor_t   hypervisor;
+ 
+    struct mp {
+@@ -6850,6 +6869,25 @@
  
           int  status;
           status = syscall(__NR_sched_setaffinity, 0, sizeof(mask), &mask);
++#elif defined(__APPLE__)
++         /*
++          ** https://developer.apple.com/library/archive/releasenotes/Performance/RN-AffinityAPI/
++          */
++         pthread_t thread = pthread_self();
++         mach_port_t mthread = pthread_mach_thread_np(thread);
++         thread_affinity_policy_data_t policy = { cpu };
++         int status = thread_policy_set(mthread, THREAD_AFFINITY_POLICY, (thread_policy_t)&policy, 1);
++         if (status != KERN_SUCCESS) {
++             errno = EINVAL;
++             status = -1;
++         }
 +#elif defined(__sun)
 +         /*
 +          ** https://www.oracle.com/technetwork/server-storage/solaris/solaris-linux-app-139382.html
