@@ -287,10 +287,10 @@
 -   char           transmeta_info[48];
 -   char           override_brand[48];
 -   char           soc_brand[48];
-+   char           brand[96];
-+   char           transmeta_info[96];
-+   char           override_brand[96];
-+   char           soc_brand[96];
++   char           brand[98];
++   char           transmeta_info[98];
++   char           override_brand[98];
++   char           soc_brand[98];
     hypervisor_t   hypervisor;
  
     struct mp {
@@ -304,8 +304,8 @@
 +          ** https://stackoverflow.com/a/39839919/608639
 +          */
 +         pthread_t thread = pthread_self();
-+         mach_port_t mthread = pthread_mach_thread_np(thread);
 +         thread_affinity_policy_data_t policy = { cpu };
++         mach_port_t mthread = pthread_mach_thread_np(thread);
 +         int status = thread_policy_set(mthread, THREAD_AFFINITY_POLICY, (thread_policy_t)&policy, 1);
 +         if (status != KERN_SUCCESS) {
 +             errno = EINVAL;
