@@ -243,11 +243,15 @@
  #ifdef USE_CPUID_MODULE
  #include <linux/major.h>
  #endif
-@@ -54,6 +67,24 @@
+@@ -54,3 +67,6 @@
  #include <sched.h>
  #endif
- 
-+#if defined(__APPLE__) || defined(__BSD__) || defined(__DragonFly__)
+
++#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__DragonFly__)
++#define BSD_FAMILY 1
++#endif
+
++#if defined(__APPLE__) || defined(BSD_FAMILY)
 +#define OFF64_T off_t
 +#define LSEEK64 lseek
 +#else
