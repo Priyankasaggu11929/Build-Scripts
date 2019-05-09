@@ -79,6 +79,14 @@ cd "$BOOTSTRAP_DIR/$SSL_DIR"
     --prefix="$PREFIX" \
     no-asm no-shared no-dso no-engine -fPIC
 
+for file in $(find "$PWD" -name 'Makefile')
+do
+    sed -e 's|-lssl|-l:libssl.a|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    sed -e 's|-lcrypto|-l:libcrypto.a|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+done
+
 if ! make MAKEDEPPROG="$MAKEDEPPROG" depend; then
     echo "Failed to update OpenSSL"
     exit 1
