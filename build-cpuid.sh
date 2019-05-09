@@ -9,6 +9,15 @@ PKG_NAME=cpuid
 
 ###############################################################################
 
+# Bail early
+if [[ $(uname -m 2>/dev/null | grep -E -i -c 'i86pc|i.86|amd64|x86_64') -eq 0 ]]
+then
+    echo "Failed to build cpuid. The program is only valid for x86 platforms."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 CURR_DIR=$(pwd)
 function finish {
   cd "$CURR_DIR"
@@ -37,14 +46,6 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if [[ "$IS_IA32" -eq 0 ]]
-then
-    echo "Failed to build cpuid. The program is only valid for x86 platforms."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
