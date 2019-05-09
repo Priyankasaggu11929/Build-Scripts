@@ -247,7 +247,7 @@
  #include <sched.h>
  #endif
  
-+#ifdef __APPLE__
++#if defined(__APPLE__) || defined(__BSD__) || defined(__DragonFly__)
 +#define OFF64_T off_t
 +#define LSEEK64 lseek
 +#else
