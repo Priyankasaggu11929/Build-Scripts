@@ -64,15 +64,15 @@ fi
 
 "$UNBOUND_ANCHOR" -a "$ROOT_KEY" -u data.iana.org
 
+ROOT_USR=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $3}')
+ROOT_GRP=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $4}')
+
 if [[ -s "$ROOT_KEY" ]]
 then
     echo ""
     echo "Installing $SH_UNBOUND_ROOTKEY_FILE"
     if [[ -n "$SUDO_PASSWORD" ]]
     then
-        ROOT_USR=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $3}')
-        ROOT_GRP=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $4}')
-
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_UNBOUND_ROOTKEY_PATH"
         echo "$SUDO_PASSWORD" | sudo -S mv "$ROOT_KEY" "$SH_UNBOUND_ROOTKEY_FILE"
         echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR":"$ROOT_GRP" "$SH_UNBOUND_ROOTKEY_PATH"
@@ -109,9 +109,9 @@ then
     then
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_UNBOUND_CACERT_PATH"
         echo "$SUDO_PASSWORD" | sudo -S mv "$ICANN_BUNDLE" "$SH_UNBOUND_CACERT_FILE"
-        echo "$SUDO_PASSWORD" | sudo -S chown root:root "$SH_UNBOUND_CACERT_PATH"
+        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR":"$ROOT_GRP" "$SH_UNBOUND_CACERT_PATH"
         echo "$SUDO_PASSWORD" | sudo -S chmod 644 "$SH_UNBOUND_CACERT_FILE"
-        echo "$SUDO_PASSWORD" | sudo -S chown root:root "$SH_UNBOUND_CACERT_FILE"
+        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR":"$ROOT_GRP" "$SH_UNBOUND_CACERT_FILE"
     else
         mkdir -p "$SH_UNBOUND_CACERT_PATH"
         cp "$ICANN_BUNDLE" "$SH_UNBOUND_CACERT_FILE"
