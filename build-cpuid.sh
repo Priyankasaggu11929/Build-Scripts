@@ -42,6 +42,14 @@ fi
 
 ###############################################################################
 
+if [[ "$IS_IA32" -eq 0 ]]
+then
+    echo "Failed to build cpuid. The program is only valid for x86 platforms."
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 echo
 echo "********** Cpuid **********"
 echo
