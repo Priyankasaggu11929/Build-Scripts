@@ -199,9 +199,12 @@
 +	rm -f $(PROG)
 --- cpuid.c
 +++ cpuid.c
-@@ -19,19 +19,22 @@
+@@ -18,20 +18,24 @@
+ ** 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  */
  
++#define _GNU_SOURCE
++
  #ifdef __linux__
 -#define USE_CPUID_MODULE
 -#define USE_KERNEL_SCHED_SETAFFINITY
@@ -218,7 +221,7 @@
 +#define BSD_FAMILY 1
  #endif
  
- #define _GNU_SOURCE
+-#define _GNU_SOURCE
  #include <stdio.h>
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -226,14 +229,14 @@
  #include <fcntl.h>
  #include <errno.h>
  #include <unistd.h>
-@@ -40,6 +43,20 @@
+@@ -40,6 +44,20 @@
  #include <regex.h>
  #include <getopt.h>
  
 +#if defined(__APPLE__)
 +#include <mach/thread_policy.h>
 +#include <pthread.h>
-+#elif defined(__linux__) || defined(BSD_FAMILY)
++#elif defined(__linux__)
 +#include <sys/sysmacros.h>
 +#endif
 +
@@ -247,7 +250,14 @@
  #ifdef USE_CPUID_MODULE
  #include <linux/major.h>
  #endif
-@@ -54,6 +71,24 @@
+@@ -50,10 +68,30 @@
+ 
+ #ifdef USE_KERNEL_SCHED_SETAFFINITY
+ #include <sys/syscall.h>
+-#else
++#endif
++
++#if defined(__linux__) || defined(BSD_FAMILY)
  #include <sched.h>
  #endif
  
@@ -272,7 +282,7 @@
  typedef int   boolean;
  #define TRUE  1
  #define FALSE 0
-@@ -66,8 +101,9 @@
+@@ -66,8 +104,9 @@
  #define STR(x)   #x
  #define XSTR(x)  STR(x)
  
@@ -283,7 +293,7 @@
  
  #define LENGTH(array, type) (sizeof(array) / sizeof(type))
  #define STRLEN(s)           (LENGTH(s,char) - 1)
-@@ -273,10 +309,10 @@
+@@ -273,10 +312,10 @@
     unsigned int   val_80000001_edx;
     unsigned int   val_80000008_ecx;
     unsigned int   transmeta_proc_rev;
@@ -298,7 +308,7 @@
     hypervisor_t   hypervisor;
  
     struct mp {
-@@ -358,7 +394,7 @@
+@@ -358,7 +397,7 @@
                      0, 0, 0, 0, 0, 0, \
                      "", "", "", "", \
                      HYPERVISOR_UNKNOWN, \
@@ -307,7 +317,7 @@
                      { FALSE, \
                        { FALSE, FALSE, FALSE, FALSE, FALSE, \
                          FALSE, FALSE, FALSE, FALSE }, \
-@@ -6850,6 +6886,26 @@
+@@ -6850,6 +6889,26 @@
  
           int  status;
           status = syscall(__NR_sched_setaffinity, 0, sizeof(mask), &mask);
@@ -334,7 +344,7 @@
  #else
           cpu_set_t  cpuset;
           CPU_ZERO(&cpuset);
-@@ -6978,11 +7034,11 @@
+@@ -6978,11 +7037,11 @@
              "c" (ecx));
  #endif
     } else {
@@ -349,7 +359,7 @@
        if (result == -1) {
           if (quiet) {
              return FALSE;
-@@ -7391,7 +7447,7 @@
+@@ -7391,7 +7450,7 @@
          boolean   debug)
  {
     boolean       seen_cpu    = FALSE;
@@ -358,7 +368,7 @@
     /*
     ** The try* variables are a kludge to deal with those leaves that depended on
     ** the try (a.k.a. ecx) values that existed with cpuid's old-style method of
-@@ -7399,11 +7455,11 @@
+@@ -7399,11 +7458,11 @@
     ** It is not necessary to add more kludges for more modern ecx-dependent
     ** leaves.
     */
