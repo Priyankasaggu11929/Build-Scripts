@@ -70,16 +70,8 @@ then
     echo "Installing $SH_UNBOUND_ROOTKEY_FILE"
     if [[ -n "$SUDO_PASSWORD" ]]
     then
-        if [[ "$IS_DARWIN" -ne 0 ]]; then
-            ROOT_USR=root
-            ROOT_GRP=wheel
-        elif [[ "$IS_SOLARIS" -ne 0 ]]; then
-            ROOT_USR=root
-            ROOT_GRP=sys
-        else
-            ROOT_USR=root
-            ROOT_GRP=root
-        fi
+        ROOT_USR=$(ls -ld /etc | awk 'NR==1 {print $3}')
+        ROOT_GRP=$(ls -ld /etc | awk 'NR==1 {print $4}')
 
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_UNBOUND_ROOTKEY_PATH"
         echo "$SUDO_PASSWORD" | sudo -S mv "$ROOT_KEY" "$SH_UNBOUND_ROOTKEY_FILE"

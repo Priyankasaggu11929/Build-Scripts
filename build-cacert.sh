@@ -59,16 +59,8 @@ fi
 
 if [[ -s "$CACERT_FILE" ]]
 then
-    if [[ "$IS_DARWIN" -ne 0 ]]; then
-        ROOT_USR=root
-        ROOT_GRP=wheel
-    elif [[ "$IS_SOLARIS" -ne 0 ]]; then
-        ROOT_USR=root
-        ROOT_GRP=sys
-    else
-        ROOT_USR=root
-        ROOT_GRP=root
-    fi
+    ROOT_USR=$(ls -ld /etc | awk 'NR==1 {print $3}')
+    ROOT_GRP=$(ls -ld /etc | awk 'NR==1 {print $4}')
 
     if [[ -n "$SUDO_PASSWORD" ]]; then
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_CACERT_PATH"
