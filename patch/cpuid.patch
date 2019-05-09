@@ -294,6 +294,15 @@
     hypervisor_t   hypervisor;
  
     struct mp {
+@@ -358,7 +390,7 @@
+                     0, 0, 0, 0, 0, 0, \
+                     "", "", "", "", \
+                     HYPERVISOR_UNKNOWN, \
+-                    { NULL, -1, -1 }, \
++                    { NULL, ((unsigned int)-1), ((unsigned int)-1) }, \
+                     { FALSE, \
+                       { FALSE, FALSE, FALSE, FALSE, FALSE, \
+                         FALSE, FALSE, FALSE, FALSE }, \
 @@ -6850,6 +6882,26 @@
  
           int  status;
@@ -336,3 +345,29 @@
        if (result == -1) {
           if (quiet) {
              return FALSE;
+@@ -7391,7 +7443,7 @@
+         boolean   debug)
+ {
+    boolean       seen_cpu    = FALSE;
+-   unsigned int  cpu         = -1;
++   unsigned int  cpu         = (unsigned int)-1;
+    /*
+    ** The try* variables are a kludge to deal with those leaves that depended on
+    ** the try (a.k.a. ecx) values that existed with cpuid's old-style method of
+@@ -7399,11 +7451,11 @@
+    ** It is not necessary to add more kludges for more modern ecx-dependent
+    ** leaves.
+    */
+-   unsigned int  try2        = -1;
+-   unsigned int  try4        = -1;
+-   unsigned int  try7        = -1;
+-   unsigned int  tryb        = -1;
+-   unsigned int  try8000001d = -1;
++   unsigned int  try2        = (unsigned int)-1;
++   unsigned int  try4        = (unsigned int)-1;
++   unsigned int  try7        = (unsigned int)-1;
++   unsigned int  tryb        = (unsigned int)-1;
++   unsigned int  try8000001d = (unsigned int)-1;
+    code_stash_t  stash       = NIL_STASH;
+ 
+    FILE*  file;
