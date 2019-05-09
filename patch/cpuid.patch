@@ -226,10 +226,10 @@
  #include <regex.h>
  #include <getopt.h>
  
-+#ifdef __APPLE__
++#if defined(__APPLE__)
 +#include <mach/thread_policy.h>
 +#include <pthread.h>
-+#else
++#elif defined(__linux__)
 +#include <sys/sysmacros.h>
 +#endif
 +
