@@ -64,8 +64,14 @@ fi
 
 "$UNBOUND_ANCHOR" -a "$ROOT_KEY" -u data.iana.org
 
-ROOT_USR=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $3}')
-ROOT_GRP=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $4}')
+if [[ -d /private/etc ]]
+then
+    ROOT_USR=$(ls -ld /private/etc | head -n 1 | awk 'NR==1 {print $3}')
+    ROOT_GRP=$(ls -ld /private/etc | head -n 1 | awk 'NR==1 {print $4}')
+else
+    ROOT_USR=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $3}')
+    ROOT_GRP=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $4}')
+fi
 
 if [[ -s "$ROOT_KEY" ]]
 then

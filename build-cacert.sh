@@ -57,11 +57,17 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ -s "$CACERT_FILE" ]]
+if [[ -d /private/etc ]]
 then
+    ROOT_USR=$(ls -ld /private/etc | head -n 1 | awk 'NR==1 {print $3}')
+    ROOT_GRP=$(ls -ld /private/etc | head -n 1 | awk 'NR==1 {print $4}')
+else
     ROOT_USR=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $3}')
     ROOT_GRP=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $4}')
+fi
 
+if [[ -s "$CACERT_FILE" ]]
+then
     if [[ -n "$SUDO_PASSWORD" ]]; then
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_CACERT_PATH"
         echo "$SUDO_PASSWORD" | sudo -S mv cacert.pem "$SH_CACERT_FILE"
