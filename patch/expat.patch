@@ -1,0 +1,20 @@
+--- tests/runtests.c
++++ tests/runtests.c
+@@ -7165,7 +7165,8 @@
+     XML_Char **elemstr = (XML_Char **)userData;
+     if (xcstrcmp(elemstr[0], name) != 0) {
+         char buffer[1024];
+-        sprintf(buffer, "unexpected end string: '%" XML_FMT_STR "'", name);
++        snprintf(buffer, sizeof(buffer), "unexpected end string: '%" XML_FMT_STR "'", name);
++	buffer[1023] = '\0';
+         fail(buffer);
+     }
+     triplet_end_flag = XML_TRUE;
+--- test-driver-wrapper.sh
++++ test-driver-wrapper.sh
+@@ -1,4 +1,4 @@
+-#! /bin/bash
++#!/usr/bin/env bash
+ #                          __  __            _
+ #                       ___\ \/ /_ __   __ _| |_
+ #                      / _ \\  /| '_ \ / _` | __|

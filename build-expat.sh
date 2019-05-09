@@ -64,6 +64,10 @@ rm -rf "$EXPAT_DIR" &>/dev/null
 bzip2 -dk < "$EXPAT_TAR" | tar xf -
 cd "$EXPAT_DIR"
 
+cp ../patch/expat.patch .
+patch -u -p0 < expat.patch
+echo ""
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
