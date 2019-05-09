@@ -70,14 +70,14 @@ then
     echo "Installing $SH_UNBOUND_ROOTKEY_FILE"
     if [[ -n "$SUDO_PASSWORD" ]]
     then
-        ROOT_USR=$(ls -ld /etc | awk 'NR==1 {print $3}')
-        ROOT_GRP=$(ls -ld /etc | awk 'NR==1 {print $4}')
+        ROOT_USR=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $3}')
+        ROOT_GRP=$(ls -ld /etc | head -n 1 | awk 'NR==1 {print $4}')
 
         echo "$SUDO_PASSWORD" | sudo -S mkdir -p "$SH_UNBOUND_ROOTKEY_PATH"
         echo "$SUDO_PASSWORD" | sudo -S mv "$ROOT_KEY" "$SH_UNBOUND_ROOTKEY_FILE"
-        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR:$ROOT_GRP" "$SH_UNBOUND_ROOTKEY_PATH"
+        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR":"$ROOT_GRP" "$SH_UNBOUND_ROOTKEY_PATH"
         echo "$SUDO_PASSWORD" | sudo -S chmod 644 "$SH_UNBOUND_ROOTKEY_FILE"
-        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR:$ROOT_GRP" "$SH_UNBOUND_ROOTKEY_FILE"
+        echo "$SUDO_PASSWORD" | sudo -S chown "$ROOT_USR":"$ROOT_GRP" "$SH_UNBOUND_ROOTKEY_FILE"
     else
         mkdir -p "$SH_UNBOUND_ROOTKEY_PATH"
         cp "$ROOT_KEY" "$SH_UNBOUND_ROOTKEY_FILE"
