@@ -39,6 +39,7 @@ fi
 
 IS_DARWIN=$(echo -n $(uname -s 2>&1) | grep -i -c 'darwin')
 IS_SOLARIS=$(echo -n $(uname -s 2>&1) | grep -i -c 'sunos')
+IS_FREEBSD=$(echo -n $(uname -s 2>&1) | grep -i -c 'freebsd')
 IS_OLD_DARWIN=$(system_profiler SPSoftwareDataType 2>/dev/null | grep -i -c -E "OS X 10\.[0-5]")
 
 if [[ "$IS_DARWIN" -ne "0" ]]; then
@@ -79,13 +80,16 @@ cd "$BOOTSTRAP_DIR/$SSL_DIR"
     --prefix="$PREFIX" \
     no-asm no-shared no-dso no-engine -fPIC
 
-for file in $(find "$PWD" -name 'Makefile')
-do
-    sed -e 's|-lssl|-l:libssl.a|g' "$file" > "$file.fixed"
-    mv "$file.fixed" "$file"
-    sed -e 's|-lcrypto|-l:libcrypto.a|g' "$file" > "$file.fixed"
-    mv "$file.fixed" "$file"
-done
+if [[ "$IS_FREEBSD" -ne 0 ]]
+then
+    for file in $(find "$PWD" -name 'Makefile')
+    do
+        sed -e 's|-lssl|-l:libssl.a|g' "$file" > "$file.fixed"
+        mv "$file.fixed" "$file"
+        sed -e 's|-lcrypto|-l:libcrypto.a|g' "$file" > "$file.fixed"
+        mv "$file.fixed" "$file"
+    done
+fi
 
 if ! make MAKEDEPPROG="$MAKEDEPPROG" depend; then
     echo "Failed to update OpenSSL"
