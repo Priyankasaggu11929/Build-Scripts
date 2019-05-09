@@ -1,5 +1,5 @@
---- Makefile.orig	2019-05-09 15:14:51.376286182 -0400
-+++ Makefile	2019-05-09 15:14:51.381286118 -0400
+--- Makefile
++++ Makefile
 @@ -1,10 +1,5 @@
 -CFLAGS+=-g
 -CPPFLAGS?=
@@ -197,8 +197,8 @@
 -	rm -rf $(REL_DIR)
 -	$(MAKE) -$(MAKEFLAGS) release
 +	rm -f $(PROG)
---- cpuid.c.orig	2019-05-09 15:14:51.378286156 -0400
-+++ cpuid.c	2019-05-09 15:14:51.382286105 -0400
+--- cpuid.c
++++ cpuid.c
 @@ -19,19 +19,18 @@
  */
  
@@ -243,3 +243,136 @@
  #ifdef USE_CPUID_MODULE
  #include <linux/major.h>
  #endif
+@@ -54,6 +67,29 @@
+ #include <sched.h>
+ #endif
+ 
++
++#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__DragonFly__)
++#define BSD_FAMILY 1
++#endif
++
++#if defined(__APPLE__) || defined(BSD_FAMILY)
++#define OFF64_T off_t
++#define LSEEK64 lseek
++#else
++#define OFF64_T off64_t
++#define LSEEK64 lseek64
++#endif
++
++/* Commented out in current headers */
++#ifdef __APPLE__
++extern kern_return_t 
++thread_policy_set(
++    thread_t                thread,
++    thread_policy_flavor_t  flavor,
++    thread_policy_t         policy_info,
++    mach_msg_type_number_t  count);
++#endif
++
+ typedef int   boolean;
+ #define TRUE  1
+ #define FALSE 0
+@@ -66,8 +102,9 @@
+ #define STR(x)   #x
+ #define XSTR(x)  STR(x)
+ 
+-
++#ifndef MAX
+ #define MAX(l,r)            ((l) > (r) ? (l) : (r))
++#endif
+ 
+ #define LENGTH(array, type) (sizeof(array) / sizeof(type))
+ #define STRLEN(s)           (LENGTH(s,char) - 1)
+@@ -273,10 +310,10 @@
+    unsigned int   val_80000001_edx;
+    unsigned int   val_80000008_ecx;
+    unsigned int   transmeta_proc_rev;
+-   char           brand[48];
+-   char           transmeta_info[48];
+-   char           override_brand[48];
+-   char           soc_brand[48];
++   char           brand[98];
++   char           transmeta_info[98];
++   char           override_brand[98];
++   char           soc_brand[98];
+    hypervisor_t   hypervisor;
+ 
+    struct mp {
+@@ -358,7 +395,7 @@
+                     0, 0, 0, 0, 0, 0, \
+                     "", "", "", "", \
+                     HYPERVISOR_UNKNOWN, \
+-                    { NULL, -1, -1 }, \
++                    { NULL, ((unsigned int)-1), ((unsigned int)-1) }, \
+                     { FALSE, \
+                       { FALSE, FALSE, FALSE, FALSE, FALSE, \
+                         FALSE, FALSE, FALSE, FALSE }, \
+@@ -6850,6 +6887,26 @@
+ 
+          int  status;
+          status = syscall(__NR_sched_setaffinity, 0, sizeof(mask), &mask);
++#elif defined(__APPLE__)
++         /*
++          ** https://developer.apple.com/library/archive/releasenotes/Performance/RN-AffinityAPI/
++          ** https://stackoverflow.com/a/39839919/608639
++          */
++         pthread_t thread = pthread_self();
++         mach_port_t mthread = pthread_mach_thread_np(thread);
++         thread_affinity_policy_data_t policy = { cpu };
++         int status = thread_policy_set(mthread, THREAD_AFFINITY_POLICY, (thread_policy_t)&policy, 1);
++         if (status != KERN_SUCCESS) {
++             errno = EINVAL;
++             status = -1;
++         }
++#elif defined(__sun)
++         /*
++          ** https://www.oracle.com/technetwork/server-storage/solaris/solaris-linux-app-139382.html
++          ** https://docs.oracle.com/cd/E19455-01/806-0626/6j9vgh685/index.html
++          */
++         pthread_t thread = pthread_self();
++         int status = processor_bind(P_LWPID, thread, cpu, NULL);
+ #else
+          cpu_set_t  cpuset;
+          CPU_ZERO(&cpuset);
+@@ -6978,11 +7035,11 @@
+             "c" (ecx));
+ #endif
+    } else {
+-      off64_t  result;
+-      off64_t  offset = ((off64_t)ecx << 32) + reg;
++      OFF64_T  result;
++      OFF64_T  offset = ((OFF64_T)ecx << 32) + reg;
+       int      status;
+ 
+-      result = lseek64(cpuid_fd, offset, SEEK_SET);
++      result = LSEEK64(cpuid_fd, offset, SEEK_SET);
+       if (result == -1) {
+          if (quiet) {
+             return FALSE;
+@@ -7391,7 +7448,7 @@
+         boolean   debug)
+ {
+    boolean       seen_cpu    = FALSE;
+-   unsigned int  cpu         = -1;
++   unsigned int  cpu         = (unsigned int)-1;
+    /*
+    ** The try* variables are a kludge to deal with those leaves that depended on
+    ** the try (a.k.a. ecx) values that existed with cpuid's old-style method of
+@@ -7399,11 +7456,11 @@
+    ** It is not necessary to add more kludges for more modern ecx-dependent
+    ** leaves.
+    */
+-   unsigned int  try2        = -1;
+-   unsigned int  try4        = -1;
+-   unsigned int  try7        = -1;
+-   unsigned int  tryb        = -1;
+-   unsigned int  try8000001d = -1;
++   unsigned int  try2        = (unsigned int)-1;
++   unsigned int  try4        = (unsigned int)-1;
++   unsigned int  try7        = (unsigned int)-1;
++   unsigned int  tryb        = (unsigned int)-1;
++   unsigned int  try8000001d = (unsigned int)-1;
+    code_stash_t  stash       = NIL_STASH;
+ 
+    FILE*  file;
