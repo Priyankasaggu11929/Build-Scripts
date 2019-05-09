@@ -199,7 +199,7 @@
 +	rm -f $(PROG)
 --- cpuid.c
 +++ cpuid.c
-@@ -19,19 +19,18 @@
+@@ -19,19 +19,22 @@
  */
  
  #ifdef __linux__
@@ -212,6 +212,10 @@
  #if __GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__ >= 40300
 -#define USE_CPUID_COUNT
 +#define USE_CPUID_COUNT 1
++#endif
++
++#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__DragonFly__)
++#define BSD_FAMILY 1
  #endif
  
  #define _GNU_SOURCE
@@ -222,14 +226,14 @@
  #include <fcntl.h>
  #include <errno.h>
  #include <unistd.h>
-@@ -40,6 +39,20 @@
+@@ -40,6 +43,20 @@
  #include <regex.h>
  #include <getopt.h>
  
 +#if defined(__APPLE__)
 +#include <mach/thread_policy.h>
 +#include <pthread.h>
-+#elif defined(__linux__)
++#elif defined(__linux__) || defined(BSD_FAMILY)
 +#include <sys/sysmacros.h>
 +#endif
 +
@@ -243,15 +247,10 @@
  #ifdef USE_CPUID_MODULE
  #include <linux/major.h>
  #endif
-@@ -54,6 +67,29 @@
+@@ -54,6 +71,24 @@
  #include <sched.h>
  #endif
  
-+
-+#if defined(__FreeBSD__) || defined(__OpenBSD__) || defined(__NetBSD__) || defined(__DragonFly__)
-+#define BSD_FAMILY 1
-+#endif
-+
 +#if defined(__APPLE__) || defined(BSD_FAMILY)
 +#define OFF64_T off_t
 +#define LSEEK64 lseek
@@ -273,7 +272,7 @@
  typedef int   boolean;
  #define TRUE  1
  #define FALSE 0
-@@ -66,8 +102,9 @@
+@@ -66,8 +101,9 @@
  #define STR(x)   #x
  #define XSTR(x)  STR(x)
  
@@ -284,7 +283,7 @@
  
  #define LENGTH(array, type) (sizeof(array) / sizeof(type))
  #define STRLEN(s)           (LENGTH(s,char) - 1)
-@@ -273,10 +310,10 @@
+@@ -273,10 +309,10 @@
     unsigned int   val_80000001_edx;
     unsigned int   val_80000008_ecx;
     unsigned int   transmeta_proc_rev;
@@ -299,7 +298,7 @@
     hypervisor_t   hypervisor;
  
     struct mp {
-@@ -358,7 +395,7 @@
+@@ -358,7 +394,7 @@
                      0, 0, 0, 0, 0, 0, \
                      "", "", "", "", \
                      HYPERVISOR_UNKNOWN, \
@@ -308,7 +307,7 @@
                      { FALSE, \
                        { FALSE, FALSE, FALSE, FALSE, FALSE, \
                          FALSE, FALSE, FALSE, FALSE }, \
-@@ -6850,6 +6887,26 @@
+@@ -6850,6 +6886,26 @@
  
           int  status;
           status = syscall(__NR_sched_setaffinity, 0, sizeof(mask), &mask);
@@ -335,7 +334,7 @@
  #else
           cpu_set_t  cpuset;
           CPU_ZERO(&cpuset);
-@@ -6978,11 +7035,11 @@
+@@ -6978,11 +7034,11 @@
              "c" (ecx));
  #endif
     } else {
@@ -350,7 +349,7 @@
        if (result == -1) {
           if (quiet) {
              return FALSE;
-@@ -7391,7 +7448,7 @@
+@@ -7391,7 +7447,7 @@
          boolean   debug)
  {
     boolean       seen_cpu    = FALSE;
@@ -359,7 +358,7 @@
     /*
     ** The try* variables are a kludge to deal with those leaves that depended on
     ** the try (a.k.a. ecx) values that existed with cpuid's old-style method of
-@@ -7399,11 +7456,11 @@
+@@ -7399,11 +7455,11 @@
     ** It is not necessary to add more kludges for more modern ecx-dependent
     ** leaves.
     */
