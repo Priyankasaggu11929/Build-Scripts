@@ -1,0 +1,48 @@
+--- src/global.c
++++ src/global.c
+@@ -41,8 +41,6 @@
+ #include "secmem.h" /* our own secmem allocator */
+ 
+ 
+-
+-
+ /****************
+  * flag bits: 0 : general cipher debug
+  *	      1 : general MPI debug
+@@ -79,8 +77,6 @@
+ /* Prototypes.  */
+ static gpg_err_code_t external_lock_test (int cmd);
+ 
+-
+-
+ 
+ /* This is our handmade constructor.  It gets called by any function
+    likely to be called at startup.  The suggested way for an
+@@ -173,8 +169,6 @@
+ }
+ 
+ 
+-
+-
+ /* Version number parsing.  */
+ 
+ /* This function parses the first portion of the version number S and
+@@ -222,6 +216,7 @@
+     return s; /* patchlevel */
+ }
+ 
++
+ /* If REQ_VERSION is non-NULL, check that the version of the library
+    is at minimum the requested one.  Returns the string representation
+    of the library version if the condition is satisfied; return NULL
+@@ -297,6 +292,10 @@
+                      "clang:" __VERSION__
+ #elif __GNUC__
+                      "gcc:" __VERSION__
++#elif __SUNPRO_C
++		     "SunC: 0x" #__SUNPRO_C
++#elif __INTEL_COMPILER
++		     "icc: " __INTEL_COMPILER
+ #else
+                      ":"
+ #endif
