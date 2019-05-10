@@ -89,7 +89,8 @@ fi
 ./configure \
     --enable-shared \
     --prefix="$INSTX_PREFIX" \
-    --libdir="$INSTX_LIBDIR"
+    --libdir="$INSTX_LIBDIR" \
+    --with-libgpg-error-prefix="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure libgcrypt"
