@@ -170,6 +170,8 @@ fi
     --disable-dirmngr \
     --disable-wks-tools \
     --disable-doc \
+    --with-zlib="$INSTX_PREFIX" \
+    --with-bzip2="$INSTX_PREFIX" \
     --with-libgpg-error-prefix="$INSTX_PREFIX" \
     --with-libgcrypt-prefix="$INSTX_PREFIX" \
     --with-libassuan-prefix="$INSTX_PREFIX" \
@@ -177,9 +179,7 @@ fi
     --with-npth-prefix=PFX="$INSTX_PREFIX" \
     --with-ntbtls-prefix="$INSTX_PREFIX" \
     --with-libiconv-prefix="$INSTX_PREFIX" \
-    --with-libintl-prefix="$INSTX_PREFIX" \
-    --with-zlib="$INSTX_PREFIX" \
-    --with-bzip2="$INSTX_PREFIX"
+    --with-libintl-prefix="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure GnuPG"
