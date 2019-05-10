@@ -147,6 +147,10 @@ rm -rf "$GNUPG_DIR" &>/dev/null
 tar xjf "$GNUPG_TAR"
 cd "$GNUPG_DIR"
 
+cp ../patch/gnupg.patch .
+patch -u -p0 < gnupg.patch
+echo ""
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -181,10 +185,6 @@ if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure GnuPG"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
-
-cp ../patch/gnupg.patch .
-patch -u -p0 < gnupg.patch
-echo ""
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
