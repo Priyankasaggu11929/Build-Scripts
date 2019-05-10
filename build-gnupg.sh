@@ -147,10 +147,6 @@ rm -rf "$GNUPG_DIR" &>/dev/null
 tar xjf "$GNUPG_TAR"
 cd "$GNUPG_DIR"
 
-cp ../patch/gnupg.patch .
-patch -u -p0 < gnupg.patch
-echo ""
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
