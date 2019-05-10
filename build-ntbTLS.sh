@@ -50,6 +50,38 @@ fi
 
 ###############################################################################
 
+if ! ./build-zlib.sh
+then
+    echo "Failed to build zLib"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-gpgerror.sh
+then
+    echo "Failed to build libgpg-error"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-libgcrypt.sh
+then
+    echo "Failed to build libgpg-gcrypt"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-libksba.sh
+then
+    echo "Failed to build libksba"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 echo
 echo "********** ntbtls **********"
 echo
