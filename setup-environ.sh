@@ -352,10 +352,12 @@ BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT")
 BUILD_LDFLAGS=("-L$INSTX_LIBDIR")
 BUILD_LIBS=()
 
+# -fno-sanitize-recover causes an abort(). Useful for test
+# programs that swallow UBsan output and pretty print "OK"
 if [[ -n "$INSTX_UBSAN" ]]; then
-    BUILD_CFLAGS+=("-fsanitize=undefined")
-    BUILD_CXXFLAGS+=("-fsanitize=undefined")
-    BUILD_LDFLAGS+=("-fsanitize=undefined")
+    BUILD_CFLAGS+=("-fsanitize=undefined -fno-sanitize-recover")
+    BUILD_CXXFLAGS+=("-fsanitize=undefined -fno-sanitize-recover")
+    BUILD_LDFLAGS+=("-fsanitize=undefined -fno-sanitize-recover")
 elif [[ -n "$INSTX_ASAN" ]]; then
     BUILD_CFLAGS+=("-fsanitize=address -fno-omit-frame-pointer")
     BUILD_CXXFLAGS+=("-fsanitize=address -fno-omit-frame-pointer")
