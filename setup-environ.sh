@@ -209,52 +209,52 @@ fi
 
 ###############################################################################
 
-PIC_ERROR=$("$CC" -fPIC -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$PIC_ERROR" -eq 0 ]]; then
+SH_ERROR=$("$CC" -fPIC -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_PIC="-fPIC"
 fi
 
 # For the benefit of the programs and libraries. Make them run faster.
-NATIVE_ERROR=$("$CC" -march=native -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$NATIVE_ERROR" -eq 0 ]]; then
+SH_ERROR=$("$CC" -march=native -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_NATIVE="-march=native"
 fi
 
-PTHREAD_ERROR=$("$CC" -pthread -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$PTHREAD_ERROR" -eq 0 ]]; then
+SH_ERROR=$("$CC" -pthread -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_PTHREAD="-pthread"
 fi
 
 # Switch from -march=native to something more appropriate
 if [[ $(grep -i -c -E 'armv7' /proc/cpuinfo 2>/dev/null) -ne 0 ]]; then
-    ARMV7_ERROR=$("$CC" -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-    if [[ "$ARMV7_ERROR" -eq 0 ]]; then
+    SH_ERROR=$("$CC" -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_ARMV7="-march=armv7-a"
     fi
 fi
 # See if we can upgrade to ARMv7+NEON
 if [[ $(grep -i -c -E 'neon' /proc/cpuinfo 2>/dev/null) -ne 0 ]]; then
-    ARMV7_ERROR=$("$CC" -march=armv7-a -mfpu=neon -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-    if [[ "$ARMV7_ERROR" -eq 0 ]]; then
+    SH_ERROR=$("$CC" -march=armv7-a -mfpu=neon -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_ARMV7="-march=armv7-a -mfpu=neon"
     fi
 fi
 # See if we can upgrade to ARMv8
 if [[ $(uname -m 2>&1 | grep -i -c -E 'aarch32|aarch64') -ne 0 ]]; then
-    ARMV8_ERROR=$("$CC" -march=armv8-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-    if [[ "$ARMV8_ERROR" -eq 0 ]]; then
+    SH_ERROR=$("$CC" -march=armv8-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_ARMV8="-march=armv8-a"
     fi
 fi
 
-RPATH_ERROR=$("$CC" -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$RPATH_ERROR" -eq 0 ]]; then
+SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-rpath,$INSTX_LIBDIR"
 fi
 
 # AIX ld uses -R for runpath when -bsvr4
-RPATH_ERROR=$("$CC" -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$RPATH_ERROR" -eq 0 ]]; then
+SH_ERROR=$("$CC" -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-R,$INSTX_LIBDIR"
 fi
 
