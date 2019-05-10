@@ -175,8 +175,8 @@ fi
     --with-libgpg-error-prefix="$INSTX_PREFIX" \
     --with-libgcrypt-prefix="$INSTX_PREFIX" \
     --with-libassuan-prefix="$INSTX_PREFIX" \
-    --with-ksba-prefix=PFX="$INSTX_PREFIX" \
-    --with-npth-prefix=PFX="$INSTX_PREFIX" \
+    --with-ksba-prefix="$INSTX_PREFIX" \
+    --with-npth-prefix="$INSTX_PREFIX" \
     --with-ntbtls-prefix="$INSTX_PREFIX" \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX"
