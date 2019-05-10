@@ -147,6 +147,20 @@ Many programs and libraries feel it is OK to leak resources, and it screws up a 
 
 Once finished with testing remove `~/.build-scripts` so everything is rebuilt.
 
+## OpenBSD
+
+OpenBSD has an annoyance:
+
+```
+Provide an AUTOCONF_VERSION environment variable, please
+```
+
+If you encounter the annoyance then set the variables to `*`:
+
+```
+AUTOCONF_VERSION=* AUTOMAKE_VERSION=* ./build-package.sh
+```
+
 ## Self Tests
 
 The scripts attempt to run the program's or library's self tests. Usually the recipe is `make check`, but it is `make test` on occassion.
