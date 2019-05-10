@@ -4,8 +4,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds GnuPG and its dependencies from sources.
 
-GNUPG_TAR=gnupg-2.2.13.tar.bz2
-GNUPG_DIR=gnupg-2.2.13
+GNUPG_TAR=gnupg-2.2.15.tar.bz2
+GNUPG_DIR=gnupg-2.2.15
 PKG_NAME=gnupg
 
 ###############################################################################
