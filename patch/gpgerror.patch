@@ -181,7 +181,7 @@
          case 'd': debug++; break;
          default : pargs.err = ARGPARSE_PRINT_ERROR; break;
 -	}
-+    }
++        }
      }
    gpgrt_argparse (NULL, &pargs, NULL);
  
