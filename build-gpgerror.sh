@@ -65,6 +65,10 @@ rm -rf "$LIBERR_DIR" &>/dev/null
 tar xjf "$LIBERR_TAR"
 cd "$LIBERR_DIR"
 
+cp ../patch/gpgerror.patch .
+patch -u -p0 < gpgerror.patch
+echo ""
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
