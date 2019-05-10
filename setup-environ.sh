@@ -325,10 +325,10 @@ SH_ERROR=$("$CC" -std=gnu11 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_C11=1
 else
-	SH_ERROR=$("$CC" -std=c11 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-	if [[ "$SH_ERROR" -eq 0 ]]; then
-		SH_C11=1
-	fi
+    SH_ERROR=$("$CC" -std=c11 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    if [[ "$SH_ERROR" -eq 0 ]]; then
+        SH_C11=1
+    fi
 fi
 
 ###############################################################################
