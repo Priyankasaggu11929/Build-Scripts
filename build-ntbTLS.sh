@@ -68,13 +68,20 @@ cd "$NTBTLS_DIR"
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
+if [[ "$IS_SOLARIS" -ne 0 ]]; then
+    BUILD_STD="-std=c99"
+fi
+
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
-    CFLAGS="${BUILD_CFLAGS[*]}" \
+    CFLAGS="${BUILD_CFLAGS[*]} $BUILD_STD" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
+./configure \
+    --enable-shared \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure ntbtls"

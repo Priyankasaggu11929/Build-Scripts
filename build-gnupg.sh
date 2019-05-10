@@ -150,6 +150,10 @@ cd "$GNUPG_DIR"
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
+if [[ "$IS_SOLARIS" -ne 0 ]]; then
+    BUILD_STD="-std=c99"
+fi
+
 # Solaris is a tab bit stricter than libc
 #if [[ "$IS_SOLARIS" -eq 1 ]]; then
 #    # Don't use CPPFLAGS. _XOPEN_SOURCE will cross-pollinate into CXXFLAGS.
@@ -159,10 +163,12 @@ cd "$GNUPG_DIR"
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
-    CFLAGS="${BUILD_CFLAGS[*]}" \
+    CFLAGS="${BUILD_CFLAGS[*]} $BUILD_STD" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
     --disable-scdaemon \
     --disable-dirmngr \
     --disable-wks-tools \
