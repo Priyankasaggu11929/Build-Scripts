@@ -129,10 +129,13 @@ fi
 
 ###############################################################################
 
-if ! ./build-guile.sh
+if [[ "$SH_C11" -ne 0 ]]
 then
-    echo "Failed to build Guile"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    if ! ./build-guile.sh
+    then
+        echo "Failed to build Guile"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 ###############################################################################
@@ -174,8 +177,10 @@ fi
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
-    LIBS="-lhogweed -lnettle -lgmp ${BUILD_LIBS[*]}" \
-./configure --enable-shared --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+    LIBS="${BUILD_LIBS[*]}" \
+./configure --enable-shared \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
     --with-unbound-root-key-file \
     --enable-seccomp-tests \
     --disable-openssl-compatibility \
