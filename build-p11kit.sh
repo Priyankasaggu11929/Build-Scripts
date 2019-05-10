@@ -62,7 +62,7 @@ echo "********** p11-kit **********"
 echo
 
 if ! "$WGET" -O "$P11KIT_TAR" --ca-certificate="$DIGICERT_ROOT" \
-     "https://github.com/p11-glue/p11-kit/releases/download/0.23.12/$P11KIT_TAR"
+     "https://github.com/p11-glue/p11-kit/releases/download/0.23.15/$P11KIT_TAR"
 then
     echo "Failed to download p11-kit"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
