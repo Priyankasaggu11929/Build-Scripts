@@ -154,13 +154,6 @@ if [[ "$IS_SOLARIS" -ne 0 ]]; then
     BUILD_STD="-std=c99"
 fi
 
-# Solaris is a tab bit stricter than libc
-#if [[ "$IS_SOLARIS" -eq 1 ]]; then
-#    # Don't use CPPFLAGS. _XOPEN_SOURCE will cross-pollinate into CXXFLAGS.
-#    BUILD_CFLAGS+=("-D_XOPEN_SOURCE=600 -std=c99")
-#    BUILD_CXXFLAGS+=("-std=c++03")
-#fi
-
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]} $BUILD_STD" \
@@ -191,6 +184,7 @@ fi
 
 cp ../patch/gnupg.patch .
 patch -u -p0 < gnupg.patch
+echo ""
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "all")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
@@ -199,22 +193,11 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ "$IS_DARWIN" -ne 0 ]];
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    MAKE_FLAGS=("check" "V=1")
-    if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test GnuPG"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-elif [[ "$IS_LINUX" -ne 0 ]];
-then
-    MAKE_FLAGS=("check" "V=1")
-    if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test GnuPG"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
+	echo "Failed to test GnuPG"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 echo "Searching for errors hidden in log files"
