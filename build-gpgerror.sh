@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds libgpg-error from sources.
 
-LIBERR_TAR=libgpg-error-1.35.tar.bz2
-LIBERR_DIR=libgpg-error-1.35
+LIBERR_TAR=libgpg-error-1.36.tar.bz2
+LIBERR_DIR=libgpg-error-1.36
 PKG_NAME=gpgerror
 
 ###############################################################################
