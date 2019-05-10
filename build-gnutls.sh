@@ -3,7 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds GnuTLS and its dependencies from sources.
 
-GNUTLS_TAR=gnutls-3.6.7.1.tar.xz
+GNUTLS_XZ=gnutls-3.6.7.1.tar.xz
+GNUTLS_TAR=gnutls-3.6.7.1.tar
 GNUTLS_DIR=gnutls-3.6.7
 PKG_NAME=gnutls
 
@@ -144,15 +145,15 @@ echo
 echo "********** GnuTLS **********"
 echo
 
-if ! "$WGET" -O "$GNUTLS_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
-     "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/$GNUTLS_TAR"
+if ! "$WGET" -O "$GNUTLS_XZ" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/$GNUTLS_XZ"
 then
     echo "Failed to download GnuTLS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-rm -rf "$GNUTLS_DIR" &>/dev/null
-tar xJf "$GNUTLS_TAR"
+rm -rf "$GNUTLS_TAR" "$GNUTLS_DIR" &>/dev/null
+unxz "$GNUTLS_XZ" && tar -xf "$GNUTLS_TAR"
 cd "$GNUTLS_DIR"
 
 cp ../patch/gnutls.patch .
@@ -163,7 +164,7 @@ echo ""
 ../fix-config.sh
 
 # I cringe over this due to the patch
-autoreconf
+# autoreconf
 
 # Solaris is a tab bit stricter than libc
 if [[ "$IS_SOLARIS" -eq 1 ]]; then
@@ -268,7 +269,7 @@ touch "$INSTX_CACHE/$PKG_NAME"
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$GNUTLS_TAR" "$GNUTLS_DIR")
+    ARTIFACTS=("$GNUTLS_XZ" "$GNUTLS_TAR" "$GNUTLS_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
