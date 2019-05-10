@@ -157,10 +157,10 @@ fi
 IS_GMAKE=$($MAKE -v 2>&1 | grep -i -c 'gnu make')
 
 # If CC and CXX are not set, then use default or assume GCC
-if [[ -z "$CC" ]] && [[ -n "$(command -v cc)" ]]; then export CC='cc'; fi
 if [[ -z "$CC" ]] && [[ -n "$(command -v gcc)" ]]; then export CC='gcc'; fi
-if [[ -z "$CXX" ]] && [[ -n "$(command -v CC)" ]]; then export CXX='CC'; fi
+if [[ -z "$CC" ]] && [[ -n "$(command -v cc)" ]]; then export CC='cc'; fi
 if [[ -z "$CXX" ]] && [[ -n "$(command -v g++)" ]]; then export CXX='g++'; fi
+if [[ -z "$CXX" ]] && [[ -n "$(command -v CC)" ]]; then export CXX='CC'; fi
 
 IS_GCC=$("$CC" --version 2>&1 | grep -i -c -E 'gcc')
 IS_CLANG=$("$CC" --version 2>&1 | grep -i -c -E 'clang|llvm')
