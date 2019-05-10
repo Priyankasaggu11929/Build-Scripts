@@ -32,3 +32,22 @@
  }
  
  /* ADJ is enough slack to align cells in a TYPE_BITS-bit boundary */
+--- sm/certdump.c
++++ sm/certdump.c
+@@ -692,9 +692,13 @@
+       gpg_err_set_errno (c->error);
+       return -1;
+     }
+-  memcpy (p + c->len, buffer, size);
+-  c->len += size;
+-  p[c->len] = 0; /* Terminate string. */
++
++  if (p + c->len && buffer)
++    {
++      memcpy (p + c->len, buffer, size);
++      c->len += size;
++      p[c->len] = 0; /* Terminate string. */
++    }
+ 
+   return (gpgrt_ssize_t)size;
+ }
