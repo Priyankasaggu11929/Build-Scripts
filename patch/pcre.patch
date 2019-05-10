@@ -237,17 +237,6 @@
                  true_study_size)
                {
                fprintf(outfile, "Write error on %s: %s\n", to_file,
---- pcretest.c
-+++ pcretest.c
-@@ -1127,7 +1127,7 @@
- #define PCRE_STUDY_ALLJIT (PCRE_STUDY_JIT_COMPILE | \
-   PCRE_STUDY_JIT_PARTIAL_SOFT_COMPILE | PCRE_STUDY_JIT_PARTIAL_HARD_COMPILE)
- 
--/* Textual explanations for runtime error codes */
-+/* Textual explanations for run time error codes */
- 
- static const char *errtexts[] = {
-   NULL,  /* 0 is no error */
 --- sljit/sljitNativeMIPS_common.c
 +++ sljit/sljitNativeMIPS_common.c
 @@ -500,6 +500,7 @@
