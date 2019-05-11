@@ -52,11 +52,11 @@
  static gcry_mpi_t constants[MPI_NUMBER_OF_CONSTANTS];
  
  
-+/* Best effort attempt to cleanup constants array */
++/* Best effort attempt to cleanup constants array. */
 +#if defined(__GNUC__)
 +__attribute__((destructor))
 +static void
-+constants_cleanup()
++mpi_array_cleanup()
 +{
 +  int idx;
 +  for (idx=0; idx < MPI_NUMBER_OF_CONSTANTS; idx++)
@@ -72,11 +72,13 @@
  _gcry_mpi_get_hw_config (void)
 --- tests/mpitests.c
 +++ tests/mpitests.c
-@@ -35,6 +35,15 @@
+@@ -35,6 +35,17 @@
  #define PGM "mpitests"
  #include "t-common.h"
  
-+/* From mpi.h */
++/* From mpi.h. The shadow struct is valid for libgcrypt 1.8.4.
++   The shadow struct may not hold if gcry_mpi_t changes in
++   future versions of the library. */
 +struct hack_gcry_mpi
 +{
 +  int alloced;
@@ -88,12 +90,14 @@
  
  /* Set up some test patterns */
  
-@@ -149,6 +158,11 @@
+@@ -149,6 +158,13 @@
    /* Due to the the constant flag the release below should be a NOP
       and will leak memory.  */
    gcry_mpi_release (one);
 +
-+  /* Hack... free the memory to avoid warnings and errors from tooling */
++  /* Hack... free the memory to avoid warnings and errors from tooling.
++     This compliments the release performed on 'one' above. If we avoid
++     the double-free then GCRYMPI_FLAG_CONST is working as expected. */
 +  ((struct hack_gcry_mpi*)one)->flags &= ~32U;
 +  gcry_mpi_release (one);
 +
