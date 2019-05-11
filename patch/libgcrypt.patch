@@ -46,3 +46,26 @@
  #else
                       ":"
  #endif
+--- mpi/mpiutil.c
++++ mpi/mpiutil.c
+@@ -32,6 +32,20 @@
+ static gcry_mpi_t constants[MPI_NUMBER_OF_CONSTANTS];
+ 
+ 
++#if defined(__GNUC__)
++__attribute__((destructor))
++static void
++constants_cleanup()
++{
++  int idx;
++  for (idx=0; idx < MPI_NUMBER_OF_CONSTANTS; idx++)
++    {
++      constants[idx]->flags = 0;
++      _gcry_mpi_free(constants[idx]);
++    }
++}
++#endif
++
+ 
+ const char *
+ _gcry_mpi_get_hw_config (void)
