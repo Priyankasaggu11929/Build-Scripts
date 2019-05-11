@@ -73,8 +73,6 @@ rm -rf "$GCRYPT_DIR" &>/dev/null
 tar xjf "$GCRYPT_TAR"
 cd "$GCRYPT_DIR"
 
-cp src/global.c src/global.c.orig
-
 cp ../patch/libgcrypt.patch .
 patch -u -p0 < libgcrypt.patch
 echo ""
