@@ -90,14 +90,15 @@
  
  /* Set up some test patterns */
  
-@@ -149,6 +158,13 @@
+@@ -149,6 +158,14 @@
    /* Due to the the constant flag the release below should be a NOP
       and will leak memory.  */
    gcry_mpi_release (one);
 +
 +  /* Hack... free the memory to avoid warnings and errors from tooling.
 +     This compliments the release performed on 'one' above. If we avoid
-+     the double-free then GCRYMPI_FLAG_CONST is working as expected. */
++     the double-free then GCRYMPI_FLAG_CONST is working as expected,
++     and we avoid the memory leak that breaks acceptance testing. */
 +  ((struct hack_gcry_mpi*)one)->flags &= ~32U;
 +  gcry_mpi_release (one);
 +
