@@ -864,3 +864,34 @@
    }
  
    /* Check the value of LDBL_MIN.  */
+--- tests/test-striconveh.c
++++ tests/test-striconveh.c
+@@ -1108,5 +1108,28 @@
+ 
+ #endif
+ 
++#if HAVE_ICONV
++
++  if (cd_ascii_to_88591 != (iconv_t)-1)
++    iconv_close(cd_ascii_to_88591);
++  if (cd_88591_to_88592 != (iconv_t)-1)
++    iconv_close(cd_88591_to_88592);
++  if (cd_88592_to_88591 != (iconv_t)-1)
++    iconv_close(cd_88592_to_88591);
++  if (cd_ascii_to_utf8 != (iconv_t)-1)
++    iconv_close(cd_ascii_to_utf8);
++  if (cd_88591_to_utf8 != (iconv_t)-1)
++    iconv_close(cd_88591_to_utf8);
++  if (cd_utf8_to_88591 != (iconv_t)-1)
++    iconv_close(cd_utf8_to_88591);
++  if (cd_88592_to_utf8 != (iconv_t)-1)
++    iconv_close(cd_88592_to_utf8);
++  if (cd_utf8_to_88592 != (iconv_t)-1)
++    iconv_close(cd_utf8_to_88592);
++  if (cd_utf7_to_utf8 != (iconv_t)-1)
++    iconv_close(cd_utf7_to_utf8);
++
++#endif
++
+   return 0;
+ }
