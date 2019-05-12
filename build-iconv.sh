@@ -64,6 +64,13 @@ rm -rf "$ICONV_DIR" &>/dev/null
 gzip -d < "$ICONV_TAR" | tar xf -
 cd "$ICONV_DIR"
 
+#cp src/iconv.c src/iconv.c.orig
+#cp tests/test-shiftseq.c tests/test-shiftseq.c.orig
+
+cp ../patch/iconv.patch .
+patch -u -p0 < iconv.patch
+echo ""
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -87,17 +94,12 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# iconv cannot pass Asan. It leaks too many resources. A
-# dependent library that uses iconv will likely fail due
-# to the iconv leaks.
-if [[ -z "$INSTX_ASAN" ]]
+
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    MAKE_FLAGS=("check" "V=1")
-    if ! "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test iConv"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
+    echo "Failed to test iConv"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 echo "Searching for errors hidden in log files"
