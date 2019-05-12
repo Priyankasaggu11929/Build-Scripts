@@ -895,3 +895,58 @@
 +
    return 0;
  }
+--- tests/test-striconveh.c
++++ tests/test-striconveh.c
+@@ -737,13 +737,23 @@
+     }
+ 
+   if (cd_88591_to_88592 != (iconv_t)(-1))
++  {
+     iconv_close (cd_88591_to_88592);
++    cd_88591_to_88592 = (iconv_t)(-1);
++  }
+   if (cd_88592_to_88591 != (iconv_t)(-1))
++  {
+     iconv_close (cd_88592_to_88591);
++    cd_88592_to_88591 = (iconv_t)(-1);
++  }
+   iconv_close (cd_88591_to_utf8);
++  cd_88591_to_utf8 = (iconv_t)(-1);
+   iconv_close (cd_utf8_to_88591);
++  cd_utf8_to_88591 = (iconv_t)(-1);
+   iconv_close (cd_88592_to_utf8);
++  cd_88592_to_utf8 = (iconv_t)(-1);
+   iconv_close (cd_utf8_to_88592);
++  cd_utf8_to_88592 = (iconv_t)(-1);
+ 
+   /* ------------------------- Test mem_iconveh() ------------------------- */
+ 
+@@ -1108,5 +1118,28 @@
+ 
+ #endif
+ 
++#if HAVE_ICONV
++
++  if (cd_ascii_to_88591 != (iconv_t)-1)
++    iconv_close(cd_ascii_to_88591);
++  if (cd_88591_to_88592 != (iconv_t)-1)
++    iconv_close(cd_88591_to_88592);
++  if (cd_88592_to_88591 != (iconv_t)-1)
++    iconv_close(cd_88592_to_88591);
++  if (cd_ascii_to_utf8 != (iconv_t)-1)
++    iconv_close(cd_ascii_to_utf8);
++  if (cd_88591_to_utf8 != (iconv_t)-1)
++    iconv_close(cd_88591_to_utf8);
++  if (cd_utf8_to_88591 != (iconv_t)-1)
++    iconv_close(cd_utf8_to_88591);
++  if (cd_88592_to_utf8 != (iconv_t)-1)
++    iconv_close(cd_88592_to_utf8);
++  if (cd_utf8_to_88592 != (iconv_t)-1)
++    iconv_close(cd_utf8_to_88592);
++  if (cd_utf7_to_utf8 != (iconv_t)-1)
++    iconv_close(cd_utf7_to_utf8);
++
++#endif
++
+   return 0;
+ }
