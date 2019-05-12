@@ -979,7 +979,7 @@
                }
                break;
              case iconveh_escape_sequence:
-@@ -140,12 +138,14 @@
+@@ -140,13 +138,14 @@
                                               i == 5 ? (size_t)(-1) :
                                               i + 4));
                      ASSERT (offsets[17] == MAGIC);
@@ -996,3 +996,13 @@
          }
      }
  
+--- tests/uninorm/test-u32-normalize-big.c
++++ tests/uninorm/test-u32-normalize-big.c
+@@ -297,6 +297,7 @@
+           input[0] = uc;
+           result = u32_normalize (nf, input, 1, NULL, &length);
+           ASSERT (result != NULL && length == 1 && result[0] == uc);
++          free (result);
+         }
+     }
+ }
