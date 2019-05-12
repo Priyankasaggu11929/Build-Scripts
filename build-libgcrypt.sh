@@ -73,7 +73,6 @@ rm -rf "$GCRYPT_DIR" &>/dev/null
 tar xjf "$GCRYPT_TAR"
 cd "$GCRYPT_DIR"
 
-# Patch is unstable
 cp ../patch/libgcrypt.patch .
 patch -u -p0 < libgcrypt.patch
 echo ""
