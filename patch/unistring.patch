@@ -909,149 +909,6 @@
 +
    return 0;
  }
---- tests/uniconv/test-u16-conv-to-enc.c
-+++ tests/uniconv/test-u16-conv-to-enc.c
-@@ -120,9 +120,7 @@
-                     for (i = 0; i < 16; i++)
-                       ASSERT (offsets[i] == i);
-                     ASSERT (offsets[16] == MAGIC);
--                    free (offsets);
-                   }
--                free (result);
-               }
-               break;
-             case iconveh_escape_sequence:
-@@ -136,12 +134,14 @@
-                     for (i = 0; i < 16; i++)
-                       ASSERT (offsets[i] == (i < 5 ? i : i + 5));
-                     ASSERT (offsets[16] == MAGIC);
--                    free (offsets);
-                   }
--                free (result);
-               }
-               break;
-             }
-+          if (offsets)
-+            free (offsets);
-+          if (result)
-+            free (result);
-         }
-     }
- 
---- tests/uniconv/test-u32-conv-to-enc.c
-+++ tests/uniconv/test-u32-conv-to-enc.c
-@@ -120,9 +120,7 @@
-                     for (i = 0; i < 16; i++)
-                       ASSERT (offsets[i] == i);
-                     ASSERT (offsets[16] == MAGIC);
--                    free (offsets);
-                   }
--                free (result);
-               }
-               break;
-             case iconveh_escape_sequence:
-@@ -136,12 +134,14 @@
-                     for (i = 0; i < 16; i++)
-                       ASSERT (offsets[i] == (i < 5 ? i : i + 5));
-                     ASSERT (offsets[16] == MAGIC);
--                    free (offsets);
-                   }
--                free (result);
-               }
-               break;
-             }
-+          if (offsets)
-+            free (offsets);
-+          if (result)
-+            free (result);
-         }
-     }
- 
---- tests/uniconv/test-u8-conv-to-enc.c
-+++ tests/uniconv/test-u8-conv-to-enc.c
-@@ -122,9 +122,7 @@
-                                              i == 5 ? (size_t)(-1) :
-                                              i - 1));
-                     ASSERT (offsets[17] == MAGIC);
--                    free (offsets);
-                   }
--                free (result);
-               }
-               break;
-             case iconveh_escape_sequence:
-@@ -140,13 +138,14 @@
-                                              i == 5 ? (size_t)(-1) :
-                                              i + 4));
-                     ASSERT (offsets[17] == MAGIC);
--                    free (offsets);
-                   }
--                free (result);
-               }
-               break;
-             }
-+          if (offsets)
-+            free (offsets);
-+          if (result)
-+            free (result);
-         }
-     }
- 
---- tests/uninorm/test-u32-normalize-big.c
-+++ tests/uninorm/test-u32-normalize-big.c
-@@ -297,6 +297,7 @@
-           input[0] = uc;
-           result = u32_normalize (nf, input, 1, NULL, &length);
-           ASSERT (result != NULL && length == 1 && result[0] == uc);
-+          free (result);
-         }
-     }
- }
---- tests/uniconv/test-u8-conv-to-enc.c
-+++ tests/uniconv/test-u8-conv-to-enc.c
-@@ -81,9 +81,11 @@
-                                        i == 40 ? (size_t)(-1) :
-                                        i - 4));
-               ASSERT (offsets[41] == MAGIC);
--              free (offsets);
-             }
--          free (result);
-+          if (offsets)
-+            free (offsets);
-+          if (result)
-+            free (result);
-         }
-     }
- 
-@@ -138,12 +140,14 @@
-                                              i == 5 ? (size_t)(-1) :
-                                              i + 4));
-                     ASSERT (offsets[17] == MAGIC);
--                    free (offsets);
-                   }
--                free (result);
-               }
-               break;
-             }
-+          if (offsets)
-+            free (offsets);
-+          if (result)
-+            free (result);
-         }
-     }
- 
-@@ -166,9 +170,11 @@
-             {
-               ASSERT (offsets[0] == 0);
-               ASSERT (offsets[1] == MAGIC);
--              free (offsets);
-             }
--          free (result);
-+          if (offsets)
-+            free (offsets);
-+          if (result)
-+            free (result);
-         }
-     }
  
 --- tests/uniconv/test-u8-conv-to-enc.c
 +++ tests/uniconv/test-u8-conv-to-enc.c
@@ -1110,3 +967,71 @@
          }
      }
  
+--- tests/uniconv/test-u16-conv-to-enc.c
++++ tests/uniconv/test-u16-conv-to-enc.c
+@@ -120,9 +120,7 @@
+                     for (i = 0; i < 16; i++)
+                       ASSERT (offsets[i] == i);
+                     ASSERT (offsets[16] == MAGIC);
+-                    free (offsets);
+                   }
+-                free (result);
+               }
+               break;
+             case iconveh_escape_sequence:
+@@ -136,12 +134,14 @@
+                     for (i = 0; i < 16; i++)
+                       ASSERT (offsets[i] == (i < 5 ? i : i + 5));
+                     ASSERT (offsets[16] == MAGIC);
+-                    free (offsets);
+                   }
+-                free (result);
+               }
+               break;
+             }
++          if (offsets)
++            free (offsets);
++          if (result)
++            free (result);
+         }
+     }
+ 
+--- tests/uniconv/test-u32-conv-to-enc.c
++++ tests/uniconv/test-u32-conv-to-enc.c
+@@ -120,9 +120,7 @@
+                     for (i = 0; i < 16; i++)
+                       ASSERT (offsets[i] == i);
+                     ASSERT (offsets[16] == MAGIC);
+-                    free (offsets);
+                   }
+-                free (result);
+               }
+               break;
+             case iconveh_escape_sequence:
+@@ -136,12 +134,14 @@
+                     for (i = 0; i < 16; i++)
+                       ASSERT (offsets[i] == (i < 5 ? i : i + 5));
+                     ASSERT (offsets[16] == MAGIC);
+-                    free (offsets);
+                   }
+-                free (result);
+               }
+               break;
+             }
++          if (offsets)
++            free (offsets);
++          if (result)
++            free (result);
+         }
+     }
+ 
+--- tests/uninorm/test-u32-normalize-big.c
++++ tests/uninorm/test-u32-normalize-big.c
+@@ -297,6 +297,7 @@
+           input[0] = uc;
+           result = u32_normalize (nf, input, 1, NULL, &length);
+           ASSERT (result != NULL && length == 1 && result[0] == uc);
++          free (result);
+         }
+     }
+ }
