@@ -61,3 +61,20 @@
 -  return constants[no];
 +  return &constants[no];
  }
+--- tests/t-common.h
++++ tests/t-common.h
+@@ -151,13 +151,7 @@
+ 
+ 
+ /* Convenience macro for initializing gcrypt with error checking.  */
+-#define xgcry_control(cmd...)                                   \
+-  do {                                                          \
+-    gcry_error_t err__ = gcry_control (cmd);                    \
+-    if (err__)                                                  \
+-      die ("line %d: gcry_control (%s) failed: %s",             \
+-           __LINE__, #cmd, gcry_strerror (err__));              \
+-  } while (0)
++#define xgcry_control gcry_control
+ 
+ 
+ /* Split a string into colon delimited fields A pointer to each field
