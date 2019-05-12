@@ -1008,10 +1008,21 @@
  }
 --- tests/unistr/test-strchr.h
 +++ tests/unistr/test-strchr.h
-@@ -157,5 +157,5 @@
+@@ -157,5 +157,6 @@
    }
  #endif
  
 -  free (input);
++  free (input);
 +  free (input32);
+ }
+--- tests/unistr/test-chr.h
++++ tests/unistr/test-chr.h
+@@ -132,6 +132,7 @@
+   }
+ 
+   free (input);
++  free (input32);
+ 
+   return 0;
  }
