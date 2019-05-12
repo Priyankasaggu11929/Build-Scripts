@@ -146,7 +146,7 @@
        abort();
 +    }
    }
-+  if (cd > (iconv_t)0)
++  if (cd != (iconv_t)(-1))
 +    iconv_close(cd);
  }
  
