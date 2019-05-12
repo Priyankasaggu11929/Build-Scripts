@@ -1043,7 +1043,7 @@
  
 -  free (input);
 +  if ((const uint32*)input != input32)
-+      free (input);
++    free (input);
 +  free (input32);
  }
 --- tests/unistr/test-chr.h
@@ -1054,7 +1054,7 @@
  
 -  free (input);
 +  if ((const uint32*)input != input32)
-+      free (input);
++    free (input);
 +  free (input32);
  
    return 0;
