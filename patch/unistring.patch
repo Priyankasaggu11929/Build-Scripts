@@ -1053,3 +1053,60 @@
          }
      }
  
+--- tests/uniconv/test-u8-conv-to-enc.c
++++ tests/uniconv/test-u8-conv-to-enc.c
+@@ -81,9 +81,11 @@
+                                        i == 40 ? (size_t)(-1) :
+                                        i - 4));
+               ASSERT (offsets[41] == MAGIC);
+-              free (offsets);
+             }
+-          free (result);
++          if (offsets)
++            free (offsets);
++          if (result)
++            free (result);
+         }
+     }
+ 
+@@ -122,9 +124,7 @@
+                                              i == 5 ? (size_t)(-1) :
+                                              i - 1));
+                     ASSERT (offsets[17] == MAGIC);
+-                    free (offsets);
+                   }
+-                free (result);
+               }
+               break;
+             case iconveh_escape_sequence:
+@@ -140,12 +140,14 @@
+                                              i == 5 ? (size_t)(-1) :
+                                              i + 4));
+                     ASSERT (offsets[17] == MAGIC);
+-                    free (offsets);
+                   }
+-                free (result);
+               }
+               break;
+             }
++          if (offsets)
++            free (offsets);
++          if (result)
++            free (result);
+         }
+     }
+ 
+@@ -168,9 +170,11 @@
+             {
+               ASSERT (offsets[0] == 0);
+               ASSERT (offsets[1] == MAGIC);
+-              free (offsets);
+             }
+-          free (result);
++          if (offsets)
++            free (offsets);
++          if (result)
++            free (result);
+         }
+     }
+ 

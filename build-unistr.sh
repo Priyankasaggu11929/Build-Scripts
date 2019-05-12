@@ -73,6 +73,8 @@ rm -rf "$UNISTR_DIR" &>/dev/null
 gzip -d < "$UNISTR_TAR" | tar xf -
 cd "$UNISTR_DIR"
 
+cp tests/uniconv/test-u8-conv-to-enc.c tests/uniconv/test-u8-conv-to-enc.c.orig
+
 cp ../patch/unistring.patch .
 patch -u -p0 < unistring.patch
 echo ""
