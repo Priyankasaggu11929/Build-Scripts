@@ -74,9 +74,9 @@ tar xjf "$GCRYPT_TAR"
 cd "$GCRYPT_DIR"
 
 # Patch is unstable
-#cp ../patch/libgcrypt.patch .
-#patch -u -p0 < libgcrypt.patch
-#echo ""
+cp ../patch/libgcrypt.patch .
+patch -u -p0 < libgcrypt.patch
+echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
