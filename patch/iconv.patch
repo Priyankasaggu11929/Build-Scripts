@@ -62,14 +62,14 @@
 -      if (iconv_open("UCS-4",fromcode) == (iconv_t)(-1))
 +    std_cd = iconv_open(tocode,fromcode);
 +    if (std_cd == (iconv_t)(-1)) {
-+      if (((tmp_cd = iconv_open("UCS-4",fromcode))) == (iconv_t)(-1))
++      if ((tmp_cd = iconv_open("UCS-4",fromcode)) == (iconv_t)(-1))
          error(0,0,
                /* TRANSLATORS: An error message.
                   The placeholder expands to the encoding name, specified through --from-code.  */
                _("conversion from %s unsupported"),
                fromcode);
 -      else if (iconv_open(tocode,"UCS-4") == (iconv_t)(-1))
-+      else if (((tmp_cd = iconv_open(tocode,"UCS-4"))) == (iconv_t)(-1))
++      else if ((tmp_cd = iconv_open(tocode,"UCS-4")) == (iconv_t)(-1))
          error(0,0,
                /* TRANSLATORS: An error message.
                   The placeholder expands to the encoding name, specified through --to-code.  */
