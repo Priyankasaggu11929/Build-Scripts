@@ -832,16 +832,6 @@
      }
  }
  
---- tests/test-intprops.c
-+++ tests/test-intprops.c
-@@ -34,6 +34,7 @@
- #include "verify.h"
- 
- #include <stdbool.h>
-+#include <stdint.h>
- #include <inttypes.h>
- #include <limits.h>
- 
 --- tests/test-float.c
 +++ tests/test-float.c
 @@ -315,6 +315,11 @@
