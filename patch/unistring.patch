@@ -931,10 +931,10 @@
                }
                break;
              }
-+	  if (offsets)
++          if (offsets)
 +            free (offsets);
-+	  if (result)
-+	    free (result);
++          if (result)
++            free (result);
          }
      }
  
