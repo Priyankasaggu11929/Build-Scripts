@@ -32,8 +32,11 @@ do
     touch -t 197001010000 "$file"
 done
 
-find "$PWD" -name config.sub -exec bash -c 'echo "patching config.sub..."' \
-                             -exec bash -c 'cp ../patch/config.sub "$1"' _ {} \;
-find "$PWD" -name config.guess -exec bash -c 'echo "patching config.guess..."' \
-                               -exec bash -c 'cp ../patch/config.guess "$1"' _ {} \;
+echo "patching config.sub..."
+
+find "$PWD" -name config.sub -exec bash -c 'cp ../patch/config.sub "$1"' _ {} \;
+
+echo "patching config.guess..."
+
+find "$PWD" -name config.guess -exec bash -c 'cp ../patch/config.guess "$1"' _ {} \;
 echo ""
