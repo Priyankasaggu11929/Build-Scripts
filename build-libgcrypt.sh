@@ -50,9 +50,25 @@ fi
 
 ###############################################################################
 
+if ! ./build-iconv.sh
+then
+    echo "Failed to build iConv"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 if ! ./build-gpgerror.sh
 then
     echo "Failed to build Libgpg-error"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-nPth.sh
+then
+    echo "Failed to build nPth"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -94,7 +110,8 @@ fi
     --enable-shared \
     --prefix="$INSTX_PREFIX" \
     --libdir="$INSTX_LIBDIR" \
-    --with-libgpg-error-prefix="$INSTX_PREFIX"
+    --with-libgpg-error-prefix="$INSTX_PREFIX" \
+    --with-pth-prefix="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure libgcrypt"
