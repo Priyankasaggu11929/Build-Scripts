@@ -51,3 +51,39 @@
  
    return (gpgrt_ssize_t)size;
  }
+--- m4/iconv.m4
++++ m4/iconv.m4
+@@ -83,6 +83,7 @@
+         size_t res = iconv (cd_utf8_to_88591,
+                             (char **) &inptr, &inbytesleft,
+                             &outptr, &outbytesleft);
++        iconv_close(cd_utf8_to_88591);
+         if (res == 0)
+           return 1;
+       }
+@@ -102,6 +103,7 @@
+         size_t res = iconv (cd_88591_to_utf8,
+                             (char **) &inptr, &inbytesleft,
+                             &outptr, &outbytesleft);
++        iconv_close(cd_88591_to_utf8);
+         if ((int)res > 0)
+           return 1;
+       }
+--- configure
++++ configure
+@@ -11719,6 +11719,7 @@
+         size_t res = iconv (cd_utf8_to_88591,
+                             (char **) &inptr, &inbytesleft,
+                             &outptr, &outbytesleft);
++        iconv_close(cd_utf8_to_88591);
+         if (res == 0)
+           return 1;
+       }
+@@ -11738,6 +11739,7 @@
+         size_t res = iconv (cd_88591_to_utf8,
+                             (char **) &inptr, &inbytesleft,
+                             &outptr, &outbytesleft);
++        iconv_close(cd_88591_to_utf8);
+         if ((int)res > 0)
+           return 1;
+       }
