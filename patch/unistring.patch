@@ -909,3 +909,32 @@
 +
    return 0;
  }
+--- tests/uniconv/test-u16-conv-to-enc.c
++++ tests/uniconv/test-u16-conv-to-enc.c
+@@ -120,9 +120,7 @@
+                     for (i = 0; i < 16; i++)
+                       ASSERT (offsets[i] == i);
+                     ASSERT (offsets[16] == MAGIC);
+-                    free (offsets);
+                   }
+-                free (result);
+               }
+               break;
+             case iconveh_escape_sequence:
+@@ -136,12 +134,14 @@
+                     for (i = 0; i < 16; i++)
+                       ASSERT (offsets[i] == (i < 5 ? i : i + 5));
+                     ASSERT (offsets[16] == MAGIC);
+-                    free (offsets);
+                   }
+-                free (result);
+               }
+               break;
+             }
++	  if (offsets)
++            free (offsets);
++	  if (result)
++	    free (result);
+         }
+     }
+ 
