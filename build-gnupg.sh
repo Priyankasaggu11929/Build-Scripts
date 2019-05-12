@@ -147,6 +147,9 @@ rm -rf "$GNUPG_DIR" &>/dev/null
 tar xjf "$GNUPG_TAR"
 cd "$GNUPG_DIR"
 
+cp configure configure.orig
+cp m4/iconv.m4 m4/iconv.m4.orig
+
 cp ../patch/gnupg.patch .
 patch -u -p0 < gnupg.patch
 echo ""

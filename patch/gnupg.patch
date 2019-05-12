@@ -68,7 +68,7 @@
        {
          static const char input[] = "\342\202\254"; /* EURO SIGN */
          char buf[10];
-@@ -80,10 +81,10 @@
+@@ -80,9 +81,10 @@
          size_t inbytesleft = strlen (input);
          char *outptr = buf;
          size_t outbytesleft = sizeof (buf);
@@ -76,12 +76,11 @@
 +        size_t res = iconv (cd,
                              (char **) &inptr, &inbytesleft,
                              &outptr, &outbytesleft);
--        iconv_close(cd_utf8_to_88591);
 +        iconv_close(cd);
          if (res == 0)
            return 1;
        }
-@@ -91,8 +92,8 @@
+@@ -90,8 +92,8 @@
  #if 0 /* This bug could be worked around by the caller.  */
    /* Test against HP-UX 11.11 bug: Positive return value instead of 0.  */
    {
@@ -92,7 +91,7 @@
        {
          static const char input[] = "\304rger mit b\366sen B\374bchen ohne Augenma\337";
          char buf[50];
-@@ -100,10 +101,10 @@
+@@ -99,9 +101,10 @@
          size_t inbytesleft = strlen (input);
          char *outptr = buf;
          size_t outbytesleft = sizeof (buf);
@@ -100,12 +99,11 @@
 +        size_t res = iconv (cd,
                              (char **) &inptr, &inbytesleft,
                              &outptr, &outbytesleft);
--        iconv_close(cd_88591_to_utf8);
 +        iconv_close(cd);
          if ((int)res > 0)
            return 1;
        }
-@@ -112,14 +113,15 @@
+@@ -110,14 +113,15 @@
    /* Test against HP-UX 11.11 bug: No converter from EUC-JP to UTF-8 is
       provided.  */
    if (/* Try standardized names.  */
@@ -142,7 +140,7 @@
        {
          static const char input[] = "\342\202\254"; /* EURO SIGN */
          char buf[10];
-@@ -11716,10 +11717,10 @@
+@@ -11716,9 +11717,10 @@
          size_t inbytesleft = strlen (input);
          char *outptr = buf;
          size_t outbytesleft = sizeof (buf);
@@ -150,12 +148,11 @@
 +        size_t res = iconv (cd,
                              (char **) &inptr, &inbytesleft,
                              &outptr, &outbytesleft);
--        iconv_close(cd_utf8_to_88591);
-+        iconv_close(cd);
++        iconv_close (cd);
          if (res == 0)
            return 1;
        }
-@@ -11727,8 +11728,8 @@
+@@ -11726,8 +11728,8 @@
  #if 0 /* This bug could be worked around by the caller.  */
    /* Test against HP-UX 11.11 bug: Positive return value instead of 0.  */
    {
@@ -166,7 +163,7 @@
        {
          static const char input[] = "\304rger mit b\366sen B\374bchen ohne Augenma\337";
          char buf[50];
-@@ -11736,10 +11737,10 @@
+@@ -11735,9 +11737,10 @@
          size_t inbytesleft = strlen (input);
          char *outptr = buf;
          size_t outbytesleft = sizeof (buf);
@@ -174,12 +171,11 @@
 +        size_t res = iconv (cd,
                              (char **) &inptr, &inbytesleft,
                              &outptr, &outbytesleft);
--        iconv_close(cd_88591_to_utf8);
-+        iconv_close(cd);
++        iconv_close (cd);
          if ((int)res > 0)
            return 1;
        }
-@@ -11748,14 +11749,15 @@
+@@ -11746,14 +11749,15 @@
    /* Test against HP-UX 11.11 bug: No converter from EUC-JP to UTF-8 is
       provided.  */
    if (/* Try standardized names.  */
