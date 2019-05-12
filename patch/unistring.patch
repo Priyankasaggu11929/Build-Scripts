@@ -967,8 +967,8 @@
          }
      }
  
---- tests/uniconv/test-u8-conv-to-enc.c.orig	2019-05-12 09:37:51.703511003 -0400
-+++ tests/uniconv/test-u8-conv-to-enc.c	2019-05-12 09:40:00.745416875 -0400
+--- tests/uniconv/test-u8-conv-to-enc.c
++++ tests/uniconv/test-u8-conv-to-enc.c
 @@ -122,9 +122,7 @@
                                               i == 5 ? (size_t)(-1) :
                                               i - 1));
@@ -1006,23 +1006,50 @@
          }
      }
  }
---- tests/unistr/test-strchr.h
-+++ tests/unistr/test-strchr.h
-@@ -157,5 +157,6 @@
-   }
- #endif
+--- tests/uniconv/test-u8-conv-to-enc.c
++++ tests/uniconv/test-u8-conv-to-enc.c
+@@ -81,9 +81,11 @@
+                                        i == 40 ? (size_t)(-1) :
+                                        i - 4));
+               ASSERT (offsets[41] == MAGIC);
+-              free (offsets);
+             }
+-          free (result);
++          if (offsets)
++            free (offsets);
++          if (result)
++            free (result);
+         }
+     }
  
--  free (input);
-+  free (input);
-+  free (input32);
- }
---- tests/unistr/test-chr.h
-+++ tests/unistr/test-chr.h
-@@ -132,6 +132,7 @@
-   }
+@@ -138,12 +140,14 @@
+                                              i == 5 ? (size_t)(-1) :
+                                              i + 4));
+                     ASSERT (offsets[17] == MAGIC);
+-                    free (offsets);
+                   }
+-                free (result);
+               }
+               break;
+             }
++          if (offsets)
++            free (offsets);
++          if (result)
++            free (result);
+         }
+     }
  
-   free (input);
-+  free (input32);
+@@ -166,9 +170,11 @@
+             {
+               ASSERT (offsets[0] == 0);
+               ASSERT (offsets[1] == MAGIC);
+-              free (offsets);
+             }
+-          free (result);
++          if (offsets)
++            free (offsets);
++          if (result)
++            free (result);
+         }
+     }
  
-   return 0;
- }
