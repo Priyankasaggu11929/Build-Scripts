@@ -1006,3 +1006,12 @@
          }
      }
  }
+--- tests/unistr/test-strchr.h
++++ tests/unistr/test-strchr.h
+@@ -157,5 +157,5 @@
+   }
+ #endif
+ 
+-  free (input);
++  free (input32);
+ }
