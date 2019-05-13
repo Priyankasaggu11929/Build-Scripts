@@ -64,6 +64,10 @@ rm -rf "$CRYPTOPP_DIR" &>/dev/null
 unzip -aoq "$CRYPTOPP_ZIP" -d "$CRYPTOPP_DIR"
 cd "$CRYPTOPP_DIR"
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("all" "-j" "$INSTX_JOBS")
 if ! CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
      CFLAGS="${BUILD_CFLAGS[*]}" \
@@ -76,18 +80,21 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Testing package"
+echo "**********************"
+
 if ! ./cryptest.exe v
 then
     echo "Failed to test Crypto++"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# OK to uncomment, commented for expediency
-# if ! ./cryptest.exe tv all
-# then
-#     echo "Failed to test Crypto++"
-#     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-# fi
+if ! ./cryptest.exe tv all
+then
+    echo "Failed to test Crypto++"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
@@ -96,6 +103,10 @@ then
     echo "Failed to test Crypto++"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install" "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
 if [[ -n "$SUDO_PASSWORD" ]]; then
