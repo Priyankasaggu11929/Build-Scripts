@@ -1102,7 +1102,7 @@
 +        uint32_t *sequence = file->parts[i].lines[j].sequences[k];
 +        if (sequence)
 +          free (sequence);
-+	file->parts[i].lines[j].sequences[k] = NULL;
++        file->parts[i].lines[j].sequences[k] = NULL;
 +      }
 +    }
 +  
