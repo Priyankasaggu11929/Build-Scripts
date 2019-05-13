@@ -1059,3 +1059,67 @@
  
    return 0;
  }
+--- tests/uninorm/test-u32-normalize-big.h
++++ tests/uninorm/test-u32-normalize-big.h
+@@ -48,7 +48,7 @@
+      sentinel value of 0x110000 at the end.  */
+   ucs4_t *part1_c1_sorted;
+   /* The filename of the NormalizationTest.txt file.  */
+-  const char *filename;
++  char *filename;
+ };
+ 
+ /* Read the NormalizationTest.txt file and return its contents.  */
+@@ -56,6 +56,10 @@
+        read_normalization_test_file (const char *filename,
+                                      struct normalization_test_file *file);
+ 
++/* Free normalization_test_file contents.  */
++extern void
++       free_normalization_test_file (struct normalization_test_file *file);
++
+ /* Perform the first compliance test.  */
+ extern void
+        test_specific (const struct normalization_test_file *file,
+--- tests/uninorm/test-u32-normalize-big.c
++++ tests/uninorm/test-u32-normalize-big.c
+@@ -239,6 +239,39 @@
+ }
+ 
+ void
++free_normalization_test_file (struct normalization_test_file *file)
++{
++  if (file == NULL)
++    return;
++
++  unsigned int i, j, k;
++  for (i=0; i<4; ++i)
++  {
++    for (j=0; j<file->parts[i].lines_length; ++j)
++    {
++      for (k=0; k<5; ++k)
++      {
++        uint32_t *sequence = file->parts[i].lines[j].sequences[k];
++        if (sequence)
++          free (sequence);
++	file->parts[i].lines[j].sequences[k] = NULL;
++      }
++    }
++  
++    free(file->parts[i].lines);
++    file->parts[i].lines = NULL;
++  }
++
++  if (file->part1_c1_sorted)
++    free (file->part1_c1_sorted);
++  file->part1_c1_sorted = NULL;
++
++  if (file->filename)
++      free (file->filename);
++  file->filename = NULL;
++}
++
++void
+ test_specific (const struct normalization_test_file *file,
+                int (*check) (const uint32_t *c1, size_t c1_length,
+                              const uint32_t *c2, size_t c2_length,
