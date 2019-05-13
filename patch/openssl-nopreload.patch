@@ -1,5 +1,5 @@
---- util/shlib_wrap.sh.orig	2019-05-13 13:05:59.868625160 -0400
-+++ util/shlib_wrap.sh	2019-05-13 13:42:23.914260879 -0400
+--- util/shlib_wrap.sh
++++ util/shlib_wrap.sh
 @@ -81,22 +81,6 @@
  	;;
  esac
