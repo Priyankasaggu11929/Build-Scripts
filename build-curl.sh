@@ -186,12 +186,20 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build cURL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Testing package"
+echo "**********************"
 
 # Disable Valgrind with "TFLAGS=-n". Too many findings due
 # to -march=native. We also want the sanitizers since others
@@ -211,6 +219,10 @@ then
     echo "Failed to test cURL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install")
 if [[ -n "$SUDO_PASSWORD" ]]; then
