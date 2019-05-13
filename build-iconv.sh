@@ -64,9 +64,6 @@ rm -rf "$ICONV_DIR" &>/dev/null
 gzip -d < "$ICONV_TAR" | tar xf -
 cd "$ICONV_DIR"
 
-#cp src/iconv.c src/iconv.c.orig
-#cp tests/test-shiftseq.c tests/test-shiftseq.c.orig
-
 cp ../patch/iconv.patch .
 patch -u -p0 < iconv.patch
 echo ""
