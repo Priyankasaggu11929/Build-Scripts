@@ -1115,7 +1115,7 @@
 +  file->part1_c1_sorted = NULL;
 +
 +  if (file->filename)
-+      free (file->filename);
++    free (file->filename);
 +  file->filename = NULL;
 +}
 +
