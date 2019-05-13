@@ -67,16 +67,27 @@ cd "$NCURSES_DIR"
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
+    # Ncurses use PKG_CONFIG_LIBDIR, not PKG_CONFIG_PATH???
+    PKG_CONFIG_LIBDIR="${BUILD_PKGCONFIG[*]}" \
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --with-shared --with-cxx-shared --without-ada --enable-pc-files \
-    --with-termlib --enable-widec --disable-root-environ \
-    --with-build-cc="$CC" --with-build-cxx="$CXX" \
+./configure
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
+    --disable-leaks \
+    --with-shared \
+    --with-cxx-shared \
+    --without-ada \
+    --enable-pc-files \
+    --with-termlib \
+    --enable-widec \
+    --disable-root-environ \
+    --with-build-cc="$CC" \
+    --with-build-cxx="$CXX" \
     --with-build-cpp="${BUILD_CPPFLAGS[*]}" \
     --with-build-cflags="${BUILD_CPPFLAGS[*]} ${BUILD_CFLAGS[*]}" \
     --with-build-cxxflags="${BUILD_CPPFLAGS[*]} ${BUILD_CXXFLAGS[*]}" \
