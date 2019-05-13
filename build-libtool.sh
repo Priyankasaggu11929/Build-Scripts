@@ -72,12 +72,20 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build libtool and libltdl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+#echo "**********************"
+#echo "Testing package"
+#echo "**********************"
 
 # https://lists.gnu.org/archive/html/bug-libtool/2017-10/msg00009.html
 # MAKE_FLAGS=("check" "V=1")
@@ -87,13 +95,17 @@ fi
 #     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 # fi
 
-echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
-if [[ "${COUNT}" -ne 0 ]];
-then
-    echo "Failed to test libltdl"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+#echo "Searching for errors hidden in log files"
+#COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+#if [[ "${COUNT}" -ne 0 ]];
+#then
+#    echo "Failed to test libltdl"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install")
 if [[ -n "$SUDO_PASSWORD" ]]; then
