@@ -3,8 +3,9 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds CMake and its dependencies from sources.
 
-CMAKE_TAR=cmake-3.14.3.tar.gz
-CMAKE_DIR=cmake-3.14.3
+CMAKE_VER="3.14.3"
+CMAKE_TAR=cmake-"$CMAKE_VER".tar.gz
+CMAKE_DIR=cmake-"$CMAKE_VER"
 
 ###############################################################################
 
@@ -47,7 +48,7 @@ echo "********** CMake **********"
 echo
 
 if ! "$WGET" -O "$CMAKE_TAR" --ca-certificate="$DIGICERT_ROOT" \
-     "https://github.com/Kitware/CMake/releases/download/v3.14.3/$CMAKE_TAR"
+     "https://github.com/Kitware/CMake/releases/download/v$CMAKE_VER/$CMAKE_TAR"
 then
     echo "Failed to download CMake"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
