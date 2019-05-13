@@ -70,6 +70,10 @@ cp ../patch/cpuid.patch .
 patch -u -p0 < cpuid.patch
 echo ""
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
      CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
@@ -82,6 +86,10 @@ then
     echo "Failed to build Cpuid"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+#echo "**********************"
+#echo "Testing package"
+#echo "**********************"
 
 # No make check program
 #MAKE_FLAGS=("check")
@@ -98,6 +106,10 @@ then
     echo "Failed to test Cpuid"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install" "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
 if [[ -n "$SUDO_PASSWORD" ]]; then
