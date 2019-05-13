@@ -110,6 +110,16 @@ do
     mv "$file.fixed" "$file"
 done
 
+# Fix makefiles
+if [[ -n "$INSTX_ASAN" ]]
+then
+	for file in $(find . -iname '*Makefile*')
+	do
+		sed 's|LIBDEPS="|LIBDEPS="-lasan |g' "$file" > "$file.fixed"
+		mv "$file.fixed" "$file"
+	done
+fi
+
 CONFIG_FLAGS=("no-ssl2" "no-ssl3" "no-comp" "shared" "$SH_SYM" "$SH_OPT")
 CONFIG_FLAGS+=("${BUILD_CPPFLAGS[*]}")
 CONFIG_FLAGS+=("${BUILD_CFLAGS[*]}")
@@ -182,7 +192,7 @@ then
     then
         echo "Failed to test OpenSSL"
         # Too many failures. Sigh...
-        #[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 fi
 
