@@ -21,7 +21,7 @@ trap finish EXIT
 ###############################################################################
 
 # Get the environment as needed. We can't export it because it includes arrays.
-if ! source ./build-environ.sh
+if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
@@ -30,12 +30,12 @@ fi
 # Get a sudo password as needed. The password should die when this
 # subshell goes out of scope.
 if [[ -z "$SUDO_PASSWORD" ]]; then
-    source ./build-password.sh
+    source ./setup-password.sh
 fi
 
 ###############################################################################
 
-if ! ./build-cacerts.sh
+if ! ./setup-cacerts.sh
 then
     echo "Failed to install CA Certs"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
