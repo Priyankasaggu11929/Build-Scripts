@@ -1189,3 +1189,201 @@
    return 0;
  }
  
+--- tests/uninorm/test-u32-nfd-big.c
++++ tests/uninorm/test-u32-nfd-big.c
+@@ -46,7 +46,10 @@
+     if (!(result != NULL
+           && length == c3_length
+           && u32_cmp (result, c3, c3_length) == 0))
++    {
++      free (result);
+       return 1;
++    }
+     free (result);
+   }
+   {
+@@ -57,7 +60,10 @@
+     if (!(result != NULL
+           && length == c3_length
+           && u32_cmp (result, c3, c3_length) == 0))
++    {
++      free (result);
+       return 2;
++    }
+     free (result);
+   }
+   {
+@@ -68,7 +74,10 @@
+     if (!(result != NULL
+           && length == c3_length
+           && u32_cmp (result, c3, c3_length) == 0))
++    {
++      free (result);
+       return 3;
++    }
+     free (result);
+   }
+   {
+@@ -79,7 +88,10 @@
+     if (!(result != NULL
+           && length == c5_length
+           && u32_cmp (result, c5, c5_length) == 0))
++    {
++      free (result);
+       return 4;
++    }
+     free (result);
+   }
+   {
+@@ -90,7 +102,10 @@
+     if (!(result != NULL
+           && length == c5_length
+           && u32_cmp (result, c5, c5_length) == 0))
++    {
++      free (result);
+       return 5;
++    }
+     free (result);
+   }
+   return 0;
+@@ -106,6 +121,8 @@
+   test_specific (&file, check);
+   test_other (&file, UNINORM_NFD);
+ 
++  free_normalization_test_file(&file);
++
+   return 0;
+ }
+ 
+--- tests/uninorm/test-u32-nfkc-big.c
++++ tests/uninorm/test-u32-nfkc-big.c
+@@ -43,7 +43,10 @@
+     if (!(result != NULL
+           && length == c4_length
+           && u32_cmp (result, c4, c4_length) == 0))
++    {
++      free (result);
+       return 1;
++    }
+     free (result);
+   }
+   {
+@@ -54,7 +57,10 @@
+     if (!(result != NULL
+           && length == c4_length
+           && u32_cmp (result, c4, c4_length) == 0))
++    {
++      free (result);
+       return 2;
++    }
+     free (result);
+   }
+   {
+@@ -65,7 +71,10 @@
+     if (!(result != NULL
+           && length == c4_length
+           && u32_cmp (result, c4, c4_length) == 0))
++    {
++      free (result);
+       return 3;
++    }
+     free (result);
+   }
+   {
+@@ -76,7 +85,10 @@
+     if (!(result != NULL
+           && length == c4_length
+           && u32_cmp (result, c4, c4_length) == 0))
++    {
++      free (result);
+       return 4;
++    }
+     free (result);
+   }
+   {
+@@ -87,7 +99,10 @@
+     if (!(result != NULL
+           && length == c4_length
+           && u32_cmp (result, c4, c4_length) == 0))
++    {
++      free (result);
+       return 5;
++    }
+     free (result);
+   }
+   return 0;
+@@ -103,6 +118,8 @@
+   test_specific (&file, check);
+   test_other (&file, UNINORM_NFKC);
+ 
++  free_normalization_test_file(&file);
++
+   return 0;
+ }
+ 
+--- tests/uninorm/test-u32-nfkd-big.c
++++ tests/uninorm/test-u32-nfkd-big.c
+@@ -43,7 +43,10 @@
+     if (!(result != NULL
+           && length == c5_length
+           && u32_cmp (result, c5, c5_length) == 0))
++    {
++      free (result);
+       return 1;
++    }
+     free (result);
+   }
+   {
+@@ -54,7 +57,10 @@
+     if (!(result != NULL
+           && length == c5_length
+           && u32_cmp (result, c5, c5_length) == 0))
++    {
++      free (result);
+       return 2;
++    }
+     free (result);
+   }
+   {
+@@ -65,7 +71,10 @@
+     if (!(result != NULL
+           && length == c5_length
+           && u32_cmp (result, c5, c5_length) == 0))
++    {
++      free (result);
+       return 3;
++    }
+     free (result);
+   }
+   {
+@@ -76,7 +85,10 @@
+     if (!(result != NULL
+           && length == c5_length
+           && u32_cmp (result, c5, c5_length) == 0))
++    {
++      free (result);
+       return 4;
++    }
+     free (result);
+   }
+   {
+@@ -87,7 +99,10 @@
+     if (!(result != NULL
+           && length == c5_length
+           && u32_cmp (result, c5, c5_length) == 0))
++    {
++      free (result);
+       return 5;
++    }
+     free (result);
+   }
+   return 0;
+@@ -103,6 +118,8 @@
+   test_specific (&file, check);
+   test_other (&file, UNINORM_NFKD);
+ 
++  free_normalization_test_file(&file);
++
+   return 0;
+ }
+ 
