@@ -1,0 +1,25 @@
+--- util/shlib_wrap.sh.orig	2019-05-13 13:05:59.868625160 -0400
++++ util/shlib_wrap.sh	2019-05-13 13:42:23.914260879 -0400
+@@ -81,22 +81,6 @@
+ 	;;
+ esac
+ 
+-if [ -f "$LIBCRYPTOSO" -a -z "$preload_var" ]; then
+-	# Following three lines are major excuse for isolating them into
+-	# this wrapper script. Original reason for setting LD_PRELOAD
+-	# was to make it possible to pass 'make test' when user linked
+-	# with -rpath pointing to previous version installation. Wrapping
+-	# it into a script makes it possible to do so on multi-ABI
+-	# platforms.
+-	case "$SYSNAME" in
+-	*BSD|QNX)	LD_PRELOAD="$LIBCRYPTOSO:$LIBSSLSO" ;;	# *BSD, QNX
+-	*)	LD_PRELOAD="$LIBCRYPTOSO $LIBSSLSO" ;;	# SunOS, Linux, ELF HP-UX
+-	esac
+-	_RLD_LIST="$LIBCRYPTOSO:$LIBSSLSO:DEFAULT"	# Tru64, o32 IRIX
+-	DYLD_INSERT_LIBRARIES="$LIBCRYPTOSO:$LIBSSLSO"	# MacOS X
+-	export LD_PRELOAD _RLD_LIST DYLD_INSERT_LIBRARIES
+-fi
+-
+ cmd="$1${EXE_EXT}"
+ shift
+ if [ $# -eq 0 ]; then

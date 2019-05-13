@@ -101,6 +101,12 @@ cp ../patch/openssl.patch .
 patch -u -p0 < openssl.patch
 echo ""
 
+if [[ -n "$INSTX_ASAN" ]]; then
+    cp ../patch/openssl-nopreload.patch .
+    patch -u -p0 < openssl-nopreload.patch
+    echo ""
+fi
+
 # Fix the twisted library paths used by OpenSSL
 for file in $(find . -iname '*Makefile*')
 do
@@ -109,16 +115,6 @@ do
     sed 's|libdir=$${exec_prefix}/$(LIBDIR)|libdir=$(LIBDIR)|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
-
-# Fix makefiles
-if [[ -n "$INSTX_ASAN" ]]
-then
-	for file in $(find . -iname '*Makefile*')
-	do
-		sed 's|LIBDEPS="|LIBDEPS="-lasan |g' "$file" > "$file.fixed"
-		mv "$file.fixed" "$file"
-	done
-fi
 
 CONFIG_FLAGS=("no-ssl2" "no-ssl3" "no-comp" "shared" "$SH_SYM" "$SH_OPT")
 CONFIG_FLAGS+=("${BUILD_CPPFLAGS[*]}")
