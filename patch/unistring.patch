@@ -1123,3 +1123,69 @@
  test_specific (const struct normalization_test_file *file,
                 int (*check) (const uint32_t *c1, size_t c1_length,
                               const uint32_t *c2, size_t c2_length,
+--- tests/uninorm/test-u32-nfc-big.c
++++ tests/uninorm/test-u32-nfc-big.c
+@@ -46,7 +46,10 @@
+     if (!(result != NULL
+           && length == c2_length
+           && u32_cmp (result, c2, c2_length) == 0))
++    {
++      free (result);
+       return 1;
++    }
+     free (result);
+   }
+   {
+@@ -57,7 +60,10 @@
+     if (!(result != NULL
+           && length == c2_length
+           && u32_cmp (result, c2, c2_length) == 0))
++    {
++      free (result);
+       return 2;
++    }
+     free (result);
+   }
+   {
+@@ -68,7 +74,10 @@
+     if (!(result != NULL
+           && length == c2_length
+           && u32_cmp (result, c2, c2_length) == 0))
++    {
++      free (result);
+       return 3;
++    }
+     free (result);
+   }
+   {
+@@ -79,7 +88,10 @@
+     if (!(result != NULL
+           && length == c4_length
+           && u32_cmp (result, c4, c4_length) == 0))
++    {
++      free (result);
+       return 4;
++    }
+     free (result);
+   }
+   {
+@@ -90,7 +102,10 @@
+     if (!(result != NULL
+           && length == c4_length
+           && u32_cmp (result, c4, c4_length) == 0))
++    {
++      free (result);
+       return 5;
++    }
+     free (result);
+   }
+   return 0;
+@@ -106,6 +121,8 @@
+   test_specific (&file, check);
+   test_other (&file, UNINORM_NFC);
+ 
++  free_normalization_test_file(&file);
++
+   return 0;
+ }
+ 
