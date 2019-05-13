@@ -84,12 +84,20 @@ if [[ "$IS_64BIT" -ne 0 ]]; then
     done
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bzip"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Testing package"
+echo "**********************"
 
 MAKE_FLAGS=("check")
 if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
@@ -105,6 +113,10 @@ then
     echo "Failed to test Bzip"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=(install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
 if [[ -n "$SUDO_PASSWORD" ]]; then

@@ -57,15 +57,6 @@ rm -rf "$AUTOMAKE_DIR" &>/dev/null
 gzip -d < "$AUTOMAKE_TAR" | tar xf -
 cd "$AUTOMAKE_DIR"
 
-# Avoid reconfiguring.
-if [[ ! -e "configure" ]]; then
-    autoreconf --force --install
-    if [[ "$?" -ne 0 ]]; then
-        echo "Failed to reconfigure Automake"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-fi
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -85,12 +76,20 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Automake"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install")
 if [[ -n "$SUDO_PASSWORD" ]]; then

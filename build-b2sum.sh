@@ -96,12 +96,20 @@ if [[ "$IS_SOLARIS" -eq 1 ]]; then
     mv makefile.fixed makefile
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("CFLAGS=$B2SUM_CFLAGS" "-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build b2sum"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+#echo "**********************"
+#echo "Testing package"
+#echo "**********************"
 
 # Ugh, no 'check' or 'test' targets
 #MAKE_FLAGS=("check")
@@ -111,13 +119,17 @@ fi
 #    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 #fi
 
-echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
-if [[ "${COUNT}" -ne 0 ]];
-then
-    echo "Failed to test b2sum"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+#echo "Searching for errors hidden in log files"
+#COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+#if [[ "${COUNT}" -ne 0 ]];
+#then
+#    echo "Failed to test b2sum"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install")
 if [[ -n "$SUDO_PASSWORD" ]]; then

@@ -163,6 +163,10 @@ if [[ "$IS_DARWIN" -ne 0 ]]; then
     done
 fi
 
+echo "**********************"
+echo "Depending package"
+echo "**********************"
+
 # Try to make depend...
 if [[ "$IS_OLD_DARWIN" -ne 0 ]]; then
     "$MAKE" MAKEDEPPROG="gcc -M" depend
@@ -172,13 +176,20 @@ else
     "$MAKE" depend
 fi
 
-# Build the library
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build OpenSSL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Testing package"
+echo "**********************"
 
 # Self tests are still unreliable, https://github.com/openssl/openssl/issues/4963
 if [[ "$SKIP_OPENSSL_TESTS" -eq 0 ]];
@@ -190,6 +201,8 @@ then
         # Too many failures. Sigh...
         # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
+else
+    echo "OpenSSL is not tested."
 fi
 
 echo "Searching for errors hidden in log files"
@@ -199,6 +212,10 @@ then
     echo "Failed to test OpenSSL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 # Install the software only
 MAKE_FLAGS=(install_sw)
