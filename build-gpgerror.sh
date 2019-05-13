@@ -92,6 +92,10 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
@@ -99,22 +103,15 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-if [[ "$IS_DARWIN" -ne 0 ]];
+echo "**********************"
+echo "Testing package"
+echo "**********************"
+
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    MAKE_FLAGS=("check" "V=1")
-    if ! DYLD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test libgpg-error"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-elif [[ "$IS_LINUX" -ne 0 ]];
-then
-    MAKE_FLAGS=("check" "V=1")
-    if ! LD_LIBRARY_PATH="./.libs" "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test libgpg-error"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
+	echo "Failed to test libgpg-error"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 echo "Searching for errors hidden in log files"
@@ -124,6 +121,10 @@ then
     echo "Failed to test libgpg-error"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install")
 if [[ -n "$SUDO_PASSWORD" ]]; then

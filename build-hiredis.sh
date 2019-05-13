@@ -88,6 +88,10 @@ echo ""
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
@@ -100,6 +104,10 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+#echo "**********************"
+#echo "Testing package"
+#echo "**********************"
+
 # Need redis-server
 #MAKE_FLAGS=("check" "V=1")
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
@@ -108,13 +116,17 @@ fi
 #    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 #fi
 
-echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
-if [[ "${COUNT}" -ne 0 ]];
-then
-    echo "Failed to test Hidredis"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+#echo "Searching for errors hidden in log files"
+#COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+#if [[ "${COUNT}" -ne 0 ]];
+#then
+#    echo "Failed to test Hidredis"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install")
 MAKE_FLAGS+=("PREFIX=$INSTX_PREFIX")

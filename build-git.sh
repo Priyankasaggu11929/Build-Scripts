@@ -147,6 +147,10 @@ echo ""
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
+echo "**********************"
+echo "Building configure"
+echo "**********************"
+
 if ! "$MAKE" configure
 then
     echo "Failed to make configure Git"
@@ -216,11 +220,19 @@ if [[ -z $(command -v tclsh) ]]; then
     MAKE_FLAGS+=("NO_TCLTK=Yes")
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Git"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Testing package"
+echo "**********************"
 
 # Skip self tests on OS X 10.5 for the moment.
 if [[ "$IS_OLD_DARWIN" -eq 0 ]]
@@ -240,6 +252,10 @@ then
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 # See INSTALL for the formats and the requirements
 MAKE_FLAGS=("install")
