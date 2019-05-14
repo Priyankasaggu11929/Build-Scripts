@@ -53,6 +53,22 @@ fi
 
 ###############################################################################
 
+if ! ./build-iconv.sh
+then
+    echo "Failed to build iConvert"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+if ! ./build-unistr.sh
+then
+    echo "Failed to build Unistring"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
 echo
 echo "********** IDN **********"
 echo
@@ -82,9 +98,14 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
     --enable-shared \
-    --disable-doc
+    --disable-rpath \
+    --disable-doc \
+    --with-libiconv-prefix="$INSTX_PREFIX" \
+    --with-libunistring-prefix="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure IDN"
@@ -154,15 +175,6 @@ rm -rf "$IDN2_DIR" &>/dev/null
 gzip -d < "$IDN2_TAR" | tar xf -
 cd "$IDN2_DIR"
 
-# Avoid reconfiguring.
-if [[ ! -e "configure" ]]; then
-    ./bootstrap.sh
-    if [[ "$?" -ne 0 ]]; then
-        echo "Failed to reconfigure IDN2"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-fi
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -172,9 +184,14 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
     --enable-shared \
-    --disable-doc
+    --disable-rpath \
+    --disable-doc \
+    --with-libiconv-prefix="$INSTX_PREFIX" \
+    --with-libunistring-prefix="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure IDN2"
