@@ -126,12 +126,12 @@ echo "Testing package"
 echo "**********************"
 
 # 'make test' fails for 1.7.0
-#MAKE_FLAGS=("test")
-#if ! "$MAKE" "${MAKE_FLAGS[@]}"
-#then
-#    echo "Failed to test LDNS"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
+MAKE_FLAGS=("test")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test LDNS"
+    # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
