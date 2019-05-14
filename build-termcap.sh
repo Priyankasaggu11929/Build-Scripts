@@ -88,6 +88,10 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 ARFLAGS="cr"
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! ARFLAGS="$ARFLAGS" "$MAKE" "${MAKE_FLAGS[@]}"
@@ -95,6 +99,10 @@ then
     echo "Failed to build Termcap"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Building package"
+echo "**********************"
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
@@ -104,7 +112,21 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# libdir="$INSTX_LIBDIR"
+echo "**********************"
+echo "Testing package"
+echo "**********************"
+
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+	echo "Failed to test Termcap"
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
+
 MAKE_FLAGS=("install" "libdir=$INSTX_LIBDIR")
 if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
