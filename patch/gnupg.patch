@@ -1,14 +1,19 @@
 --- g10/armor.c
 +++ g10/armor.c
-@@ -1156,7 +1156,7 @@
- 	      }
- 
- 	    /* write the comment strings */
--	    for(s=comment->d;comment;comment=comment->next,s=comment->d)
-+	    for(s=comment?comment->d:NULL;comment;comment=comment->next,s=comment->d)
- 	      {
- 		iobuf_writestr(a, "Comment: " );
- 		for( ; *s; s++ )
+@@ -1156,10 +1156,11 @@
+              }
+
+            /* write the comment strings */
+-           for(s=comment->d;comment;comment=comment->next,s=comment->d)
++           /* https://dev.gnupg.org/rG5b22d2c4008 */
++           for( ; comment; comment=comment->next )
+              {
+                iobuf_writestr(a, "Comment: " );
+-               for( ; *s; s++ )
++               for( s=comment->d; *s; s++ )
+                  {
+                    if( *s == '\n' )
+                      iobuf_writestr(a, "\\n" );
 --- g10/keylist.c
 +++ g10/keylist.c
 @@ -1611,8 +1611,8 @@
