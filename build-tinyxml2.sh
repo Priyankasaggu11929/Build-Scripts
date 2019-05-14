@@ -75,11 +75,19 @@ MAKE_FLAGS+=("CXXFLAGS=${BUILD_CXXFLAGS[*]}")
 MAKE_FLAGS+=("LDFLAGS=${BUILD_LDFLAGS[*]}")
 MAKE_FLAGS+=("LIBS=${BUILD_LIBS[*]}")
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build tinyxml2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Testing package"
+echo "**********************"
 
 MAKE_FLAGS=("test")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
@@ -95,6 +103,10 @@ then
     echo "Failed to test tinyxml2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 # TODO... fix this simple copy
 echo "Installing TinyXML2"
