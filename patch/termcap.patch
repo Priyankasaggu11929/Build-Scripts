@@ -40,25 +40,25 @@
  all:   libtermcap.a info
 
  .c.o:
--       $(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
-+       $(CC) -c $(CPPFLAGS) $(CFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
+-	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
++	$(CC) -c $(CPPFLAGS) $(CFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
 
  install: all installdirs @installdata@
-        $(INSTALL_DATA) libtermcap.a $(libdir)/libtermcap.a
--       -$(RANLIB) $(libdir)/libtermcap.a
-+       $(INSTALL_DATA) termcap.pc $(libdir)/pkgconfig/termcap.pc
-        cd $(srcdir); $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
--       -cd $(srcdir); test -z "$(oldincludedir)" || \
--         $(INSTALL_DATA) termcap.h $(oldincludedir)/termcap.h
-+       -cd $(srcdir); test -z "$(includedir)" || \
-+         $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
-        cd $(srcdir); for f in termcap.info*; \
-        do $(INSTALL_DATA) $$f $(infodir)/$$f; done
+	$(INSTALL_DATA) libtermcap.a $(libdir)/libtermcap.a
+-	-$(RANLIB) $(libdir)/libtermcap.a
++	$(INSTALL_DATA) termcap.pc $(libdir)/pkgconfig/termcap.pc
+	cd $(srcdir); $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
+-	-cd $(srcdir); test -z "$(oldincludedir)" || \
+-	  $(INSTALL_DATA) termcap.h $(oldincludedir)/termcap.h
++	-cd $(srcdir); test -z "$(includedir)" || \
++	  $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
+	 cd $(srcdir); for f in termcap.info*; \
+	 do $(INSTALL_DATA) $$f $(infodir)/$$f; done
 
  uninstall: @uninstalldata@
-        rm -f $(libdir)/libtermcap.a $(includedir)/termcap.h
--       test -z "$(oldincludedir)" || rm -f $(oldincludedir)/termcap.h
-        rm -f $(infodir)/termcap.info*
+	 rm -f $(libdir)/libtermcap.a $(includedir)/termcap.h
+-	test -z "$(oldincludedir)" || rm -f $(oldincludedir)/termcap.h
+	 rm -f $(infodir)/termcap.info*
 
  # These are separate targets to avoid trashing the user's existing
 --- tparam.c
