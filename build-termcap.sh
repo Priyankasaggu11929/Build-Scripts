@@ -69,6 +69,19 @@ cp ../patch/termcap.patch .
 patch -u -p0 < termcap.patch
 echo ""
 
+# Write package config file
+rm -f 2>/dev/null termcap.pc
+echo 'prefix='"$INSTX_PREFIX" >> termcap.pc
+echo 'libdir=${prefix}/'"$(basename "$INSTX_LIBDIR")"
+echo 'includedir=${prefix}/include'
+echo ''
+echo 'Name: Termcap'
+echo 'Version: 1.3.1'
+echo 'Description: Terminal capabilites library'
+echo 'URL: https://www.gnu.org/software/termutils'
+echo 'Libs: -L${libdir} -ltermcap'
+echo 'Cflags: -I${includedir}'
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -78,7 +91,8 @@ echo ""
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" \
+./configure \
+    --prefix="$INSTX_PREFIX" \
     --enable-shared \
     --enable-install-termcap \
     --with-termcap="$INSTX_PREFIX/etc"
