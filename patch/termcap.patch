@@ -1,50 +1,65 @@
 --- Makefile.in
 +++ Makefile.in
-@@ -31,7 +31,7 @@
- 
+@@ -1,4 +1,4 @@
+-# Makefile for GNU termcap library.
++'# Makefile for GNU termcap library.
+ # Copyright (C) 1992, 1993, 1994 Free Software Foundation, Inc.
+
+ # This program is free software; you can redistribute it and/or modify
+@@ -22,6 +22,7 @@
+
+ CC = @CC@
+ AR = ar
++ARFLAGS = @ARFLAGS@
+ RANLIB = @RANLIB@
+
+ INSTALL = @INSTALL@
+@@ -31,7 +32,7 @@
+
  DEFS = @DEFS@ -DTERMCAP_FILE=\"$(termcapfile)\"
- 
+
 -CFLAGS = -g
 +CFLAGS = @CFLAGS@
- 
+
  prefix = @prefix@
  exec_prefix = @exec_prefix@
-@@ -42,12 +42,6 @@
+@@ -42,12 +43,6 @@
  # Directory in which to install termcap.h.
  includedir = $(prefix)/include
- 
+
 -# Directory in which to optionally also install termcap.h,
 -# so compilers besides gcc can find it by default.
 -# If it is empty or not defined, termcap.h will only be installed in
--# includedir. 
+-# includedir.
 -oldincludedir = /usr/include
 -
  # Directory in which to install the documentation info files.
  infodir = $(prefix)/info
- 
-@@ -69,20 +63,19 @@
- all:	libtermcap.a info
- 
+
+@@ -69,20 +64,19 @@
+ all:   libtermcap.a info
+
  .c.o:
--	$(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
-+	$(CC) -c $(CPPFLAGS) $(CFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
- 
+-       $(CC) -c $(CPPFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
++       $(CC) -c $(CPPFLAGS) $(CFLAGS) $(DEFS) -I. -I$(srcdir) $(CFLAGS) $<
+
  install: all installdirs @installdata@
- 	$(INSTALL_DATA) libtermcap.a $(libdir)/libtermcap.a
- 	-$(RANLIB) $(libdir)/libtermcap.a
- 	cd $(srcdir); $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
--	-cd $(srcdir); test -z "$(oldincludedir)" || \
--	  $(INSTALL_DATA) termcap.h $(oldincludedir)/termcap.h
-+	-cd $(srcdir); test -z "$(includedir)" || \
-+	  $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
- 	cd $(srcdir); for f in termcap.info*; \
- 	do $(INSTALL_DATA) $$f $(infodir)/$$f; done
- 
+        $(INSTALL_DATA) libtermcap.a $(libdir)/libtermcap.a
+-       -$(RANLIB) $(libdir)/libtermcap.a
++       $(INSTALL_DATA) termcap.pc $(libdir)/pkgconfig/termcap.pc
+        cd $(srcdir); $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
+-       -cd $(srcdir); test -z "$(oldincludedir)" || \
+-         $(INSTALL_DATA) termcap.h $(oldincludedir)/termcap.h
++       -cd $(srcdir); test -z "$(includedir)" || \
++         $(INSTALL_DATA) termcap.h $(includedir)/termcap.h
+        cd $(srcdir); for f in termcap.info*; \
+        do $(INSTALL_DATA) $$f $(infodir)/$$f; done
+
  uninstall: @uninstalldata@
- 	rm -f $(libdir)/libtermcap.a $(includedir)/termcap.h
--	test -z "$(oldincludedir)" || rm -f $(oldincludedir)/termcap.h
- 	rm -f $(infodir)/termcap.info*
- 
+        rm -f $(libdir)/libtermcap.a $(includedir)/termcap.h
+-       test -z "$(oldincludedir)" || rm -f $(oldincludedir)/termcap.h
+        rm -f $(infodir)/termcap.info*
+
  # These are separate targets to avoid trashing the user's existing
 --- tparam.c
 +++ tparam.c
