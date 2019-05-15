@@ -127,11 +127,25 @@ echo "**********************"
 echo "Testing package"
 echo "**********************"
 
-MAKE_FLAGS=("check" "V=1")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+if [[ -n "$INSTX_ASAN" ]]
 then
-    echo "Failed to test IDN"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    # Determine the libasan.so that will be used.
+    LIBASAB=$(ldd lib/.libs/libidn.so | grep -E 'libasan.so.*' | awk '{print $3}')
+    echo "Using Asan library $LIBASAB"
+
+    MAKE_FLAGS=("check" "V=1")
+    if ! LD_PRELOAD="$LIBASAB" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test IDN"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
+else
+    MAKE_FLAGS=("check" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test IDN"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"
@@ -213,11 +227,25 @@ echo "**********************"
 echo "Testing package"
 echo "**********************"
 
-MAKE_FLAGS=("check" "V=1")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+if [[ -n "$INSTX_ASAN" ]]
 then
-    echo "Failed to test IDN2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    # Determine the libasan.so that will be used.
+    LIBASAB=$(ldd lib/.libs/libidn2.so | grep -E 'libasan.so.*' | awk '{print $3}')
+    echo "Using Asan library $LIBASAB"
+
+    MAKE_FLAGS=("check" "V=1")
+    if ! LD_PRELOAD="$LIBASAB" "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test IDN2"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
+else
+    MAKE_FLAGS=("check" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+        echo "Failed to test IDN2"
+        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"
