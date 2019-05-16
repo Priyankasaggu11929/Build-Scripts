@@ -87,8 +87,11 @@ then
     echo ""
 fi
 
+sed '11iAM_INIT_AUTOMAKE' configure.ac > configure.ac.fixed
+mv configure.ac.fixed configure.ac
+
 mkdir -p m4/
-libtoolize --force
+automake --add-missing
 autoreconf --force --install
 if [[ ! -f ./configure ]]
 then
