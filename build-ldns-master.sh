@@ -87,6 +87,12 @@ then
     echo ""
 fi
 
+if ! autoreconf -f -i
+then
+    echo "Failed to autoreconf LDNS"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
