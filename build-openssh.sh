@@ -116,9 +116,13 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-#echo "**********************"
-#echo "Building package"
-#echo "**********************"
+echo "**********************"
+echo "Testing package"
+echo "**********************"
+
+echo
+echo "Unable to test OpenSSH"
+echo
 
 # No way to test OpenSSH after build...
 # https://groups.google.com/forum/#!topic/mailing.unix.openssh-dev/srdwaPQQ_Aw
@@ -129,13 +133,13 @@ fi
 #    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 #fi
 
-echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
-if [[ "${COUNT}" -ne 0 ]];
-then
-    echo "Failed to test SSH"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
+#echo "Searching for errors hidden in log files"
+#COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+#if [[ "${COUNT}" -ne 0 ]];
+#then
+#    echo "Failed to test SSH"
+#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#fi
 
 echo "**********************"
 echo "Installing package"
