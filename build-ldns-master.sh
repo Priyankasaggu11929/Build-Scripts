@@ -87,6 +87,7 @@ then
     echo ""
 fi
 
+mkdir -p m4/
 if ! autoreconf --force --install && libtoolize --force
 then
     echo "Failed to autoreconf LDNS"
