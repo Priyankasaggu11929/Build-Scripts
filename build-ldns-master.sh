@@ -87,7 +87,7 @@ then
     echo ""
 fi
 
-sed '11iAM_INIT_AUTOMAKE' configure.ac > configure.ac.fixed
+sed '11iAM_INIT_AUTOMAKE([ldns], [1.7.0])' configure.ac > configure.ac.fixed
 mv configure.ac.fixed configure.ac
 
 mkdir -p m4/
