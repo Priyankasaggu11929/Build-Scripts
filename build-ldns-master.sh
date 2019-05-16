@@ -4,6 +4,7 @@
 # This script builds LDNS from sources.
 
 LDNS_DIR=ldns-master
+LDNS_TAG=release-1.7.0
 PKG_NAME=ldns
 
 ###############################################################################
@@ -77,6 +78,7 @@ then
 fi
 
 cd "$LDNS_DIR"
+git checkout "$LDNS_TAG" &>/dev/null
 
 if [[ "$IS_OLD_DARWIN" -ne 0 ]]
 then
