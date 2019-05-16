@@ -110,6 +110,10 @@ if [[ "$IS_SOLARIS" -ne 0 ]]; then
     done
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
@@ -117,13 +121,17 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Testing package"
+echo "**********************"
+
 # https://bugs.freedesktop.org/show_bug.cgi?id=103402
-# MAKE_FLAGS=("check" "V=1")
-# if ! "$MAKE" "${MAKE_FLAGS[@]}"
-# then
-#     echo "Failed to test p11-kit"
-#     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-# fi
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test p11-kit"
+    # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 echo "Searching for errors hidden in log files"
 COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
@@ -132,6 +140,10 @@ then
     echo "Failed to test p11-kit"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install")
 if [[ -n "$SUDO_PASSWORD" ]]; then

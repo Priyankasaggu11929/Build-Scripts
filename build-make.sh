@@ -69,12 +69,6 @@ cp ../patch/make.patch .
 patch -u -p0 < make.patch
 echo ""
 
-# Autoreconf does not work on Solaris. Fortunately the
-# Make folks supplied an updated configure file. We only
-# need to keep the file time in the past.
-touch -t 197001010000 "configure.ac"
-touch -t 197001010000 "configure"
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
@@ -93,12 +87,20 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Make"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Testing package"
+echo "**********************"
 
 # Can't pass self tests...
 MAKE_FLAGS=("PERL_USE_UNSAFE_INC=1" "check")
@@ -115,6 +117,10 @@ then
     echo "Failed to test Make"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install")
 if [[ -n "$SUDO_PASSWORD" ]]; then

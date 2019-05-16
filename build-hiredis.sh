@@ -104,9 +104,13 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-#echo "**********************"
-#echo "Testing package"
-#echo "**********************"
+echo "**********************"
+echo "Testing package"
+echo "**********************"
+
+echo
+echo "Unable to test Hiredis"
+echo
 
 # Need redis-server
 #MAKE_FLAGS=("check" "V=1")

@@ -164,7 +164,7 @@ if [[ "$IS_DARWIN" -ne 0 ]]; then
 fi
 
 echo "**********************"
-echo "Depending package"
+echo "Preparing package"
 echo "**********************"
 
 # Try to make depend...

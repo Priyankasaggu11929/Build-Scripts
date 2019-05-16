@@ -118,6 +118,10 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Updating package"
+echo "**********************"
+
 # Update the PSL data file
 echo "Updating Public Suffix List (PSL) data file"
 mkdir -p list

@@ -119,6 +119,10 @@ if [[ "$?" -ne 0 ]]; then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Building package"
+echo "**********************"
+
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
@@ -126,32 +130,32 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
+echo "**********************"
+echo "Testing package"
+echo "**********************"
+
 # Can't pass self tests on ARM
-#MAKE_FLAGS=("check" "V=1")
-#if ! "$MAKE" "${MAKE_FLAGS[@]}"
-#then
-#    echo "Failed to test OpenLDAP"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test OpenLDAP"
+    # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 # Too many findings...
 # https://www.openldap.org/its/index.cgi/Incoming?id=8988
 # https://www.openldap.org/its/index.cgi/Incoming?id=8989
-#echo "Searching for errors hidden in log files"
-#COUNT=$(grep -oIR 'runtime error:' | wc -l)
-#if [[ "${COUNT}" -ne 0 ]];
-#then
-#    echo "Failed to test OpenLDAP"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-#fi
-
 echo "Searching for errors hidden in log files"
-COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+COUNT=$(grep -oIR 'runtime error:' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test OpenLDAP"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
+
+echo "**********************"
+echo "Installing package"
+echo "**********************"
 
 MAKE_FLAGS=("install")
 if [[ -n "$SUDO_PASSWORD" ]]; then

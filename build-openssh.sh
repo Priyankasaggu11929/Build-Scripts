@@ -122,6 +122,7 @@ echo "**********************"
 
 echo
 echo "Unable to test OpenSSH"
+echo 'https://groups.google.com/forum/#!topic/mailing.unix.openssh-dev/srdwaPQQ_Aw'
 echo
 
 # No way to test OpenSSH after build...
