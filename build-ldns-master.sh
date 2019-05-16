@@ -90,7 +90,7 @@ fi
 mkdir -p m4/
 libtoolize --force
 autoreconf --force --install
-if ! -f ./configure
+if [[ ! -f ./configure ]]
 then
     echo "Failed to autoreconf LDNS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
