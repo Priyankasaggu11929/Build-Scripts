@@ -130,7 +130,8 @@ echo "Unable to test ldns"
 echo
 
 # 'make test' fails. The tarball is missing the test framework.
-# Master is missing the source code for tpkg.
+# Master is missing the source code for tpkg, and the test script
+# accesses internal company URLs.
 # https://github.com/NLnetLabs/ldns/issues/8
 # https://github.com/NLnetLabs/ldns/issues/13
 #MAKE_FLAGS=("test")
