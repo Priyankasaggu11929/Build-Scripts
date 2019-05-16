@@ -94,10 +94,6 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-# Autotools is putting the file in the wrong location.
-# Man I despise that fucked up tool.
-cp -p drill/install-sh .
-
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
