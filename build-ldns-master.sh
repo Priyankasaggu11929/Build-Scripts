@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
-# This script builds Valgrind from sources.
+# This script builds LDNS from sources.
 
-VALGRIND_DIR=valgrind-master
-PKG_NAME=valgrind
+LDNS_DIR=ldns-master
+PKG_NAME=ldns
 
 ###############################################################################
 
@@ -48,40 +48,63 @@ fi
 
 ###############################################################################
 
-echo
-echo "********** Valgrind **********"
-echo
-
-rm -rf "$VALGRIND_DIR" 2>/dev/null
-
-if ! git clone --depth=3 git://sourceware.org/git/valgrind.git "$VALGRIND_DIR";
+if ! ./build-openssl.sh
 then
-    echo "Failed to checkout Valgrind"
+    echo "Failed to build OpenSSL"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-cd "$VALGRIND_DIR"
+###############################################################################
 
-./autogen.sh
-
-if [[ "$?" -ne 0 ]]; then
-    echo "Failed to generate Valgrind build files"
+if ! ./build-unbound.sh
+then
+    echo "Failed to build Unbound"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+###############################################################################
+
+echo
+echo "********** LDNS **********"
+echo
+
+rm -rf "$LDNS_DIR" &>/dev/null
+
+if ! git clone https://github.com/NLnetLabs/ldns.git "$LDNS_DIR"
+then
+    echo "Failed to clone LDNS"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+cd "$LDNS_DIR"
+
+if [[ "$IS_OLD_DARWIN" -ne 0 ]]
+then
+    cp ../patch/ldns-darwin.patch .
+    patch -u -p0 < ldns-darwin.patch
+    echo ""
 fi
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
-    CPPFLAGS="-g2 -O3" \
-    CFLAGS="-g2 -O3" \
-    CXXFLAGS="-g2 -O3" \
-    LDFLAGS="" \
-    LIBS="" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR"
+    CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
+    CFLAGS="${BUILD_CFLAGS[*]}" \
+    CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
+    LDFLAGS="${BUILD_LDFLAGS[*]}" \
+    LIBS="${BUILD_LIBS[*]}" \
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
+    --with-ssl="$INSTX_PREFIX" \
+    --with-ca-file="$SH_UNBOUND_CACERT_FILE" \
+    --with-ca-path="$SH_UNBOUND_CACERT_PATH" \
+    --with-trust-anchor="$SH_UNBOUND_ROOTKEY_FILE" \
+    --disable-dane-ta-usage
 
 if [[ "$?" -ne 0 ]]; then
-    echo "Failed to configure Valgrind"
+    echo "Failed to configure LDNS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -92,21 +115,29 @@ echo "**********************"
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Failed to build Valgrind"
+    echo "Failed to build LDNS"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-#echo "**********************"
-#echo "Testing package"
-#echo "**********************"
+echo "**********************"
+echo "Testing package"
+echo "**********************"
 
-# Man, Valgirnd is awful when it comes to trying to build self tests.
-# MAKE_FLAGS=("check" "V=1")
-# if ! "$MAKE" "${MAKE_FLAGS[@]}"
-# then
-#    echo "Failed to test Valgrind"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-# fi
+# 'make test' fails for 1.7.0
+MAKE_FLAGS=("test")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to test LDNS"
+    # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+echo "Searching for errors hidden in log files"
+COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+if [[ "${COUNT}" -ne 0 ]];
+then
+    echo "Failed to test LDNS"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 echo "**********************"
 echo "Installing package"
@@ -126,24 +157,17 @@ touch "$INSTX_CACHE/$PKG_NAME"
 
 ###############################################################################
 
-echo ""
-echo "*****************************************************************************"
-echo "Please run Bash's 'hash -r' to update program cache in the current shell"
-echo "*****************************************************************************"
-
-###############################################################################
-
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$VALGRIND_DIR")
+    ARTIFACTS=("$LDNS_TAR" "$LDNS_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
 
-    # ./build-valgrind.sh 2>&1 | tee build-valgrind.log
-    if [[ -e build-valgrind.log ]]; then
-        rm -f build-valgrind.log
+    # ./build-ldns.sh 2>&1 | tee build-ldns.log
+    if [[ -e build-ldns.log ]]; then
+        rm -f build-ldns.log
     fi
 fi
 

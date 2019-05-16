@@ -127,12 +127,17 @@ echo "**********************"
 echo "Testing package"
 echo "**********************"
 
+# Clang static links, GCC dynamic links. LIBASAB may be empty.
 if [[ -n "$INSTX_ASAN" ]]
 then
     # Determine the libasan.so that will be used.
     LIBASAB=$(ldd lib/.libs/libidn.so | grep -E 'libasan.so.*' | awk '{print $3}')
-    echo "Using Asan library $LIBASAB"
+    echo "Using Asan library: $LIBASAB"
+fi
 
+# See if we need to LD_PRELOAD.
+if [[ -n "$LIBASAB" ]]
+then
     MAKE_FLAGS=("check" "V=1")
     if ! LD_PRELOAD="$LIBASAB" "$MAKE" "${MAKE_FLAGS[@]}"
     then
@@ -227,12 +232,17 @@ echo "**********************"
 echo "Testing package"
 echo "**********************"
 
+# Clang static links, GCC dynamic links. LIBASAB may be empty.
 if [[ -n "$INSTX_ASAN" ]]
 then
     # Determine the libasan.so that will be used.
     LIBASAB=$(ldd lib/.libs/libidn2.so | grep -E 'libasan.so.*' | awk '{print $3}')
-    echo "Using Asan library $LIBASAB"
+    echo "Using Asan library: $LIBASAB"
+fi
 
+# See if we need to LD_PRELOAD.
+if [[ -n "$LIBASAB" ]]
+then
     MAKE_FLAGS=("check" "V=1")
     if ! LD_PRELOAD="$LIBASAB" "$MAKE" "${MAKE_FLAGS[@]}"
     then
