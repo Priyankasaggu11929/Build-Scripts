@@ -49,9 +49,9 @@ fi
 
 ###############################################################################
 
-if ! ./build-iconv.sh
+if ! ./build-iconv-gettext.sh
 then
-    echo "Failed to build iConvert"
+    echo "Failed to build iConv and GetTextert"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

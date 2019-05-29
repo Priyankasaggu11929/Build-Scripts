@@ -41,14 +41,6 @@ fi
 
 ###############################################################################
 
-if ! ./build-iconv.sh
-then
-    echo "Failed to build iConvert"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
 if ! ./build-pcre.sh
 then
     echo "Failed to build PCRE and PCRE2"
@@ -58,7 +50,7 @@ fi
 ###############################################################################
 
 # For libint.h, https://stackoverflow.com/q/11370684/608639
-if ! ./build-gettext.sh
+if ! ./build-iconv-gettext.sh
 then
     echo "Failed to build GetText"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1

@@ -6,7 +6,9 @@
 # iConvert and GetText are unique among packages. They have circular
 # dependencies on one another. We have to build iConv, then GetText,
 # and iConv again. Also see https://www.gnu.org/software/libiconv/.
-# The build-gettext recipe handles the dependencies.
+# The script that builds iConvert and GetText in accordance to specs
+# is build-iconv-gettext.sh. You should use build-iconv-gettext.sh
+# instead of build-iconv.sh directly
 
 ICONV_TAR=libiconv-1.16.tar.gz
 ICONV_DIR=libiconv-1.16
