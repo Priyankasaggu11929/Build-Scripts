@@ -3,9 +3,9 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds IDN and IDN2 from sources.
 
-IDN_TAR=libidn-1.35.tar.gz
-IDN_DIR=libidn-1.35
-PKG_NAME=libidn
+IDN2_TAR=libidn2-2.2.0.tar.gz
+IDN2_DIR=libidn2-2.2.0
+PKG_NAME=libidn2
 
 ###############################################################################
 
@@ -66,24 +66,19 @@ fi
 ###############################################################################
 
 echo
-echo "********** IDN **********"
+echo "********** IDN2 **********"
 echo
 
-if ! "$WGET" -O "$IDN_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
-     "https://ftp.gnu.org/gnu/libidn/$IDN_TAR"
+if ! "$WGET" -O "$IDN2_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
+     "https://ftp.gnu.org/gnu/libidn/$IDN2_TAR"
 then
-    echo "Failed to download IDN"
+    echo "Failed to download IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-rm -rf "$IDN_DIR" &>/dev/null
-gzip -d < "$IDN_TAR" | tar xf -
-cd "$IDN_DIR"
-
-# https://bugs.launchpad.net/ubuntu/+source/binutils/+bug/1340250
-if [[ -n "$SH_NO_AS_NEEDED" ]]; then
-    BUILD_LIBS+=("$SH_NO_AS_NEEDED")
-fi
+rm -rf "$IDN2_DIR" &>/dev/null
+gzip -d < "$IDN2_TAR" | tar xf -
+cd "$IDN2_DIR"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -104,7 +99,7 @@ fi
     --with-libunistring-prefix="$INSTX_PREFIX"
 
 if [[ "$?" -ne 0 ]]; then
-    echo "Failed to configure IDN"
+    echo "Failed to configure IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -115,7 +110,7 @@ echo "**********************"
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Failed to build IDN"
+    echo "Failed to build IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -127,7 +122,7 @@ echo "**********************"
 if [[ -n "$INSTX_ASAN" ]]
 then
     # Determine the libasan.so that will be used.
-    LIBASAB=$(ldd lib/.libs/libidn.so | grep -E 'libasan.so.*' | awk '{print $3}')
+    LIBASAB=$(ldd lib/.libs/libidn2.so | grep -E 'libasan.so.*' | awk '{print $3}')
     echo "Using Asan library: $LIBASAB"
 fi
 
@@ -137,14 +132,14 @@ then
     MAKE_FLAGS=("check" "V=1")
     if ! LD_PRELOAD="$LIBASAB" "$MAKE" "${MAKE_FLAGS[@]}"
     then
-        echo "Failed to test IDN"
+        echo "Failed to test IDN2"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 else
     MAKE_FLAGS=("check" "V=1")
     if ! "$MAKE" "${MAKE_FLAGS[@]}"
     then
-        echo "Failed to test IDN"
+        echo "Failed to test IDN2"
         [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 fi
@@ -153,7 +148,7 @@ echo "Searching for errors hidden in log files"
 COUNT=$(find . -name '*.log' | grep -o 'runtime error:' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-    echo "Failed to test IDN"
+    echo "Failed to test IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -178,7 +173,7 @@ touch "$INSTX_CACHE/$PKG_NAME"
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$IDN_TAR" "$IDN_DIR")
+    ARTIFACTS=("$IDN_TAR" "$IDN_DIR" "$IDN2_TAR" "$IDN2_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
