@@ -129,7 +129,7 @@ echo "Building package"
 echo "**********************"
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+if ! "$MAKE" "${MAKE_FLAGS[@]} V=1"
 then
     echo "Failed to build libpsl"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
@@ -139,10 +139,8 @@ echo "**********************"
 echo "Testing package"
 echo "**********************"
 
-# libpsl is failing its self tests at the moment
-# https://github.com/rockdaboot/libpsl/issues/87
 MAKE_FLAGS=("check")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+if ! "$MAKE" "${MAKE_FLAGS[@]} V=1"
 then
    echo "Failed to test libpsl"
    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
