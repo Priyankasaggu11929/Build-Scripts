@@ -3,6 +3,10 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds GetText from sources.
 
+# iConvert and GetText are unique among packages. They have circular
+# dependencies on one another. We have to build iConv, then GetText,
+# and iConv again. Also see https://www.gnu.org/software/libiconv/.
+
 GETTEXT_TAR=gettext-0.19.8.1.tar.gz
 GETTEXT_DIR=gettext-0.19.8.1
 PKG_NAME=gettext
@@ -136,6 +140,18 @@ cd "$CURR_DIR"
 
 # Set package status to installed. Delete the file to rebuild the package.
 touch "$INSTX_CACHE/$PKG_NAME"
+
+###############################################################################
+
+# Due to circular dependency. Once GetText is built, we need
+# to build iConvert again so it picks up the new GetText.
+rm "$INSTX_CACHE/iconv"
+
+if ! ./build-iconv.sh
+then
+    echo "Failed to build iConv (2nd Time)"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
 
 ###############################################################################
 

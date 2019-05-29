@@ -3,6 +3,11 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds iConv from sources.
 
+# iConvert and GetText are unique among packages. They have circular
+# dependencies on one another. We have to build iConv, then GetText,
+# and iConv again. Also see https://www.gnu.org/software/libiconv/.
+# The build-gettext recipe handles the dependencies.
+
 ICONV_TAR=libiconv-1.16.tar.gz
 ICONV_DIR=libiconv-1.16
 PKG_NAME=iconv
