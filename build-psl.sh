@@ -151,6 +151,9 @@ COUNT=$(find . -name '*.log' | grep -o 'runtime error:' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test libpsl"
+    echo ""
+    echo "If you have existing libpsl libraries at $LIBDIR"
+    echo "then you should manually delete them and run this script again."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
