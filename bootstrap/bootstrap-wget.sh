@@ -7,13 +7,13 @@
 # Binaries
 WGET_TAR=wget-1.20.3.tar.gz
 UNISTR_TAR=libunistring-0.9.10.tar.gz
-SSL_TAR=openssl-1.0.2r.tar.gz
+SSL_TAR=openssl-1.0.2s.tar.gz
 
 # Directories
 BOOTSTRAP_DIR=$(pwd)
 WGET_DIR=wget-1.20.3
 UNISTR_DIR=libunistring-0.9.10
-SSL_DIR=openssl-1.0.2r
+SSL_DIR=openssl-1.0.2s
 
 # Install location
 PREFIX="$HOME/bootstrap"

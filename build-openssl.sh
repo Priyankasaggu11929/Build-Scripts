@@ -4,8 +4,8 @@
 # This script builds OpenSSL from sources.
 
 # OpenSSH and a few other key programs can only use OpenSSL 1.0.2 at the moment
-OPENSSL_TAR=openssl-1.0.2r.tar.gz
-OPENSSL_DIR=openssl-1.0.2r
+OPENSSL_TAR=openssl-1.0.2s.tar.gz
+OPENSSL_DIR=openssl-1.0.2s
 PKG_NAME=openssl
 
 ###############################################################################
@@ -97,9 +97,9 @@ rm -rf "$OPENSSL_DIR" &>/dev/null
 gzip -d < "$OPENSSL_TAR" | tar xf -
 cd "$OPENSSL_DIR"
 
-cp ../patch/openssl.patch .
-patch -u -p0 < openssl.patch
-echo ""
+#cp ../patch/openssl.patch .
+#patch -u -p0 < openssl.patch
+#echo ""
 
 if [[ -n "$INSTX_ASAN" ]]; then
     cp ../patch/openssl-nopreload.patch .
