@@ -108,9 +108,9 @@ fi
 
 ###############################################################################
 
-if ! ./build-idn.sh
+if ! ./build-idn2.sh
 then
-    echo "Failed to build IDN and IDN2"
+    echo "Failed to build IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

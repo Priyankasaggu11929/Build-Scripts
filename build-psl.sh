@@ -66,9 +66,9 @@ fi
 
 ###############################################################################
 
-if ! ./build-idn.sh
+if ! ./build-idn2.sh
 then
-    echo "Failed to build IDN"
+    echo "Failed to build IDN2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -88,15 +88,6 @@ fi
 rm -rf "$PSL_DIR" &>/dev/null
 gzip -d < "$PSL_TAR" | tar xf -
 cd "$PSL_DIR"
-
-# Avoid reconfiguring.
-if [[ ! -e "configure" ]]; then
-    autoreconf --force --install
-    if [[ "$?" -ne 0 ]]; then
-        echo "Failed to reconfigure libpsl"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
-fi
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
