@@ -148,6 +148,9 @@ COUNT=$(find . -name '*.log' | grep -o 'runtime error:' | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test IDN2"
+    echo ""
+    echo "If you have existing libidn2 libraries at $LIBDIR"
+    echo "them you should manually delete them and run this script again."
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
