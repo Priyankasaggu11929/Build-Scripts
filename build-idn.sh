@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
-# This script builds IDN and IDN2 from sources.
+# This script builds IDN from sources.
 
 IDN_TAR=libidn-1.35.tar.gz
 IDN_DIR=libidn-1.35

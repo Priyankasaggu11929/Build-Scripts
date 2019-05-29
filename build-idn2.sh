@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Written and placed in public domain by Jeffrey Walton
-# This script builds IDN and IDN2 from sources.
+# This script builds IDN2 from sources.
 
 IDN2_TAR=libidn2-2.2.0.tar.gz
 IDN2_DIR=libidn2-2.2.0
@@ -173,7 +173,7 @@ touch "$INSTX_CACHE/$PKG_NAME"
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$IDN_TAR" "$IDN_DIR" "$IDN2_TAR" "$IDN2_DIR")
+    ARTIFACTS=("$IDN2_TAR" "$IDN2_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
