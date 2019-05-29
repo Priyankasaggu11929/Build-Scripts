@@ -117,7 +117,7 @@ echo "**********************"
 echo "Updating Public Suffix List (PSL) data file"
 mkdir -p list
 
-if ! "$WGET" -O "list/public_suffix_list.dat" --ca-certificate="$CA_ZOO"
+if ! "$WGET" -O "list/public_suffix_list.dat" --ca-certificate="$CA_ZOO" \
      "https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat"
 then
     echo "Failed to update Public Suffix List (PSL)"
