@@ -6,9 +6,12 @@
 # iConvert and GetText are unique among packages. They have circular
 # dependencies on one another. We have to build iConv, then GetText,
 # and iConv again. Also see https://www.gnu.org/software/libiconv/.
+# The script that builds iConvert and GetText in accordance to specs
+# is build-iconv-gettext.sh. You should use build-iconv-gettext.sh
+# instead of build-gettext.sh directly
 
-GETTEXT_TAR=gettext-0.19.8.1.tar.gz
-GETTEXT_DIR=gettext-0.19.8.1
+GETTEXT_TAR=gettext-0.20.1.tar.gz
+GETTEXT_DIR=gettext-0.20.1
 PKG_NAME=gettext
 
 ###############################################################################
@@ -48,14 +51,6 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if ! ./build-iconv.sh
-then
-    echo "Failed to build iConv"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -140,18 +135,6 @@ cd "$CURR_DIR"
 
 # Set package status to installed. Delete the file to rebuild the package.
 touch "$INSTX_CACHE/$PKG_NAME"
-
-###############################################################################
-
-# Due to circular dependency. Once GetText is built, we need
-# to build iConvert again so it picks up the new GetText.
-rm "$INSTX_CACHE/iconv"
-
-if ! ./build-iconv.sh
-then
-    echo "Failed to build iConv (2nd Time)"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
 
 ###############################################################################
 
