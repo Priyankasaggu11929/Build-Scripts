@@ -93,7 +93,6 @@ cd "$IDN2_DIR"
     --prefix="$INSTX_PREFIX" \
     --libdir="$INSTX_LIBDIR" \
     --enable-shared \
-    --disable-rpath \
     --disable-doc \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libunistring-prefix="$INSTX_PREFIX"
