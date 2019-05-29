@@ -7,8 +7,8 @@ IDN_TAR=libidn-1.35.tar.gz
 IDN_DIR=libidn-1.35
 PKG_NAME1=libidn
 
-IDN2_TAR=libidn2-2.1.1a.tar.gz
-IDN2_DIR=libidn2-2.1.1
+IDN2_TAR=libidn2-2.2.0.tar.gz
+IDN2_DIR=libidn2-2.2.0
 PKG_NAME2=libidn2
 
 ###############################################################################
