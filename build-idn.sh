@@ -51,7 +51,7 @@ fi
 
 if ! ./build-iconv-gettext.sh
 then
-    echo "Failed to build iConv and GetTextert"
+    echo "Failed to build iConv and GetText"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
