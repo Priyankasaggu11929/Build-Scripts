@@ -245,7 +245,7 @@ then
     fi
 
     echo "Searching for errors hidden in log files"
-    COUNT=$(grep -oIR 'runtime error:' ./* | wc -l)
+    COUNT=$(find . -name '*.log' | grep -o 'runtime error:' | wc -l)
     if [[ "${COUNT}" -ne 0 ]];
     then
         echo "Failed to test Git"
@@ -263,7 +263,7 @@ MAKE_FLAGS=("install")
 # Git builds things during install, and they end up root:root.
 if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
-    echo "$SUDO_PASSWORD" | sudo -S chmod -R 0777 ./*
+    echo "$SUDO_PASSWORD" | sudo -S chmod -R 0777
 else
     "$MAKE" "${MAKE_FLAGS[@]}"
 fi
