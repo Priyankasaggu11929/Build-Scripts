@@ -73,7 +73,7 @@ echo ""
 ../fix-config.sh
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
-    CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
+    CPPFLAGS="${BUILD_CPPFLAGS[*]} -I." \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
