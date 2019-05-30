@@ -178,6 +178,16 @@ sed -e 's|$(LTLIBICONV)|$(LIBICONV)|g' fuzz/Makefile.am > fuzz/Makefile.am.fixed
 mv fuzz/Makefile.am.fixed fuzz/Makefile.am
 touch -t 197001010000 fuzz/Makefile.am
 
+# https://lists.gnu.org/archive/html/bug-wget/2019-05/msg00064.html
+for file in $(find "$PWD" -name '*.px')
+do
+    sed -e 's|env -S perl -I .|env perl|g' "$file" > "$file.fixed"
+    chmod +w "$file"
+    mv "$file.fixed" "$file"
+    chmod +x "$file"
+    chmod -w "$file"
+done
+
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
@@ -218,11 +228,11 @@ then
     # Ignore failures about Socket::inet_itoa and incorrect sizes.
     # https://rt.cpan.org/Public/Bug/Display.html?id=91699
     MAKE_FLAGS=("check" "V=1")
-    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    if ! PERL5LIB="$PWD/tests:$PERL5LIB" "$MAKE" "${MAKE_FLAGS[@]}"
     then
         echo "Failed to test Wget"
         echo "Installing anyways..."
-        # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        #[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 
     echo "Searching for errors hidden in log files"
