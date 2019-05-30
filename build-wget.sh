@@ -227,8 +227,13 @@ then
     # Perl IPv6 may be broken and cause Wget self tests to fail.
     # Ignore failures about Socket::inet_itoa and incorrect sizes.
     # https://rt.cpan.org/Public/Bug/Display.html?id=91699
+    # Perl does not include PWD so it compiles and executes
+    # tests like Test-https-pfs.px, but fails to find
+    # WgetFeature.pm which is located in the same directory.
+    # I fail to see the difference in risk. How is
+    # Test-https-pfs.px safe, but WgetFeature.pm dangerous?
     MAKE_FLAGS=("check" "V=1")
-    if ! PERL5LIB="$PWD/tests:$PERL5LIB" "$MAKE" "${MAKE_FLAGS[@]}"
+    if ! PERL_USE_UNSAFE_INC=1 "$MAKE" "${MAKE_FLAGS[@]}"
     then
         echo "Failed to test Wget"
         echo "Installing anyways..."
