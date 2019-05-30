@@ -126,7 +126,7 @@ then
 fi
 
 echo "Searching for errors hidden in log files"
-COUNT=$(find . -name '*.log' | grep -o 'runtime error:' | wc -l)
+COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test Termcap"
