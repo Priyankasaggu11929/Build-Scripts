@@ -68,8 +68,8 @@ cd "$NCURSES_DIR"
 ../fix-config.sh
 
 CONFIG_OPTS=()
-CONFIG_OPTS+=("--prefix=$INSTX_PREFIX"))
-CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR"))
+CONFIG_OPTS+=("--prefix=$INSTX_PREFIX")
+CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR")
 CONFIG_OPTS+=("--disable-leaks")
 CONFIG_OPTS+=("--with-shared")
 CONFIG_OPTS+=("--with-cxx-shared")
