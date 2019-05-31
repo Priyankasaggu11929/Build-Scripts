@@ -89,7 +89,12 @@ CONFIG_OPTS+=("--with-build-libs=${BUILD_LIBS[*]}")
 # know for sure, so we attempt to see what the distro is doing.
 COUNT=$(find /usr/lib/ /usr/lib64/ -name 'ncurses*w.*' | wc -l)
 if [[ "$COUNT" -eq 0 ]]; then
+    echo ""
+    echo "Enabling wide character version"
     CONFIG_OPTS+=("--enable-widec")
+else
+    echo ""
+    echo "Enabling narrow character version"
 fi
 
     # Ncurses use PKG_CONFIG_LIBDIR, not PKG_CONFIG_PATH???
