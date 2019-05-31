@@ -84,6 +84,8 @@ CONFIG_OPTS+=("--with-build-cflags=${BUILD_CFLAGS[*]}")
 CONFIG_OPTS+=("--with-build-cxxflags=${BUILD_CXXFLAGS[*]}")
 CONFIG_OPTS+=("--with-build-ldflags=${BUILD_LDFLAGS[*]}")
 CONFIG_OPTS+=("--with-build-libs=${BUILD_LIBS[*]}")
+CONFIG_OPTS+=("PKG_CONFIG_LIBDIR=${BUILD_PKGCONFIG[*]}")
+CONFIG_OPTS+=("PKG_CONFIG_PATH=${BUILD_PKGCONFIG[*]}")
 
 # Ncurses can be built narrow or wide. There's no real way to
 # know for sure, so we attempt to see what the distro is doing.

@@ -145,7 +145,7 @@ INSTX_UBSAN=1 INSTX_PREFIX=/var/sanitize ./build-openssl.sh
 
 Many programs and libraries feel it is OK to leak resources, and it screws up a lot testing. If you are using Asan or Msan and encounter too many `ERROR: LeakSanitizer: detected memory leaks`, then you may need `LSAN_OPTIONS=detect_leaks=0`. Also see [Issue 719, Suppress leak checking on exit](https://github.com/google/sanitizers/issues/719).
 
-Once finished with testing remove `~/.build-scripts` so everything is rebuilt.
+Once finished with testing perform `rm -rf /var/sanitize` so everything is deleted.
 
 ## OpenBSD
 
@@ -194,7 +194,7 @@ Third, you can open the `build-prog.sh` script, comment the portion that runs `m
 
 ## Bugs
 
-GnuPG may (or may not) build and install correctly. The libraries involved with GnuPG sometimes cannot find their prerequisites, like `libgpg-error`. GnuPG may break Git and code signing.
+GnuPG may break Git and code signing. There seems to be an incompatibility in the way GnuPG prompts for a password and the way Git expets a user to enter a password.
 
 GnuTLS may (or may not) build and install correctly. It is a big recipe and Guile causes a fair amount of trouble on many systems.
 
