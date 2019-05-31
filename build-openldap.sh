@@ -93,10 +93,10 @@ sed 's|0x060014|0x060300|g' configure > configure.new
 mv configure.new configure
 chmod +x configure
 
-CONFIG_OPTIONS=()
-CONFIG_OPTIONS+=("--prefix=$INSTX_PREFIX")
-CONFIG_OPTIONS+=("--libdir=$INSTX_LIBDIR")
-CONFIG_OPTIONS+=("--with-tls=openssl")
+CONFIG_OPTS=()
+CONFIG_OPTS+=("--prefix=$INSTX_PREFIX")
+CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR")
+CONFIG_OPTS+=("--with-tls=openssl")
 
 # Should this be used everywhere? MDB is dirty and cannot
 # pass acceptance testing due to undefined behavior. In
@@ -104,7 +104,7 @@ CONFIG_OPTIONS+=("--with-tls=openssl")
 # https://trac.macports.org/ticket/46236
 if [[ "$IS_OLD_DARWIN" -ne 0 ]]
 then
-    CONFIG_OPTIONS+=("--enable-mdb=no")
+    CONFIG_OPTS+=("--enable-mdb=no")
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
@@ -112,7 +112,7 @@ fi
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
-./configure "${CONFIG_OPTIONS[@]}"
+./configure "${CONFIG_OPTS[@]}"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure OpenLDAP"

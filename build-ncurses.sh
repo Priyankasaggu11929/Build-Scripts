@@ -67,6 +67,31 @@ cd "$NCURSES_DIR"
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
+CONFIG_OPTS=()
+CONFIG_OPTS+=("--prefix=$INSTX_PREFIX"))
+CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR"))
+CONFIG_OPTS+=("--disable-leaks")
+CONFIG_OPTS+=("--with-shared")
+CONFIG_OPTS+=("--with-cxx-shared")
+CONFIG_OPTS+=("--without-ada")
+CONFIG_OPTS+=("--enable-pc-files")
+CONFIG_OPTS+=("--with-termlib")
+CONFIG_OPTS+=("--disable-root-environ")
+CONFIG_OPTS+=("--with-build-cc=$CC")
+CONFIG_OPTS+=("--with-build-cxx=$CXX")
+CONFIG_OPTS+=("--with-build-cpp=${BUILD_CPPFLAGS[*]}")
+CONFIG_OPTS+=("--with-build-cflags=${BUILD_CFLAGS[*]}")
+CONFIG_OPTS+=("--with-build-cxxflags=${BUILD_CXXFLAGS[*]}")
+CONFIG_OPTS+=("--with-build-ldflags=${BUILD_LDFLAGS[*]}")
+CONFIG_OPTS+=("--with-build-libs=${BUILD_LIBS[*]}")
+
+# Ncurses can be built narrow or wide. There's no real way to
+# know for sure, so we attempt to see what the distro is doing.
+COUNT=$(find /usr/lib/ /usr/lib64/ -name 'ncurses*w.*' | wc -l)
+if [[ "$COUNT" -eq 0 ]]; then
+    CONFIG_OPTS+=("--enable-widec")
+fi
+
     # Ncurses use PKG_CONFIG_LIBDIR, not PKG_CONFIG_PATH???
     PKG_CONFIG_LIBDIR="${BUILD_PKGCONFIG[*]}" \
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
@@ -75,24 +100,7 @@ cd "$NCURSES_DIR"
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure \
-    --prefix="$INSTX_PREFIX" \
-    --libdir="$INSTX_LIBDIR" \
-    --disable-leaks \
-    --with-shared \
-    --with-cxx-shared \
-    --without-ada \
-    --enable-pc-files \
-    --with-termlib \
-    --enable-widec \
-    --disable-root-environ \
-    --with-build-cc="$CC" \
-    --with-build-cxx="$CXX" \
-    --with-build-cpp="${BUILD_CPPFLAGS[*]}" \
-    --with-build-cflags="${BUILD_CPPFLAGS[*]} ${BUILD_CFLAGS[*]}" \
-    --with-build-cxxflags="${BUILD_CPPFLAGS[*]} ${BUILD_CXXFLAGS[*]}" \
-    --with-build-ldflags="${BUILD_LDFLAGS[*]}" \
-    --with-build-libs="${BUILD_LIBS[*]}"
+./configure "${CONFIG_OPTS[@]}"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure ncurses"

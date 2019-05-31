@@ -87,7 +87,7 @@ cd "$EMACS_DIR"
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
-EMACS_OPTS=('--with-xml2' '--without-x' '--without-sound' '--without-xpm'
+CONFIG_OPTS=('--with-xml2' '--without-x' '--without-sound' '--without-xpm'
     '--without-jpeg' '--without-tiff' '--without-gif' '--without-png'
     '--without-rsvg' '--without-imagemagick' '--without-xft' '--without-libotf'
     '--without-m17n-flt' '--without-xaw3d' '--without-toolkit-scroll-bars'
@@ -96,7 +96,7 @@ EMACS_OPTS=('--with-xml2' '--without-x' '--without-sound' '--without-xpm'
 
 if [[ -e "/usr/include/selinux/context.h" ]] ||
    [[ -e "/usr/local/include/selinux/context.h" ]]; then
-    EMACS_OPTS+=('--without-selinux')
+    CONFIG_OPTS+=('--without-selinux')
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
@@ -106,7 +106,7 @@ fi
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    "${EMACS_OPTS[@]}"
+    "${CONFIG_OPTS[@]}"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure emacs"

@@ -75,13 +75,13 @@ cd "$P11KIT_DIR"
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
-P11KIT_CONFIG_OPTS=("--enable-shared" "--prefix=$INSTX_PREFIX" "--libdir=$INSTX_LIBDIR")
+CONFIG_OPTS=("--enable-shared" "--prefix=$INSTX_PREFIX" "--libdir=$INSTX_LIBDIR")
 
 # Use the path if available
 if [[ -n "$SH_CACERT_PATH" ]]; then
-    P11KIT_CONFIG_OPTS+=("--with-trust-paths=$SH_CACERT_PATH")
+    CONFIG_OPTS+=("--with-trust-paths=$SH_CACERT_PATH")
 else
-    P11KIT_CONFIG_OPTS+=("--without-trust-paths")
+    CONFIG_OPTS+=("--without-trust-paths")
 fi
 
 if [[ "$IS_SOLARIS" -ne 0 ]]; then
@@ -95,7 +95,7 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure "${P11KIT_CONFIG_OPTS[@]}"
+./configure "${CONFIG_OPTS[@]}"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure p11-kit"

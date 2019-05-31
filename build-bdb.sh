@@ -82,17 +82,17 @@ cd "$BDB_DIR/dist"
 cd "$CURR_DIR"
 cd "$BDB_DIR/build_unix"
 
-CONFIG_OPTIONS=()
-CONFIG_OPTIONS+=("--prefix=$INSTX_PREFIX")
-CONFIG_OPTIONS+=("--libdir=$INSTX_LIBDIR")
-CONFIG_OPTIONS+=("--with-tls=openssl")
+CONFIG_OPTS=()
+CONFIG_OPTS+=("--prefix=$INSTX_PREFIX")
+CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR")
+CONFIG_OPTS+=("--with-tls=openssl")
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
-../dist/configure "${CONFIG_OPTIONS[@]}"
+../dist/configure "${CONFIG_OPTS[@]}"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure BerkleyDB"
