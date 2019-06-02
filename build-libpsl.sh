@@ -143,11 +143,17 @@ echo "**********************"
 echo "Testing package"
 echo "**********************"
 
-MAKE_FLAGS=("check" "V=1")
-if ! "$MAKE" "${MAKE_FLAGS[@]}"
+# Solaris does not provide fmemopen and friends used in test
+if [[ "$IS_SOLARIS" -ne 0 ]]
 then
-   echo "Failed to test libpsl"
-   [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    echo "Skipping libpsl testing"
+else
+    MAKE_FLAGS=("check" "V=1")
+    if ! "$MAKE" "${MAKE_FLAGS[@]}"
+    then
+       echo "Failed to test libpsl"
+       [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    fi
 fi
 
 echo "Searching for errors hidden in log files"
