@@ -140,7 +140,7 @@ else
     then
         echo "Failed to test IDN2"
         echo "Installing IDN2 anyways..."
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        #[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
     fi
 fi
 
