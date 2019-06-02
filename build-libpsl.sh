@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds PSL from sources.
 
-PSL_TAR=libpsl-0.19.1.tar.gz
-PSL_DIR=libpsl-0.19.1
+PSL_TAR=libpsl-0.21.0.tar.gz
+PSL_DIR=libpsl-0.21.0
 PKG_NAME=libpsl
 
 ###############################################################################
