@@ -24,7 +24,7 @@ You can build the fully-functional version of Wget by running `./build-wget.sh`,
 
 ## OpenSSH
 
-The following steps should be performed to update OpenSSH. The new OpenSSH is permantently installed at `/opt/ssh` (as opposed to a location like /usr/local`). `/opt/ssh` will have a standard Linux filesystem below it.
+The following steps should be performed to update OpenSSH. The new OpenSSH is permantently installed at `/opt/ssh` (as opposed to a location like `/usr/local`). `/opt/ssh` will have a standard Linux filesystem below it.
 
 ```
 $ INSTX_PREFIX=/opt/ssh ./build-openssh.sh
