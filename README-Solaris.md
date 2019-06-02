@@ -2,7 +2,7 @@
 
 The Build-Scripts should work out-of-the-box for modern Solaris, like Solaris 10 or Solaris 11. Once you run the setup recipes you should be able to build most programs with the scripts.
 
-Solaris ships with a modified version of OpenSSH 1.2.12, so updating OpenSSH is an important operation. After building a new OpenSSH you have to update the existing Solaris configuration so the operating system uses the new OpenSSH.
+Solaris ships with a modified version of OpenSSH 1.2.12, so updating OpenSSH is an important operation. A new OpenSSH will allow you to use Ecdsa and Ed25519 keys. After building a new OpenSSH you have to update the existing Solaris configuration so the operating system uses the new OpenSSH.
 
 Modern OpenSSH no longer supports DSA keys by default. Default DSA support was disabled at OpenSSH 7.9. You should ensure you have an Ecdsa or Ed25519 key (or enable DSA keys in `sshd_config`). Also see [OpenSSH Release Notes](https://www.openssh.com/releasenotes.html).
 
