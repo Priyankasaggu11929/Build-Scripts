@@ -142,7 +142,7 @@ fi
 
 if [[ "$SKIP_LIBPSL" -eq 0 ]]; then
 
-if ! ./build-psl.sh
+if ! ./build-libpsl.sh
 then
     echo "Failed to build Public Suffix List library"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1

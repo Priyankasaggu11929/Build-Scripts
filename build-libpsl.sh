@@ -89,6 +89,10 @@ rm -rf "$PSL_DIR" &>/dev/null
 gzip -d < "$PSL_TAR" | tar xf -
 cd "$PSL_DIR"
 
+cp ../patch/libpsl.patch .
+patch -u -p0 < libpsl.patch
+echo ""
+
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 

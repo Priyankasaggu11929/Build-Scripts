@@ -1,0 +1,57 @@
+--- fuzz/libpsl_load_fuzzer.c
++++ fuzz/libpsl_load_fuzzer.c
+@@ -22,6 +22,11 @@
+  * This file is part of libpsl.
+  */
+ 
++/* https://docs.oracle.com/cd/E88353_01/html/E37853/posix.1-7.html */
++#ifdef __sun__
++# define _XOPEN_SOURCE 700
++#endif
++  
+ #include <config.h>
+ 
+ #include <assert.h> /* assert */
+@@ -28,6 +33,7 @@
+ #include <stdint.h> /* uint8_t */
+ #include <stdlib.h> /* malloc, free */
+ #include <string.h> /* memcpy */
++#include <stdio.h>  /* fmemopen */
+ 
+ #include "libpsl.h"
+ #include "fuzzer.h"
+--- fuzz/libpsl_load_dafsa_fuzzer.c
++++ fuzz/libpsl_load_dafsa_fuzzer.c
+@@ -22,6 +22,11 @@
+  * This file is part of libpsl.
+  */
+ 
++/* https://docs.oracle.com/cd/E88353_01/html/E37853/posix.1-7.html */
++#ifdef __sun__
++# define _XOPEN_SOURCE 700
++#endif
++
+ #include <config.h>
+ 
+ #include <assert.h> /* assert */
+@@ -28,6 +33,7 @@
+ #include <stdint.h> /* uint8_t */
+ #include <stdlib.h> /* malloc, free */
+ #include <string.h> /* memcpy */
++#include <stdio.h>  /* fmemopen */
+ 
+ #include "libpsl.h"
+ #include "fuzzer.h"
+--- fuzz/main.c
++++ fuzz/main.c
+@@ -33,6 +33,10 @@
+ #include <errno.h>
+ #include <sys/stat.h>
+ 
++#ifdef __sun__
++# include <alloca.h>
++#endif
++
+ #include "fuzzer.h"
+ 
+ #ifdef TEST_RUN
