@@ -143,20 +143,14 @@ echo "**********************"
 echo "Testing package"
 echo "**********************"
 
-# Solaris does not provide fmemopen and friends used in test
-if [[ "$IS_SOLARIS" -ne 0 ]]
+MAKE_FLAGS=("check" "V=1")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Skipping libpsl testing"
-else
-    MAKE_FLAGS=("check" "V=1")
-    if ! "$MAKE" "${MAKE_FLAGS[@]}"
-    then
-        echo "Failed to test libpsl"
-        echo ""
-        echo "If you have existing libpsl libraries at $LIBDIR"
-        echo "then you should manually delete them and run this script again."
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
+	echo "Failed to test libpsl"
+	echo ""
+	echo "If you have existing libpsl libraries at $LIBDIR"
+	echo "then you should manually delete them and run this script again."
+	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 echo "Searching for errors hidden in log files"
