@@ -223,6 +223,8 @@ kVkn8TUoE6smftX3eg==
 -----END CERTIFICATE-----" > digicert-root-ca.pem
 fi
 
+###############################################################################
+
 # This is "DigiCert High Assurance EV Root CA"
 # 02:AC:5C:26:6A:0B:40:9B:8F:0B:79:F2:AE:46:25:77
 echo "-----BEGIN CERTIFICATE-----

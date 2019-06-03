@@ -10,7 +10,7 @@ After installing OpenSSH you should also tune `sshd_config` to suit your taste. 
 
 ## Setup
 
-Before you begin you should install updated CA certificates and build a modern Wget. `./setup-wget.sh` installs a local copy of `wget` in `$HOME/bootstrap`. It is a reduced-functionality version of Wget designed to download packages over HTTPS.
+Once you clone the repo you need to perform a one-time setup. The setup installs updated CA certificates and build a modern Wget. `setup-cacerts.sh` installs a local copy of 10 certificates in `$HOME/.cacerts`. They are used to download programs and libraries. `setup-wget.sh` installs a local copy of `wget` in `$HOME/bootstrap`. It is a reduced-functionality version of Wget designed to download packages over HTTPS.
 
 ```
 $ ./setup-cacerts.sh

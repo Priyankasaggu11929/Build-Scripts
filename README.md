@@ -4,6 +4,18 @@ This GitHub is a collection of build scripts useful for building and testing pro
 
 The general idea of the scripts are, you run `./build-wget.sh`, `./build-ssh.sh`, `./build-git.sh` or some other program build script to get a fresh tool. The script for the program will download and build the dependent libraries for the program. When the script completes you have a working tool in `/usr/local`.
 
+## Setup
+
+Once you clone the repo you need to perform a one-time setup. The setup installs updated CA certificates and build a modern Wget. `setup-cacerts.sh` installs a local copy of 10 certificates in `$HOME/.cacerts`. They are used to download programs and libraries. `setup-wget.sh` installs a local copy of `wget` in `$HOME/bootstrap`. It is a reduced-functionality version of Wget designed to download packages over HTTPS.
+
+```
+$ ./setup-cacerts.sh
+...
+
+$ ./setup-wget.sh
+...
+```
+
 ## Output Artifacts
 
 All artifacts are placed in `/usr/local` by default with runtime paths and dtags set to the proper library location. The library location on 32-bit machines is `/usr/local/lib`; while 64-bit systems use `/usr/local/lib` (Debian and derivatives) or `/usr/local/lib64` (Red Hat and derivatives).
@@ -19,51 +31,9 @@ Examples of running the scripts and changing variables are shown below:
 # Build and install in a temp directory
 INSTX_PREFIX="$HOME/tmp" ./build-wget.sh
 
-# Build and install in a temp directory (same as the first command, but not obvious)
-INSTX_PREFIX="$HOME/tmp" INSTX_LIBDIR="$INSTX_PREFIX/tmp/lib" ./build-wget.sh
-
 # Build and install in a temp directory and use and different library path
 INSTX_PREFIX="$HOME/tmp" INSTX_LIBDIR="$HOME/mylibs" ./build-wget.sh
 ```
-
-The last item of interest is `INSTX_JOBS`. The variable controls the number of make jobs and is set to 4 because modern hardware is the dominant use case. Four make jobs is too much for some devices like ARM dev-boards. You can reduce the number of make jobs with:
-
-```
-INSTX_JOBS=2 ./build-curl.sh
-```
-
-## Boot strapping
-
-Generally speaking you need some CA certificates and a modern Wget. Older systems like Fedora 1 and CentOS 5 are more sensitive than newer systems, but it is OK to bootstrap a modern system  too. To install the CA certificates and build a modern Wget perform the following.
-
-```
-./setup-cacerts.sh
-
-./setup-wget.sh
-```
-
-The CA certificates are written to `$HOME/.cacerts`. The CAs are public/commercial issuers, and there are about eight of them. They are used to connect to sites like `gnu.org` and `github.com`. The script that call Wget usually use a `--ca-certificate=<exact-ca-for-site>` option. Sometimes the CA Zoo is used when a lot of redirects happen.
-
-The bootstrapped Wget is located in `$HOME/bootstrap`. The bootstrapped version of Wget uses static linking to avoid Linux path problems.
-
-If you are working on an antique system, like Fedora 1, then your next step is build Bash. Fedora 1 provides Bash 2.05b and it can't handle the scripts. The pain point is `[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1`. The command to build and use Bash in the current session is:
-
-```
-WGET="$HOME/bootstrap/bin/wget" ./build-bash.sh
-...
-
-# Use the new Bash in the current session
-$ /usr/local/bin/bash
-$
-```
-
-The bootstrapped Wget is anemic and you should build the full version next by running `./build-wget.sh`. After you build the full Wget you can move onto other goodies, like Git and SSH.
-
-```
-WGET="$HOME/bootstrap/bin/wget" ./build-wget.sh
-```
-
-You can delete `$HOME/bootstrap` at any time, but be sure you have an updated Wget that can download the source code for the remaining tools.
 
 ## Runtime Paths
 
