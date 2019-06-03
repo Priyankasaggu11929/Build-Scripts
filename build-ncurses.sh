@@ -88,7 +88,7 @@ CONFIG_OPTS+=("--with-pkg-config-libdir=${BUILD_PKGCONFIG[*]}")
 
 # Ncurses can be built narrow or wide. There's no real way to
 # know for sure, so we attempt to see what the distro is doing.
-COUNT=$(find /usr/lib/ /usr/lib64/ -name 'ncurses*w.*' | wc -l)
+COUNT=$(find /usr/lib/ /usr/lib64/ -name 'ncurses*w.*' 2>/dev/null | wc -l)
 if [[ "$COUNT" -ne 0 ]]; then
     echo "Enabling wide character version"
     echo ""
