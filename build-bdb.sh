@@ -110,9 +110,11 @@ then
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-#echo "**********************"
-#echo "Testing package"
-#echo "**********************"
+echo "**********************"
+echo "Testing package"
+echo "**********************"
+
+echo "Unable to test Berkley DB"
 
 # No check or test recipes
 #MAKE_FLAGS=("check" "V=1")
@@ -134,11 +136,29 @@ echo "**********************"
 echo "Installing package"
 echo "**********************"
 
+echo "" > libdb.pc
+echo "prefix=$INSTX_PREFIX" >> libdb.pc
+echo "exec_prefix=\${prefix}" >> libdb.pc
+echo "libdir=$INSTX_LIBDIR" >> libdb.pc
+echo "includedir=\${prefix}/include" >> libdb.pc
+echo "" >> libdb.pc
+echo "Name: Berkley DB" >> libdb.pc
+echo "Description: Berkley DB client library" >> libdb.pc
+echo "Version: 6.2" >> libdb.pc
+echo "" >> libdb.pc
+echo "Requires:" >> libdb.pc
+echo "Libs: -L\${libdir}" >> libdb.pc
+echo "Cflags: -I\${includedir}" >> libdb.pc
+
 MAKE_FLAGS=("install")
 if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
+    echo "$SUDO_PASSWORD" | sudo -S cp libdb.pc "$INSTX_LIBDIR/pkgconfig"
+    echo "$SUDO_PASSWORD" | sudo -S chmod 644 "$INSTX_LIBDIR/pkgconfig/libdb.pc"
 else
     "$MAKE" "${MAKE_FLAGS[@]}"
+    cp libdb.pc "$INSTX_LIBDIR/pkgconfig"
+    chmod 644 "$INSTX_LIBDIR/pkgconfig/libdb.pc"
 fi
 
 cd "$CURR_DIR"
