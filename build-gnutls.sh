@@ -145,6 +145,7 @@ rm -rf "$GNUTLS_TAR" "$GNUTLS_DIR" &>/dev/null
 unxz "$GNUTLS_XZ" && tar -xf "$GNUTLS_TAR"
 cd "$GNUTLS_DIR"
 
+# No need for patch since removing Guile
 #cp ../patch/gnutls.patch .
 #patch -u -p0 < gnutls.patch
 #echo ""
@@ -153,10 +154,9 @@ cd "$GNUTLS_DIR"
 ../fix-config.sh
 
 # Solaris is a tab bit stricter than libc
-if [[ "$IS_SOLARIS" -eq 1 ]]; then
+if [[ "$IS_SOLARIS" -ne 0 ]]; then
     # Don't use CPPFLAGS. _XOPEN_SOURCE will cross-pollinate into CXXFLAGS.
-    BUILD_CFLAGS+=("-D_XOPEN_SOURCE=600 -std=c99")
-    BUILD_CXXFLAGS+=("-std=c++03")
+    BUILD_CFLAGS+=("-D_XOPEN_SOURCE=600 -std=gnu99")
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
@@ -198,6 +198,26 @@ do
     mv "$file.fixed" "$file"
 
     sed -e 's|$(cipher_openssl_compat_LDADD) $(LIBS)|$(cipher_openssl_compat_LDADD) $(LIBS) -lcrypto|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+done
+
+echo "Patching Makefiles"
+for file in $(find "$PWD" -iname 'Makefile')
+do
+    # Make console output more readable...
+    sed -e 's|-Wtype-limits .*|-fno-common -Wall |g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    sed -e 's|-fno-common .*|-fno-common -Wall |g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+done
+
+echo "Patching La files"
+for file in $(find "$PWD" -iname '*.la')
+do
+    # Make console output more readable...
+    sed -e 's|-Wtype-limits .*|-fno-common -Wall |g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    sed -e 's|-fno-common .*|-fno-common -Wall |g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
 
