@@ -216,6 +216,10 @@ then
     fi
 fi
 
+if [[ -z "$INSTX_RPATH" ]]; then
+    INSTX_RPATH="$INSTX_LIBDIR"
+fi
+
 # Solaris Fixup
 if [[ "$IS_IA32" -eq 1 ]] && [[ "$INSTX_BITNESS" -eq 64 ]]; then
     IS_X86_64=1
