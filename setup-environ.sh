@@ -192,38 +192,38 @@ if [[ -z "$INSTX_PREFIX" ]]; then
 fi
 
 # Don't override a user choice of INSTX_LIBDIR. Use relative paths so we
-# don't need hard-coded paths. Check-in at for INSTX_RPATH at
+# don't need hard-coded paths. Initial check-in at for INSTX_RPATH at
 # https://github.com/noloader/Build-Scripts/commit/e100e6dc7d8e .
 # https://blogs.oracle.com/dipol/dynamic-libraries,-rpath,-and-mac-os
 if [[ -z "$INSTX_LIBDIR" ]]
 then
     if [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_SOLARIS" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib/64"
-        INSTX_RPATH="'""\$\$ORIGIN/../lib/64""'"
+        INSTX_OPATH="'""\$\$ORIGIN/../lib/64""'"
     elif [[ "$IS_SOLARIS" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib/32"
-        INSTX_RPATH="'""\$\$ORIGIN/../lib/32""'"
+        INSTX_OPATH="'""\$\$ORIGIN/../lib/32""'"
     elif [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_DARWIN" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_RPATH="@loader_path/../lib"
+        INSTX_OPATH="@loader_path/../lib"
     elif [[ "$IS_DARWIN" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_RPATH="@loader_path/../lib"
+        INSTX_OPATH="@loader_path/../lib"
     elif [[ (-d /usr/lib) && (-d /usr/lib32) ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_RPATH="'""\$\$ORIGIN/../lib""'"
+        INSTX_OPATH="'""\$\$ORIGIN/../lib""'"
     elif [[ (-d /usr/lib) && (-d /usr/lib64) ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib64"
-        INSTX_RPATH="'""\$\$ORIGIN/../lib64""'"
+        INSTX_OPATH="'""\$\$ORIGIN/../lib64""'"
     else
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_RPATH="'""\$\$ORIGIN/../lib""'"
+        INSTX_OPATH="'""\$\$ORIGIN/../lib""'"
     fi
 fi
 
 # Use a sane default
-if [[ -z "$INSTX_RPATH" ]]; then
-    INSTX_RPATH="$INSTX_LIBDIR"
+if [[ -z "$INSTX_OPATH" ]]; then
+    INSTX_OPATH="$INSTX_LIBDIR"
 fi
 
 # Solaris Fixup
@@ -271,26 +271,26 @@ if [[ $(uname -m 2>&1 | grep -i -c -E 'aarch32|aarch64') -ne 0 ]]; then
     fi
 fi
 
-SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_RPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
-    SH_RPATH="-Wl,-rpath,$INSTX_RPATH"
+    SH_OPATH="-Wl,-rpath,$INSTX_OPATH"
 fi
 
 # AIX ld uses -R for runpath when -bsvr4
-SH_ERROR=$("$CC" -Wl,-R,$INSTX_RPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$("$CC" -Wl,-R,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
-    SH_RPATH="-Wl,-R,$INSTX_RPATH"
+    SH_OPATH="-Wl,-R,$INSTX_OPATH"
 fi
 
 SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
-    SH_OPATH="-Wl,-rpath,$INSTX_LIBDIR"
+    SH_RPATH="-Wl,-rpath,$INSTX_LIBDIR"
 fi
 
 # AIX ld uses -R for runpath when -bsvr4
 SH_ERROR=$("$CC" -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
-    SH_OPATH="-Wl,-R,$INSTX_LIBDIR"
+    SH_RPATH="-Wl,-R,$INSTX_LIBDIR"
 fi
 
 SH_ERROR=$("$CC" -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
@@ -424,12 +424,12 @@ if [[ -n "$SH_PTHREAD" ]]; then
     BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$SH_PTHREAD"
 fi
 
-if [[ -n "$SH_RPATH" ]]; then
-    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_RPATH"
-fi
-
 if [[ -n "$SH_OPATH" ]]; then
     BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_OPATH"
+fi
+
+if [[ -n "$SH_RPATH" ]]; then
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_RPATH"
 fi
 
 if [[ -n "$SH_DTAGS" ]]; then
@@ -495,7 +495,7 @@ if [[ -z "$PRINT_ONCE" ]]; then
     echo "  INSTX_BITNESS: $INSTX_BITNESS-bits"
     echo "   INSTX_PREFIX: $INSTX_PREFIX"
     echo "   INSTX_LIBDIR: $INSTX_LIBDIR"
-    echo "    INSTX_RPATH: $INSTX_RPATH"
+    echo "    INSTX_OPATH: $INSTX_OPATH"
     echo ""
     echo "PKG_CONFIG_PATH: ${BUILD_PKGCONFIG[*]}"
     echo "       CPPFLAGS: ${BUILD_CPPFLAGS[*]}"
