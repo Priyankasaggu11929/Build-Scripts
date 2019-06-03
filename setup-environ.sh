@@ -186,8 +186,9 @@ if [[ -z "$INSTX_PREFIX" ]]; then
     INSTX_PREFIX="/usr/local"
 fi
 
-# Don't override a user choice of INSTX_LIBDIR
-# Use relative paths so we don't need hard-coded paths
+# Don't override a user choice of INSTX_LIBDIR. Use relative paths so we
+# don't need hard-coded paths. Check-in at for INSTX_RPATH at
+# https://github.com/noloader/Build-Scripts/commit/e100e6dc7d8e .
 # https://blogs.oracle.com/dipol/dynamic-libraries,-rpath,-and-mac-os
 if [[ -z "$INSTX_LIBDIR" ]]
 then
