@@ -96,6 +96,13 @@ echo ""
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
+# Solaris is a tab bit stricter than libc
+if [[ "$IS_SOLARIS" -eq 1 ]]; then
+    # Don't use CPPFLAGS. _XOPEN_SOURCE will cross-pollinate into CXXFLAGS.
+    BUILD_CFLAGS+=("-D_XOPEN_SOURCE=700 -std=c99")
+    # BUILD_CXXFLAGS+=("-std=c++03")
+fi
+
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
