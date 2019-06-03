@@ -122,29 +122,10 @@ fi
 
 ###############################################################################
 
-if ! ./build-libffi.sh
-then
-    echo "Failed to build Libffi"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
 if ! ./build-p11kit.sh
 then
     echo "Failed to build P11-Kit"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if [[ "$SH_C11" -ne 0 ]]
-then
-    if ! ./build-guile.sh
-    then
-        echo "Failed to build Guile"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-    fi
 fi
 
 ###############################################################################
@@ -164,9 +145,9 @@ rm -rf "$GNUTLS_TAR" "$GNUTLS_DIR" &>/dev/null
 unxz "$GNUTLS_XZ" && tar -xf "$GNUTLS_TAR"
 cd "$GNUTLS_DIR"
 
-cp ../patch/gnutls.patch .
-patch -u -p0 < gnutls.patch
-echo ""
+#cp ../patch/gnutls.patch .
+#patch -u -p0 < gnutls.patch
+#echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -189,12 +170,15 @@ fi
     --libdir="$INSTX_LIBDIR" \
     --with-unbound-root-key-file \
     --enable-seccomp-tests \
+    --disable-guile \
     --disable-openssl-compatibility \
     --disable-ssl2-support \
     --disable-ssl3-support \
-    --disable-gtk-doc --disable-gtk-doc-html \
+    --disable-gtk-doc \
+    --disable-gtk-doc-html \
     --disable-gtk-doc-pdf \
-    --with-p11-kit --with-tpm --with-libregex \
+    --with-p11-kit --with-tpm \
+    --with-libregex \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX" \
     --with-libseccomp-prefix="$INSTX_PREFIX"
