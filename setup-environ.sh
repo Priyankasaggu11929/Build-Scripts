@@ -220,6 +220,9 @@ if [[ -z "$INSTX_RPATH" ]]; then
     INSTX_RPATH="$INSTX_LIBDIR"
 fi
 
+# Force to INSTX_LIBDIR for the moment
+INSTX_RPATH="$INSTX_LIBDIR"
+
 # Solaris Fixup
 if [[ "$IS_IA32" -eq 1 ]] && [[ "$INSTX_BITNESS" -eq 64 ]]; then
     IS_X86_64=1
@@ -265,7 +268,6 @@ if [[ $(uname -m 2>&1 | grep -i -c -E 'aarch32|aarch64') -ne 0 ]]; then
     fi
 fi
 
-if false; then
 SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_RPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-rpath,$INSTX_RPATH"
@@ -275,18 +277,6 @@ fi
 SH_ERROR=$("$CC" -Wl,-R,$INSTX_RPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-R,$INSTX_RPATH"
-fi
-fi
-
-SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$SH_ERROR" -eq 0 ]]; then
-    SH_RPATH="-Wl,-rpath,$INSTX_LIBDIR"
-fi
-
-# AIX ld uses -R for runpath when -bsvr4
-SH_ERROR=$("$CC" -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$SH_ERROR" -eq 0 ]]; then
-    SH_RPATH="-Wl,-R,$INSTX_LIBDIR"
 fi
 
 SH_ERROR=$("$CC" -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
