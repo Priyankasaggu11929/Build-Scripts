@@ -6,8 +6,8 @@
 # Bzip lost its website. This build of Bzip is based on the last known
 # release bzip-1.0.6. Also see https://github.com/noloader/bzip2-noloader.
 
-BZIP2_TAR=BZIP2_1_0_6_1.tar.gz
-BZIP2_DIR=BZIP2_1_0_6_1
+BZIP2_TAR=BZIP2_1_0_6_2.tar.gz
+BZIP2_DIR=BZIP2_1_0_6_2
 PKG_NAME=bzip2
 
 ###############################################################################
@@ -71,10 +71,6 @@ gzip -d < "$BZIP2_TAR" | tar xf -
 mv "bzip2-noloader-${BZIP2_DIR}" "${BZIP2_DIR}"
 cd "$BZIP2_DIR"
 
-cp ../patch/bzip2.patch .
-patch -u -p0 < bzip2.patch
-echo ""
-
 # Fix format specifier.
 # TODO: fix this in the source code.
 if [[ "$IS_64BIT" -ne 0 ]]; then
@@ -89,6 +85,13 @@ echo "Building package"
 echo "**********************"
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
+if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." "$MAKE" "${MAKE_FLAGS[@]}"
+then
+    echo "Failed to build Bzip"
+    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+fi
+
+MAKE_FLAGS=("-f" "Makefile-libbz2_so" "-j" "$INSTX_JOBS")
 if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bzip"
@@ -118,10 +121,15 @@ echo "**********************"
 echo "Installing package"
 echo "**********************"
 
-MAKE_FLAGS=(install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
 if [[ -n "$SUDO_PASSWORD" ]]; then
+    MAKE_FLAGS=(install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
+    echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
+    MAKE_FLAGS=("-f" "Makefile-libbz2_so" install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
+    MAKE_FLAGS=(install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
+    "$MAKE" "${MAKE_FLAGS[@]}"
+    MAKE_FLAGS=("-f" "Makefile-libbz2_so" install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
     "$MAKE" "${MAKE_FLAGS[@]}"
 fi
 
