@@ -6,6 +6,11 @@
 
 ###############################################################################
 
+# SC2034: XXX appears unused. Verify use (or export if used externally).
+# shellcheck disable=SC2034
+
+###############################################################################
+
 # Can't apply the fixup reliably. Ancient Bash causes build scripts
 # to die after setting the environment. TODO... figure it out.
 
@@ -194,10 +199,10 @@ if [[ -z "$INSTX_LIBDIR" ]]
 then
     if [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_SOLARIS" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib/64"
-        INSTX_RPATH="\$ORIGIN/../lib/64"
+        INSTX_RPATH="'""\$\$ORIGIN/../lib/64""'"
     elif [[ "$IS_SOLARIS" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib/32"
-        INSTX_RPATH="\$ORIGIN/../lib/32"
+        INSTX_RPATH="'""\$\$ORIGIN/../lib/32""'"
     elif [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_DARWIN" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
         INSTX_RPATH="@loader_path/../lib"
@@ -206,22 +211,20 @@ then
         INSTX_RPATH="@loader_path/../lib"
     elif [[ (-d /usr/lib) && (-d /usr/lib32) ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_RPATH="\$ORIGIN/../lib"
+        INSTX_RPATH="'""\$\$ORIGIN/../lib""'"
     elif [[ (-d /usr/lib) && (-d /usr/lib64) ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib64"
-        INSTX_RPATH="\$ORIGIN/../lib64"
+        INSTX_RPATH="'""\$\$ORIGIN/../lib64""'"
     else
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_RPATH="\$ORIGIN/../lib"
+        INSTX_RPATH="'""\$\$ORIGIN/../lib""'"
     fi
 fi
 
+# Use a sane default
 if [[ -z "$INSTX_RPATH" ]]; then
     INSTX_RPATH="$INSTX_LIBDIR"
 fi
-
-# Force to INSTX_LIBDIR for the moment
-INSTX_RPATH="$INSTX_LIBDIR"
 
 # Solaris Fixup
 if [[ "$IS_IA32" -eq 1 ]] && [[ "$INSTX_BITNESS" -eq 64 ]]; then
@@ -277,6 +280,17 @@ fi
 SH_ERROR=$("$CC" -Wl,-R,$INSTX_RPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-R,$INSTX_RPATH"
+fi
+
+SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$SH_ERROR" -eq 0 ]]; then
+    SH_OPATH="-Wl,-rpath,$INSTX_LIBDIR"
+fi
+
+# AIX ld uses -R for runpath when -bsvr4
+SH_ERROR=$("$CC" -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$SH_ERROR" -eq 0 ]]; then
+    SH_OPATH="-Wl,-R,$INSTX_LIBDIR"
 fi
 
 SH_ERROR=$("$CC" -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
@@ -412,6 +426,10 @@ fi
 
 if [[ -n "$SH_RPATH" ]]; then
     BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_RPATH"
+fi
+
+if [[ -n "$SH_OPATH" ]]; then
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$SH_OPATH"
 fi
 
 if [[ -n "$SH_DTAGS" ]]; then
