@@ -197,12 +197,16 @@ fi
 # https://blogs.oracle.com/dipol/dynamic-libraries,-rpath,-and-mac-os
 if [[ -z "$INSTX_LIBDIR" ]]
 then
-    if [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_SOLARIS" -ne 0 ]]; then
-        INSTX_LIBDIR="$INSTX_PREFIX/lib/64"
-        INSTX_OPATH="'""\$\$ORIGIN/../lib/64""'"
-    elif [[ "$IS_SOLARIS" -ne 0 ]]; then
-        INSTX_LIBDIR="$INSTX_PREFIX/lib/32"
-        INSTX_OPATH="'""\$\$ORIGIN/../lib/32""'"
+    #if [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_SOLARIS" -ne 0 ]]; then
+    #    INSTX_LIBDIR="$INSTX_PREFIX/lib/64"
+    #    INSTX_OPATH="'""\$\$ORIGIN/../lib/64""'"
+    #elif [[ "$IS_SOLARIS" -ne 0 ]]; then
+    #    INSTX_LIBDIR="$INSTX_PREFIX/lib/32"
+    #    INSTX_OPATH="'""\$\$ORIGIN/../lib/32""'"
+
+    if [[ "$IS_SOLARIS" -ne 0 ]]; then
+        INSTX_LIBDIR="$INSTX_PREFIX/lib"
+        INSTX_OPATH="'""\$\$ORIGIN/../lib""'"
     elif [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_DARWIN" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
         INSTX_OPATH="@loader_path/../lib"
