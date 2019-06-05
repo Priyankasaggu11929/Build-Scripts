@@ -275,36 +275,35 @@ if [[ $(uname -m 2>&1 | grep -i -c -E 'aarch32|aarch64') -ne 0 ]]; then
     fi
 fi
 
+# See if -Wl,-rpath,$ORIGIN/../lib works
 SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_OPATH="-Wl,-rpath,$INSTX_OPATH"
 fi
-
-# AIX ld uses -R for runpath when -bsvr4
 SH_ERROR=$("$CC" -Wl,-R,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_OPATH="-Wl,-R,$INSTX_OPATH"
 fi
 
+# See if -Wl,-rpath,/usr/loca/lib works
 SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-rpath,$INSTX_LIBDIR"
 fi
-
-# AIX ld uses -R for runpath when -bsvr4
 SH_ERROR=$("$CC" -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-R,$INSTX_LIBDIR"
 fi
 
-SH_ERROR=$("$CC" -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
-if [[ "$SH_ERROR" -eq 0 ]]; then
-    SH_OPENMP="-fopenmp"
-fi
-
+# See if RUNPATHs are available
 SH_ERROR=$("$CC" -Wl,--enable-new-dtags -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_DTAGS="-Wl,--enable-new-dtags"
+fi
+
+SH_ERROR=$("$CC" -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+if [[ "$SH_ERROR" -eq 0 ]]; then
+    SH_OPENMP="-fopenmp"
 fi
 
 SH_ERROR=$("$CC" -Wl,--no-as-needed -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)

@@ -6,8 +6,8 @@
 # Bzip lost its website. This build of Bzip is based on the last known
 # release bzip-1.0.6. Also see https://github.com/noloader/bzip2-noloader.
 
-BZIP2_TAR=BZIP2_1_0_6_3.tar.gz
-BZIP2_DIR=BZIP2_1_0_6_3
+BZIP2_TAR=BZIP2_1_0_6_4.tar.gz
+BZIP2_DIR=BZIP2_1_0_6_4
 PKG_NAME=bzip2
 
 ###############################################################################
@@ -85,14 +85,16 @@ echo "Building package"
 echo "**********************"
 
 MAKE_FLAGS=("-j" "$INSTX_JOBS")
-if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." "$MAKE" "${MAKE_FLAGS[@]}"
+if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." \
+     LDFLAGS="${BUILD_LDFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bzip"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 MAKE_FLAGS=("-f" "Makefile-libbz2_so" "-j" "$INSTX_JOBS")
-if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." "$MAKE" "${MAKE_FLAGS[@]}"
+if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." \
+     LDFLAGS="${BUILD_LDFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bzip"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
@@ -103,7 +105,8 @@ echo "Testing package"
 echo "**********************"
 
 MAKE_FLAGS=("check")
-if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." "$MAKE" "${MAKE_FLAGS[@]}"
+if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." \
+     LDFLAGS="${BUILD_LDFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bzip"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
