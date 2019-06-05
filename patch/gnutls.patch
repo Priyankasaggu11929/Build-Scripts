@@ -1,13 +1,31 @@
 --- tests/slow/cipher-api-test.c
 +++ tests/slow/cipher-api-test.c
-@@ -137,9 +137,15 @@
+@@ -84,10 +84,17 @@
+ 	if (ret < 0)
+ 		fail("gnutls_cipher_init failed\n"); /*errcode 1 */
+ 
++#if defined(OPENSSL_VERSION_NUMBER)
++        /* try encrypting in a way that violates nettle's block conventions */
++        ret = gnutls_cipher_encrypt(ch, data, sizeof(data)-1);
++        if (ret < 0)
++                fail("failed in encrypting partial data on block cipher\n");
++#else
+ 	/* try encrypting in a way that violates nettle's block conventions */
+ 	ret = gnutls_cipher_encrypt(ch, data, sizeof(data)-1);
+ 	if (ret >= 0)
+ 		fail("succeeded in encrypting partial data on block cipher\n");
++#endif
+ 
+ 	gnutls_cipher_deinit(ch);
+ 
+@@ -137,9 +144,15 @@
  	if (ret < 0)
  		fail("could not add auth data\n");
  
 +#if defined(OPENSSL_VERSION_NUMBER)
-+	ret = gnutls_cipher_add_auth(ch, data, 16);
-+	if (ret < 0)
-+		fail("failed in adding auth data after partial data were given\n");
++        ret = gnutls_cipher_add_auth(ch, data, 16);
++        if (ret < 0)
++                fail("failed in adding auth data after partial data were given\n");
 +#else
  	ret = gnutls_cipher_add_auth(ch, data, 16);
  	if (ret >= 0)
@@ -17,14 +35,14 @@
  
  	gnutls_cipher_deinit(ch);
  
-@@ -188,9 +194,15 @@
+@@ -188,9 +201,15 @@
  	if (ret < 0)
  		fail("could not encrypt data\n");
  
 +#if defined(OPENSSL_VERSION_NUMBER)
 +	ret = gnutls_cipher_encrypt(ch, data, sizeof(data));
-+	if (ret < 0)
-+		fail("failed in encrypting partial data after partial data were given\n");
++        if (ret < 0)
++                fail("failed in encrypting partial data after partial data were given\n");
 +#else
  	ret = gnutls_cipher_encrypt(ch, data, sizeof(data));
  	if (ret >= 0)
