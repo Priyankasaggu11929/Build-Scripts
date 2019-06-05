@@ -6,8 +6,8 @@
 # Bzip lost its website. This build of Bzip is based on the last known
 # release bzip-1.0.6. Also see https://github.com/noloader/bzip2-noloader.
 
-BZIP2_TAR=BZIP2_1_0_6_4.tar.gz
-BZIP2_DIR=BZIP2_1_0_6_4
+BZIP2_TAR=BZIP2_1_0_6_5.tar.gz
+BZIP2_DIR=BZIP2_1_0_6_5
 PKG_NAME=bzip2
 
 ###############################################################################
