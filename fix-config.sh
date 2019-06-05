@@ -33,10 +33,17 @@ do
 done
 
 echo "patching config.sub..."
-
-find "$PWD" -name config.sub -exec bash -c 'cp ../patch/config.sub "$1"' _ {} \;
+if [[ -e ../../patch/config.sub ]]; then
+    find "$PWD" -name config.sub -exec bash -c 'cp ../../patch/config.sub "$1"' _ {} \;
+else
+    find "$PWD" -name config.sub -exec bash -c 'cp ../patch/config.sub "$1"' _ {} \;
+fi
 
 echo "patching config.guess..."
+if [[ -e ../../patch/config.guess ]]; then
+    find "$PWD" -name config.guess -exec bash -c 'cp ../../patch/config.guess "$1"' _ {} \;
+else
+    find "$PWD" -name config.guess -exec bash -c 'cp ../patch/config.guess "$1"' _ {} \;
+fi
 
-find "$PWD" -name config.guess -exec bash -c 'cp ../patch/config.guess "$1"' _ {} \;
 echo ""
