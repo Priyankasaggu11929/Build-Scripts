@@ -71,7 +71,7 @@ echo "**********************"
 echo "Building package"
 echo "**********************"
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1" "prefix=$INSTX_PREFIX" "libdir=$INSTX_LIBDIR")
+MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]}" LDFLAGS="${BUILD_LDFLAGS[*]}" \
      "$MAKE" "${MAKE_FLAGS[@]}"
 then
@@ -102,7 +102,7 @@ echo "**********************"
 echo "Installing package"
 echo "**********************"
 
-MAKE_FLAGS=("install")
+MAKE_FLAGS=("install" "prefix=$INSTX_PREFIX" "libdir=$INSTX_LIBDIR")
 if [[ -n "$SUDO_PASSWORD" ]]; then
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
@@ -123,7 +123,7 @@ echo "**************************************************************************
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$DATEFUDGE_TAR" "$DATEFUDGE_DIR")
+    ARTIFACTS=("$DATEFUDGE_XZ" "$DATEFUDGE_TAR" "$DATEFUDGE_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
