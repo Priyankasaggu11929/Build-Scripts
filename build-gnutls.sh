@@ -145,10 +145,9 @@ rm -rf "$GNUTLS_TAR" "$GNUTLS_DIR" &>/dev/null
 unxz "$GNUTLS_XZ" && tar -xf "$GNUTLS_TAR"
 cd "$GNUTLS_DIR"
 
-# No need for patch since removing Guile
-#cp ../patch/gnutls.patch .
-#patch -u -p0 < gnutls.patch
-#echo ""
+cp ../patch/gnutls.patch .
+patch -u -p0 < gnutls.patch
+echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
