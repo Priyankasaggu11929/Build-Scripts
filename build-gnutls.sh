@@ -66,22 +66,6 @@ fi
 
 ###############################################################################
 
-if ! ./build-gmp.sh
-then
-    echo "Failed to build GMP"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
-if ! ./build-nettle.sh
-then
-    echo "Failed to build Nettle"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
-fi
-
-###############################################################################
-
 if ! ./build-ncurses.sh
 then
     echo "Failed to build ncurses"
