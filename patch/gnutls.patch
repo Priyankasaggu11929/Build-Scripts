@@ -1,11 +1,10 @@
 --- tests/slow/cipher-api-test.c
 +++ tests/slow/cipher-api-test.c
-@@ -84,10 +84,17 @@
+@@ -84,10 +84,16 @@
  	if (ret < 0)
  		fail("gnutls_cipher_init failed\n"); /*errcode 1 */
  
 +#if defined(OPENSSL_VERSION_NUMBER)
-+	/* try encrypting in a way that violates nettle's block conventions */
 +	ret = gnutls_cipher_encrypt(ch, data, sizeof(data)-1);
 +	if (ret < 0)
 +		fail("failed in encrypting partial data on block cipher\n");
