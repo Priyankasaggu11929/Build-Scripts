@@ -125,14 +125,14 @@ echo "Installing package"
 echo "**********************"
 
 if [[ -n "$SUDO_PASSWORD" ]]; then
-    MAKE_FLAGS=(install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
+    MAKE_FLAGS=(install "BINDIR=$INSTX_PREFIX/bin" "LIBDIR=$INSTX_LIBDIR")
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
-    MAKE_FLAGS=("-f" "Makefile-libbz2_so" install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
+    MAKE_FLAGS=("-f" "Makefile-libbz2_so" install "BINDIR=$INSTX_PREFIX/bin" "LIBDIR=$INSTX_LIBDIR")
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
-    MAKE_FLAGS=(install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
+    MAKE_FLAGS=(install "BINDIR=$INSTX_PREFIX/bin" "LIBDIR=$INSTX_LIBDIR")
     "$MAKE" "${MAKE_FLAGS[@]}"
-    MAKE_FLAGS=("-f" "Makefile-libbz2_so" install "PREFIX=$INSTX_PREFIX" "LIBDIR=$INSTX_LIBDIR")
+    MAKE_FLAGS=("-f" "Makefile-libbz2_so" install "BINDIR=$INSTX_PREFIX/bin" "LIBDIR=$INSTX_LIBDIR")
     "$MAKE" "${MAKE_FLAGS[@]}"
 fi
 
