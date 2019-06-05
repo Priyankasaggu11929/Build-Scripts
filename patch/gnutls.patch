@@ -31,3 +31,19 @@
  
  	gnutls_cipher_deinit(ch);
  
+@@ -188,9 +194,15 @@
+ 	if (ret < 0)
+ 		fail("could not encrypt data\n");
+ 
++#if defined(OPENSSL_VERSION_NUMBER)
++	ret = gnutls_cipher_encrypt(ch, data, sizeof(data));
++        if (ret < 0)
++                fail("failed in encrypting partial data after partial data were given\n");
++#else
+ 	ret = gnutls_cipher_encrypt(ch, data, sizeof(data));
+ 	if (ret >= 0)
+ 		fail("succeeded in encrypting partial data after partial data were given\n");
++#endif
+ 
+ 	gnutls_cipher_deinit(ch);
+ 
