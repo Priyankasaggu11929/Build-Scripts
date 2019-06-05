@@ -5,10 +5,10 @@
  		fail("gnutls_cipher_init failed\n"); /*errcode 1 */
  
 +#if defined(OPENSSL_VERSION_NUMBER)
-+        /* try encrypting in a way that violates nettle's block conventions */
-+        ret = gnutls_cipher_encrypt(ch, data, sizeof(data)-1);
-+        if (ret < 0)
-+                fail("failed in encrypting partial data on block cipher\n");
++	/* try encrypting in a way that violates nettle's block conventions */
++	ret = gnutls_cipher_encrypt(ch, data, sizeof(data)-1);
++	if (ret < 0)
++		fail("failed in encrypting partial data on block cipher\n");
 +#else
  	/* try encrypting in a way that violates nettle's block conventions */
  	ret = gnutls_cipher_encrypt(ch, data, sizeof(data)-1);
