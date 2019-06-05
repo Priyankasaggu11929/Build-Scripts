@@ -110,16 +110,13 @@ fi
 echo "Patching Makefiles..."
 for file in $(find . -iname '*Makefile*')
 do
-    # Fix the twisted library paths used by OpenSSL
-    sed 's|$(INSTALL_PREFIX)$(INSTALLTOP)/$(LIBDIR)|$(LIBDIR)|g' "$file" > "$file.fixed"
+    sed 's|$(INSTALL_PREFIX)||g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+    sed 's|$(INSTALLTOP)/$(LIBDIR)|$(LIBDIR)|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
     sed 's|libdir=$${exec_prefix}/$(LIBDIR)|libdir=$(LIBDIR)|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
-    # Fix the hard-coded calls to 'make' instead of '$(MAKE)'
-    sed 's|^\bmake|$(MAKE)|g' "$file" > "$file.fixed"
-    mv "$file.fixed" "$file"
-    sed 's|^\bgmake|$(MAKE)|g' "$file" > "$file.fixed"
-    mv "$file.fixed" "$file"
+
     touch -t 197001010000 "$file"
 done
 
