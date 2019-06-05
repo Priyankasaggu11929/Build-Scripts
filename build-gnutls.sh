@@ -159,10 +159,8 @@ fi
 ./configure --enable-shared \
     --prefix="$INSTX_PREFIX" \
     --libdir="$INSTX_LIBDIR" \
-    --with-unbound-root-key-file \
     --enable-seccomp-tests \
     --disable-guile \
-    --disable-openssl-compatibility \
     --disable-ssl2-support \
     --disable-ssl3-support \
     --disable-gtk-doc \
@@ -172,7 +170,9 @@ fi
     --with-libregex \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX" \
-    --with-libseccomp-prefix="$INSTX_PREFIX"
+    --with-libseccomp-prefix="$INSTX_PREFIX" \
+    --with-libcrypto-prefix="$INSTX_PREFIX" \
+    --with-unbound-root-key-file="$SH_UNBOUND_ROOTKEY_FILE"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure GnuTLS"
