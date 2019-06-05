@@ -166,7 +166,7 @@ fi
     --disable-gtk-doc \
     --disable-gtk-doc-html \
     --disable-gtk-doc-pdf \
-    --with-p11-kit --with-tpm \
+    --with-p11-kit \
     --with-libregex \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX" \
