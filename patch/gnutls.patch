@@ -17,7 +17,7 @@
  
  	gnutls_cipher_deinit(ch);
  
-@@ -137,9 +144,15 @@
+@@ -137,9 +143,15 @@
  	if (ret < 0)
  		fail("could not add auth data\n");
  
@@ -34,7 +34,7 @@
  
  	gnutls_cipher_deinit(ch);
  
-@@ -188,9 +201,15 @@
+@@ -188,9 +200,15 @@
  	if (ret < 0)
  		fail("could not encrypt data\n");
  
@@ -50,3 +50,13 @@
  
  	gnutls_cipher_deinit(ch);
  
+@@ -269,7 +287,9 @@
+ 	start("aes256-gcm", GNUTLS_CIPHER_AES_256_GCM, 1);
+ 	start("aes128-cbc", GNUTLS_CIPHER_AES_128_CBC, 0);
+ 	start("aes256-cbc", GNUTLS_CIPHER_AES_256_CBC, 0);
++#ifdef ENABLE_SSL3
+ 	start("3des-cbc", GNUTLS_CIPHER_3DES_CBC, 0);
++#endif
+ 	if (!gnutls_fips140_mode_enabled()) {
+ 		start("camellia128-gcm", GNUTLS_CIPHER_CAMELLIA_128_GCM, 1);
+ 		start("camellia256-gcm", GNUTLS_CIPHER_CAMELLIA_256_GCM, 1);

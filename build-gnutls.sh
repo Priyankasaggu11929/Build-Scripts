@@ -137,6 +137,8 @@ rm -rf "$GNUTLS_TAR" "$GNUTLS_DIR" &>/dev/null
 unxz "$GNUTLS_XZ" && tar -xf "$GNUTLS_TAR"
 cd "$GNUTLS_DIR"
 
+cp tests/slow/cipher-api-test.c tests/slow/cipher-api-test.c.orig
+
 cp ../patch/gnutls.patch .
 patch -u -p0 < gnutls.patch
 echo ""
