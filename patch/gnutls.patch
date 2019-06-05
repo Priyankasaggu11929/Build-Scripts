@@ -12,3 +12,22 @@
 
        save_CFLAGS="$CFLAGS"
        save_LIBS="$LIBS"
+--- tests/slow/cipher-api-test.c
++++ tests/slow/cipher-api-test.c
+@@ -137,9 +137,15 @@
+ 	if (ret < 0)
+ 		fail("could not add auth data\n");
+ 
++#if defined(OPENSSL_VERSION_NUMBER)
++        ret = gnutls_cipher_add_auth(ch, data, 16);
++        if (ret < 0)
++                fail("failed in adding auth data after partial data were given\n");
++#else
+ 	ret = gnutls_cipher_add_auth(ch, data, 16);
+ 	if (ret >= 0)
+-		fail("succeeded in adding auth data data after partial data were given\n");
++		fail("succeeded in adding auth data after partial data were given\n");
++#endif
+ 
+ 	gnutls_cipher_deinit(ch);
+ 
