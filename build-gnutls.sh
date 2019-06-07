@@ -98,9 +98,9 @@ fi
 
 ###############################################################################
 
-if ! ./build-openssl.sh
+if ! ./build-nettle.sh
 then
-    echo "Failed to build OpenSSL"
+    echo "Failed to build Nettle"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -137,11 +137,9 @@ rm -rf "$GNUTLS_TAR" "$GNUTLS_DIR" &>/dev/null
 unxz "$GNUTLS_XZ" && tar -xf "$GNUTLS_TAR"
 cd "$GNUTLS_DIR"
 
-cp tests/slow/cipher-api-test.c tests/slow/cipher-api-test.c.orig
-
-cp ../patch/gnutls.patch .
-patch -u -p0 < gnutls.patch
-echo ""
+#cp ../patch/gnutls.patch .
+#patch -u -p0 < gnutls.patch
+#echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -170,10 +168,10 @@ fi
     --disable-gtk-doc-pdf \
     --with-p11-kit \
     --with-libregex \
+    --with-nettle-prefix="$INSTX_PREFIX" \
     --with-libiconv-prefix="$INSTX_PREFIX" \
     --with-libintl-prefix="$INSTX_PREFIX" \
     --with-libseccomp-prefix="$INSTX_PREFIX" \
-    --with-libcrypto-prefix="$INSTX_PREFIX" \
     --with-unbound-root-key-file="$SH_UNBOUND_ROOTKEY_FILE"
 
 if [[ "$?" -ne 0 ]]; then
