@@ -9,7 +9,7 @@
 #
 #    sudo ./clean-build-scripts.sh
 
-rm -rf ~/.cacerts
+rm -rf ~/.cacert
 rm -rf ~/.build-scripts
 rm -rf ~/bootstrap
 rm -rf ~/usr/local
