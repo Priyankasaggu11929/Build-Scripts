@@ -9,7 +9,12 @@
 #
 #    sudo ./clean-build-scripts.sh
 
-rm -rf ~/.cacert
-rm -rf ~/.build-scripts
-rm -rf ~/bootstrap
-rm -rf ~/usr/local
+rm -rf "$HOME/.cacert"
+rm -rf "$HOME/.build-scripts"
+rm -rf "$HOME/bootstrap"
+
+if [[ -n "$INSTX_PREFIX" ]]; then
+    rm -rf "$INSTX_PREFIX"
+elif [[ "$EUID" -ne 0 ]]; then
+    rm -rf ~/usr/local
+fi
