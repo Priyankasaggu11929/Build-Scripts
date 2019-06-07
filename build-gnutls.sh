@@ -185,9 +185,11 @@ do
     # does not provide option for separate CFLAGS or CXXFLAGS.
     # Makefile does not honor CFLAGS or CXXFLAGS on command line.
     echo "Patching $file"
+    cp -p "$file" "$file.fixed"
     sed -e 's| -DNDEBUG||g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 
+    cp -p "$file" "$file.fixed"
     sed -e 's|$(cipher_openssl_compat_LDADD) $(LIBS)|$(cipher_openssl_compat_LDADD) $(LIBS) -lcrypto|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
@@ -196,8 +198,10 @@ echo "Patching Makefiles"
 for file in $(find "$PWD" -iname 'Makefile')
 do
     # Make console output more readable...
+    cp -p "$file" "$file.fixed"
     sed -e 's|-Wtype-limits .*|-fno-common -Wall |g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
+    cp -p "$file" "$file.fixed"
     sed -e 's|-fno-common .*|-fno-common -Wall |g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
@@ -206,9 +210,20 @@ echo "Patching La files"
 for file in $(find "$PWD" -iname '*.la')
 do
     # Make console output more readable...
+    cp -p "$file" "$file.fixed"
     sed -e 's|-Wtype-limits .*|-fno-common -Wall |g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
+    cp -p "$file" "$file.fixed"
     sed -e 's|-fno-common .*|-fno-common -Wall |g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+done
+
+echo "Patching Shell Scripts"
+for file in $(find "$PWD" -name '*.sh')
+do
+    # Fix shell
+    cp -p "$file" "$file.fixed"
+    sed -e 's|#!/bin/sh|#!/usr/bin/env bash|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
 
