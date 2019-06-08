@@ -227,6 +227,16 @@ do
     mv "$file.fixed" "$file"
 done
 
+echo "Patching common,sh"
+if [[ "$IS_SOLARIS" -ne 0 ]]
+then
+    # Fix shell script
+    file=tests/scripts/common.sh
+    cp -p "$file" "$file.fixed"
+    sed -e 's|PFCMD -anl|PFCMD -an|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+fi
+
 echo "**********************"
 echo "Building package"
 echo "**********************"
