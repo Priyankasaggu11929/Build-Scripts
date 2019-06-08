@@ -22,8 +22,8 @@ for file in $(find "$PWD" -iname 'configure')
 do
     cp -p "$file" "$file.fixed"
     sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' "$file" > "$file.fixed"
-    chmod +w "$file" && mv "$file.fixed" "$file"
-    chmod +x "$file"
+    chmod +w "$file" && mv "$file.fixed" "$file" && chmod +x "$file"
+    touch -t 197001010000 "$file"
 done
 
 for file in $(find "$PWD" -iname 'configure.ac')
@@ -31,6 +31,7 @@ do
     cp -p "$file" "$file.fixed"
     sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' "$file" > "$file.fixed"
     chmod +w "$file" && mv "$file.fixed" "$file"
+    touch -t 197001010000 "$file"
 done
 
 echo "patching config.sub..."
