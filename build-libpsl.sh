@@ -99,7 +99,7 @@ echo ""
 # Solaris is a tab bit stricter than libc
 if [[ "$IS_SOLARIS" -eq 1 ]]; then
     # Don't use CPPFLAGS. _XOPEN_SOURCE will cross-pollinate into CXXFLAGS.
-    BUILD_CFLAGS+=("-D_XOPEN_SOURCE=700 -std=c99")
+    BUILD_CFLAGS+=("-D_XOPEN_SOURCE=600 -std=gnu99")
     # BUILD_CXXFLAGS+=("-std=c++03")
 fi
 
