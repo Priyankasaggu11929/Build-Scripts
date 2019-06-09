@@ -15,7 +15,9 @@ rm -rf "$HOME/bootstrap"
 
 if [[ -n "$INSTX_PREFIX" ]]; then
     rm -rf "$INSTX_PREFIX"
-elif [[ "$EUID" -eq 0 ]]; then
+fi
+
+if [[ "$EUID" -eq 0 ]]; then
     rm -rf ~/usr/local
 fi
 
