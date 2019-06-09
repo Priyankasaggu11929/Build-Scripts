@@ -157,7 +157,7 @@ then
 	echo ""
 	echo "If you have existing libpsl libraries at $LIBDIR"
 	echo "then you should manually delete them and run this script again."
-	[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	# [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
 echo "Searching for errors hidden in log files"
