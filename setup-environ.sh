@@ -169,13 +169,27 @@ if [[ -z "$CXX" ]] && [[ -n "$(command -v CC)" ]]; then export CXX='CC'; fi
 
 IS_GCC=$("$CC" --version 2>&1 | grep -i -c -E 'gcc')
 IS_CLANG=$("$CC" --version 2>&1 | grep -i -c -E 'clang|llvm')
+TEST_CC="$CC"
+
+###############################################################################
+
+# Use 64-bit for Solaris if available
+# https://docs.oracle.com/cd/E37838_01/html/E66175/features-1.html
+
+if [[ "$IS_SOLARIS" -ne 0 ]] && [[ -n $(command -v isainfo) ]]
+then
+    if [[ $(isainfo -b 2>/dev/null) = 64 ]]; then
+        CFLAGS64=-m64
+        TEST_CC="$TEST_CC -m64"
+    fi
+fi
 
 ###############################################################################
 
 # Try to determine 32 vs 64-bit, /usr/local/lib, /usr/local/lib32,
 # /usr/local/lib64 and /usr/local/lib/64. We drive a test compile
 # using the supplied compiler and flags.
-if "$CC" $CFLAGS bootstrap/bitness.c -o /dev/null &>/dev/null
+if $TEST_CC $CFLAGS bootstrap/bitness.c -o /dev/null &>/dev/null
 then
     IS_64BIT=1
     IS_32BIT=0
@@ -237,93 +251,93 @@ fi
 
 ###############################################################################
 
-SH_ERROR=$("$CC" -fPIC -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -fPIC -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_PIC="-fPIC"
 fi
 
 # For the benefit of the programs and libraries. Make them run faster.
-SH_ERROR=$("$CC" -march=native -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -march=native -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_NATIVE="-march=native"
 fi
 
-SH_ERROR=$("$CC" -pthread -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -pthread -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_PTHREAD="-pthread"
 fi
 
 # Switch from -march=native to something more appropriate
 if [[ $(grep -i -c -E 'armv7' /proc/cpuinfo 2>/dev/null) -ne 0 ]]; then
-    SH_ERROR=$("$CC" -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    SH_ERROR=$($TEST_CC -march=armv7-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_ARMV7="-march=armv7-a"
     fi
 fi
 # See if we can upgrade to ARMv7+NEON
 if [[ $(grep -i -c -E 'neon' /proc/cpuinfo 2>/dev/null) -ne 0 ]]; then
-    SH_ERROR=$("$CC" -march=armv7-a -mfpu=neon -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    SH_ERROR=$($TEST_CC -march=armv7-a -mfpu=neon -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_ARMV7="-march=armv7-a -mfpu=neon"
     fi
 fi
 # See if we can upgrade to ARMv8
 if [[ $(uname -m 2>&1 | grep -i -c -E 'aarch32|aarch64') -ne 0 ]]; then
-    SH_ERROR=$("$CC" -march=armv8-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    SH_ERROR=$($TEST_CC -march=armv8-a -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_ARMV8="-march=armv8-a"
     fi
 fi
 
 # See if -Wl,-rpath,$ORIGIN/../lib works
-SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -Wl,-rpath,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_OPATH="-Wl,-rpath,$INSTX_OPATH"
 fi
-SH_ERROR=$("$CC" -Wl,-R,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -Wl,-R,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_OPATH="-Wl,-R,$INSTX_OPATH"
 fi
 
 # See if -Wl,-rpath,/usr/loca/lib works
-SH_ERROR=$("$CC" -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -Wl,-rpath,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-rpath,$INSTX_LIBDIR"
 fi
-SH_ERROR=$("$CC" -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -Wl,-R,$INSTX_LIBDIR -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_RPATH="-Wl,-R,$INSTX_LIBDIR"
 fi
 
 # See if RUNPATHs are available
-SH_ERROR=$("$CC" -Wl,--enable-new-dtags -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -Wl,--enable-new-dtags -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_DTAGS="-Wl,--enable-new-dtags"
 fi
 
-SH_ERROR=$("$CC" -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -fopenmp -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_OPENMP="-fopenmp"
 fi
 
-SH_ERROR=$("$CC" -Wl,--no-as-needed -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -Wl,--no-as-needed -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_NO_AS_NEEDED="-Wl,--no-as-needed"
 fi
 
 # OS X linker and install names
-SH_ERROR=$("$CC" -headerpad_max_install_names -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -headerpad_max_install_names -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_INSTNAME="-headerpad_max_install_names"
 fi
 
 # Debug symbols
 if [[ -z "$SH_SYM" ]]; then
-    SH_ERROR=$("$CC" -g2 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    SH_ERROR=$($TEST_CC -g2 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_SYM="-g2"
     else
-        SH_ERROR=$("$CC" -g -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+        SH_ERROR=$($TEST_CC -g -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
         if [[ "$SH_ERROR" -eq 0 ]]; then
             SH_SYM="-g"
         fi
@@ -332,11 +346,11 @@ fi
 
 # Optimizations symbols
 if [[ -z "$SH_OPT" ]]; then
-    SH_ERROR=$("$CC" -O2 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    SH_ERROR=$($TEST_CC -O2 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_OPT="-O2"
     else
-        SH_ERROR=$("$CC" -O -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+        SH_ERROR=$($TEST_CC -O -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
         if [[ "$SH_ERROR" -eq 0 ]]; then
             SH_OPT="-O"
         fi
@@ -345,25 +359,25 @@ fi
 
 # OpenBSD does not have -ldl
 if [[ -z "$SH_DL" ]]; then
-    SH_ERROR=$("$CC" -o "$outfile" "$infile" -ldl 2>&1 | tr ' ' '\n' | wc -l)
+    SH_ERROR=$($TEST_CC -o "$outfile" "$infile" -ldl 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_DL="-ldl"
     fi
 fi
 
 if [[ -z "$SH_LIBPTHREAD" ]]; then
-    SH_ERROR=$("$CC" -o "$outfile" "$infile" -lpthread 2>&1 | tr ' ' '\n' | wc -l)
+    SH_ERROR=$($TEST_CC -o "$outfile" "$infile" -lpthread 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_LIBPTHREAD="-lpthread"
     fi
 fi
 
 # C++11 for Guile
-SH_ERROR=$("$CC" -std=gnu11 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -std=gnu11 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
     SH_C11=1
 else
-    SH_ERROR=$("$CC" -std=c11 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+    SH_ERROR=$($TEST_CC -std=c11 -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
     if [[ "$SH_ERROR" -eq 0 ]]; then
         SH_C11=1
     fi
@@ -389,6 +403,13 @@ BUILD_CFLAGS=("$SH_SYM" "$SH_OPT")
 BUILD_CXXFLAGS=("$SH_SYM" "$SH_OPT")
 BUILD_LDFLAGS=("-L$INSTX_LIBDIR")
 BUILD_LIBS=()
+
+if [[ -n "$CFLAGS64" ]]
+then
+    BUILD_CFLAGS+=("$CFLAGS64")
+    BUILD_CXXFLAGS+=("$CFLAGS64")
+    BUILD_LDFLAGS+=("$CFLAGS64")
+fi
 
 # -fno-sanitize-recover causes an abort(). Useful for test
 # programs that swallow UBsan output and pretty print "OK"
