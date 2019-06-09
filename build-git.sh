@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Git and its dependencies from sources.
 
-GIT_TAR=git-2.21.0.tar.gz
-GIT_DIR=git-2.21.0
+GIT_TAR=git-2.22.0.tar.gz
+GIT_DIR=git-2.22.0
 
 ###############################################################################
 
