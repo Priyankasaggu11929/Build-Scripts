@@ -43,7 +43,7 @@ fi
 
 if ! ./build-pcre.sh
 then
-    echo "Failed to build PCRE and PCRE2"
+    echo "Failed to build PCRE"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 

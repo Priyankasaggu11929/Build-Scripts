@@ -3,9 +3,9 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds PCRE from sources.
 
-PCRE_TAR=pcre-8.43.tar.gz
-PCRE_DIR=pcre-8.43
-PKG_NAME=pcre
+PCRE2_TAR=pcre2-10.33.tar.gz
+PCRE2_DIR=pcre2-10.33
+PKG_NAME=pcre2
 
 ###############################################################################
 
@@ -58,23 +58,19 @@ fi
 ###############################################################################
 
 echo
-echo "********** PCRE **********"
+echo "********** PCRE2 **********"
 echo
 
-if ! "$WGET" -O "$PCRE_TAR" --ca-certificate="$IDENTRUST_ROOT" \
-     "https://ftp.pcre.org/pub/pcre/$PCRE_TAR"
+if ! "$WGET" -O "$PCRE2_TAR" --ca-certificate="$IDENTRUST_ROOT" \
+     "https://ftp.pcre.org/pub/pcre/$PCRE2_TAR"
 then
-    echo "Failed to download PCRE"
+    echo "Failed to download PCRE2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
-rm -rf "$PCRE_DIR" &>/dev/null
-gzip -d < "$PCRE_TAR" | tar xf -
-cd "$PCRE_DIR"
-
-cp ../patch/pcre.patch .
-patch -u -p0 < pcre.patch
-echo ""
+rm -rf "$PCRE2_DIR" &>/dev/null
+gzip -d < "$PCRE2_TAR" | tar xf -
+cd "$PCRE2_DIR"
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
@@ -86,10 +82,10 @@ echo ""
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
 ./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --enable-shared --enable-pcregrep-libz --enable-jit --enable-pcregrep-libbz2
+    --enable-shared --enable-pcre2-8 --enable-pcre2-16 --enable-pcre2-32
 
 if [[ "$?" -ne 0 ]]; then
-    echo "Failed to configure PCRE"
+    echo "Failed to configure PCRE2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -100,7 +96,7 @@ echo "**********************"
 MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
-    echo "Failed to build PCRE"
+    echo "Failed to build PCRE2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -117,12 +113,11 @@ if [[ "$IS_LINUX" -ne 0 ]]; then
     fi
 fi
 
-# https://bugs.exim.org/show_bug.cgi?id=2380
 echo "Searching for errors hidden in log files"
 COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
-    echo "Failed to test PCRE"
+    echo "Failed to test PCRE2"
     [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
 fi
 
@@ -147,14 +142,14 @@ touch "$INSTX_CACHE/$PKG_NAME"
 # Set to false to retain artifacts
 if true; then
 
-    ARTIFACTS=("$PCRE_TAR" "$PCRE_DIR")
+    ARTIFACTS=("$PCRE2_TAR" "$PCRE2_DIR")
     for artifact in "${ARTIFACTS[@]}"; do
         rm -rf "$artifact"
     done
 
-    # ./build-pcre.sh 2>&1 | tee build-pcre.log
-    if [[ -e build-pcre.log ]]; then
-        rm -f build-pcre.log
+    # ./build-pcre2.sh 2>&1 | tee build-pcre.log
+    if [[ -e build-pcre2.log ]]; then
+        rm -f build-pcre2.log
     fi
 fi
 
