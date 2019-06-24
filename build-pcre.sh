@@ -85,8 +85,13 @@ echo ""
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --enable-shared --enable-pcregrep-libz --enable-jit --enable-pcregrep-libbz2
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
+    --enable-shared \
+    --enable-pcregrep-libz \
+    --enable-jit \
+    --enable-pcregrep-libbz2
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure PCRE"

@@ -81,8 +81,13 @@ cd "$PCRE2_DIR"
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
-    --enable-shared --enable-pcre2-8 --enable-pcre2-16 --enable-pcre2-32
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
+    --enable-shared \
+    --enable-pcre2-8 \
+    --enable-pcre2-16 \
+    --enable-pcre2-32
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure PCRE2"
