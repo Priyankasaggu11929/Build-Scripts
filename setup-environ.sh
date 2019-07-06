@@ -138,7 +138,19 @@ IS_CYGWIN=$(echo -n "$THIS_SYSTEM" | grep -i -c 'cygwin')
 IS_OPENBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'openbsd')
 IS_FREEBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'freebsd')
 IS_NETBSD=$(echo -n "$THIS_SYSTEM" | grep -i -c 'netbsd')
-IS_BSD=$(echo -n "$THIS_SYSTEM" | grep -i -c -E 'freebsd|netbsd|openbsd')
+IS_BSD_FAMILY=$(echo -n "$THIS_SYSTEM" | grep -i -c -E 'freebsd|netbsd|openbsd')
+
+# Red Hat and derivatives use /lib64, not /lib.
+IS_REDHAT=$(grep -i -c 'redhat' /etc/redhat-release 2>/dev/null)
+IS_CENTOS=$(grep -i -c 'centos' /etc/centos-release 2>/dev/null)
+IS_FEDORA=$(grep -i -c 'fedora' /etc/fedora-release 2>/dev/null)
+
+if [[ "$IS_REDHAT" -ne 0 ]] || [[ "$IS_CENTOS" -ne 0 ]] || [[ "$IS_FEDORA" -ne 0 ]]
+then
+	IS_RH_FAMILY=1
+else
+	IS_RH_FAMILY=0
+fi
 
 # Fix decades old compile and link errors on early Darwin.
 # https://gmplib.org/list-archives/gmp-bugs/2009-May/001423.html
@@ -221,16 +233,13 @@ then
     if [[ "$IS_SOLARIS" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
         INSTX_RPATH="'""\$\$ORIGIN/../lib""'"
-    elif [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_DARWIN" -ne 0 ]]; then
+    elif [[ "$IS_DARWIN" -ne 0 ]] && [[ "$IS_64BIT" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
         INSTX_RPATH="@loader_path/../lib"
     elif [[ "$IS_DARWIN" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
         INSTX_RPATH="@loader_path/../lib"
-    elif [[ (-d /usr/lib) && (-d /usr/lib32) ]]; then
-        INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_RPATH="'""\$\$ORIGIN/../lib""'"
-    elif [[ (-d /usr/lib) && (-d /usr/lib64) ]]; then
+    elif [[ "$IS_RH_FAMILY" -ne 0 ]] && [[ "$IS_64BIT" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib64"
         INSTX_RPATH="'""\$\$ORIGIN/../lib64""'"
     else
