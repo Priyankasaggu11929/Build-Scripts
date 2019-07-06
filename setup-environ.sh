@@ -213,35 +213,35 @@ if [[ -z "$INSTX_LIBDIR" ]]
 then
     #if [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_SOLARIS" -ne 0 ]]; then
     #    INSTX_LIBDIR="$INSTX_PREFIX/lib/64"
-    #    INSTX_OPATH="'""\$\$ORIGIN/../lib/64""'"
+    #    INSTX_RPATH="'""\$\$ORIGIN/../lib/64""'"
     #elif [[ "$IS_SOLARIS" -ne 0 ]]; then
     #    INSTX_LIBDIR="$INSTX_PREFIX/lib/32"
-    #    INSTX_OPATH="'""\$\$ORIGIN/../lib/32""'"
+    #    INSTX_RPATH="'""\$\$ORIGIN/../lib/32""'"
 
     if [[ "$IS_SOLARIS" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_OPATH="'""\$\$ORIGIN/../lib""'"
+        INSTX_RPATH="'""\$\$ORIGIN/../lib""'"
     elif [[ "$IS_64BIT" -ne 0 ]] && [[ "$IS_DARWIN" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_OPATH="@loader_path/../lib"
+        INSTX_RPATH="@loader_path/../lib"
     elif [[ "$IS_DARWIN" -ne 0 ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_OPATH="@loader_path/../lib"
+        INSTX_RPATH="@loader_path/../lib"
     elif [[ (-d /usr/lib) && (-d /usr/lib32) ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_OPATH="'""\$\$ORIGIN/../lib""'"
+        INSTX_RPATH="'""\$\$ORIGIN/../lib""'"
     elif [[ (-d /usr/lib) && (-d /usr/lib64) ]]; then
         INSTX_LIBDIR="$INSTX_PREFIX/lib64"
-        INSTX_OPATH="'""\$\$ORIGIN/../lib64""'"
+        INSTX_RPATH="'""\$\$ORIGIN/../lib64""'"
     else
         INSTX_LIBDIR="$INSTX_PREFIX/lib"
-        INSTX_OPATH="'""\$\$ORIGIN/../lib""'"
+        INSTX_RPATH="'""\$\$ORIGIN/../lib""'"
     fi
 fi
 
 # Use a sane default
-if [[ -z "$INSTX_OPATH" ]]; then
-    INSTX_OPATH="$INSTX_LIBDIR"
+if [[ -z "$INSTX_RPATH" ]]; then
+    INSTX_RPATH="$INSTX_LIBDIR"
 fi
 
 # Solaris Fixup
@@ -290,13 +290,13 @@ if [[ $(uname -m 2>&1 | grep -i -c -E 'aarch32|aarch64') -ne 0 ]]; then
 fi
 
 # See if -Wl,-rpath,$ORIGIN/../lib works
-SH_ERROR=$($TEST_CC -Wl,-rpath,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -Wl,-rpath,$INSTX_RPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
-    SH_OPATH="-Wl,-rpath,$INSTX_OPATH"
+    SH_OPATH="-Wl,-rpath,$INSTX_RPATH"
 fi
-SH_ERROR=$($TEST_CC -Wl,-R,$INSTX_OPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
+SH_ERROR=$($TEST_CC -Wl,-R,$INSTX_RPATH -o "$outfile" "$infile" 2>&1 | tr ' ' '\n' | wc -l)
 if [[ "$SH_ERROR" -eq 0 ]]; then
-    SH_OPATH="-Wl,-R,$INSTX_OPATH"
+    SH_OPATH="-Wl,-R,$INSTX_RPATH"
 fi
 
 # See if -Wl,-rpath,/usr/loca/lib works
@@ -519,7 +519,7 @@ if [[ -z "$PRINT_ONCE" ]]; then
     echo "  INSTX_BITNESS: $INSTX_BITNESS-bits"
     echo "   INSTX_PREFIX: $INSTX_PREFIX"
     echo "   INSTX_LIBDIR: $INSTX_LIBDIR"
-    echo "    INSTX_OPATH: $INSTX_OPATH"
+    echo "    INSTX_RPATH: $INSTX_RPATH"
     echo ""
     echo "PKG_CONFIG_PATH: ${BUILD_PKGCONFIG[*]}"
     echo "       CPPFLAGS: ${BUILD_CPPFLAGS[*]}"
