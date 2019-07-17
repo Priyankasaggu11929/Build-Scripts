@@ -24,14 +24,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # The password should die when this subshell goes out of scope
@@ -44,7 +44,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -57,7 +57,7 @@ if ! "$WGET" -O "$CRYPTOPP_ZIP" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "https://www.cryptopp.com/$CRYPTOPP_ZIP"
 then
     echo "Failed to download Crypto++"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$CRYPTOPP_DIR" &>/dev/null
@@ -77,7 +77,7 @@ if ! CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
      "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Crypto++"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -87,13 +87,13 @@ echo "**********************"
 if ! ./cryptest.exe v
 then
     echo "Failed to test Crypto++"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if ! ./cryptest.exe tv all
 then
     echo "Failed to test Crypto++"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "Searching for errors hidden in log files"
@@ -101,7 +101,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test Crypto++"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -121,7 +121,7 @@ cd "$CURR_DIR"
 if ! "$INSTX_PREFIX/bin/cryptest.exe" v
 then
     echo "Failed to test Crypto++"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Set package status to installed. Delete the file to rebuild the package.
@@ -150,4 +150,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

@@ -23,7 +23,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -37,7 +37,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -45,7 +45,7 @@ fi
 if ! ./build-zlib.sh
 then
     echo "Failed to build zLib"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -53,7 +53,7 @@ fi
 if ! ./build-bzip.sh
 then
     echo "Failed to build Bzip2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -61,7 +61,7 @@ fi
 if ! ./build-unistr.sh
 then
     echo "Failed to build Unistring"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -69,7 +69,7 @@ fi
 if ! ./build-iconv-gettext.sh
 then
     echo "Failed to build iConv and GetText"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -77,7 +77,7 @@ fi
 if ! ./build-openssl.sh
 then
     echo "Failed to build OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -85,7 +85,7 @@ fi
 if ! ./build-expat.sh
 then
     echo "Failed to build Expat"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -93,7 +93,7 @@ fi
 if ! ./build-pcre2.sh
 then
     echo "Failed to build PCRE2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -101,7 +101,7 @@ fi
 if ! ./build-curl.sh
 then
     echo "Failed to build cURL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -112,7 +112,7 @@ then
     echo ""
     echo "Git requires Perl's ExtUtils::MakeMaker."
     echo "To fix this issue, please install ExtUtils-MakeMaker."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -133,7 +133,7 @@ if ! "$WGET" -O "$GIT_TAR" --ca-certificate="$CA_ZOO" \
      "https://mirrors.edge.kernel.org/pub/software/scm/git/$GIT_TAR"
 then
     echo "Failed to download Git."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$GIT_DIR" &>/dev/null
@@ -154,7 +154,7 @@ echo "**********************"
 if ! "$MAKE" configure
 then
     echo "Failed to make configure Git"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Solaris 11.3 no longer has /usr/ucb/install
@@ -202,7 +202,7 @@ fi
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Git"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Fix LD_LIBRARY_PATH and DYLD_LIBRARY_PATH
@@ -227,7 +227,7 @@ echo "**********************"
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Git"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -241,7 +241,7 @@ then
     if ! "$MAKE" "${MAKE_FLAGS[@]}"
     then
         echo "Failed to test Git"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        exit 1
     fi
 
     echo "Searching for errors hidden in log files"
@@ -249,7 +249,7 @@ then
     if [[ "${COUNT}" -ne 0 ]];
     then
         echo "Failed to test Git"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        exit 1
     fi
 fi
 
@@ -310,4 +310,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

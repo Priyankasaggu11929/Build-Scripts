@@ -25,14 +25,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -46,7 +46,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -59,7 +59,7 @@ if ! "$WGET" -O "$ICU_TAR" \
      "http://download.icu-project.org/files/icu4c/60.2/$ICU_TAR"
 then
     echo "Failed to download libicu"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$ICU_DIR" &>/dev/null
@@ -82,7 +82,7 @@ cd "$ICU_DIR/source"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure libicu"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -93,7 +93,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build libicu"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -104,7 +104,7 @@ echo "**********************"
  if ! "$MAKE" "${MAKE_FLAGS[@]}"
  then
     echo "Failed to test libicu"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
  fi
 
  echo "Searching for errors hidden in log files"
@@ -112,7 +112,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test libicu"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -147,4 +147,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

@@ -24,14 +24,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # The password should die when this subshell goes out of scope
@@ -44,7 +44,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -57,7 +57,7 @@ if ! "$WGET" -O "$TXML2_TAR" --ca-certificate="$DIGICERT_ROOT" \
      "https://github.com/leethomason/tinyxml2/archive/$TXML2_TAR"
 then
     echo "Failed to download tinyxml2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$TXML2_DIR" &>/dev/null
@@ -82,7 +82,7 @@ echo "**********************"
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build tinyxml2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -93,7 +93,7 @@ MAKE_FLAGS=("test")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
    echo "Failed to test tinyxml2"
-   [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+   exit 1
 fi
 
 echo "Searching for errors hidden in log files"
@@ -101,7 +101,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test tinyxml2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -141,4 +141,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

@@ -27,19 +27,19 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Boehm garbage collector. Look in /usr/lib and /usr/lib64
 if [[ "$IS_DEBIAN" -ne 0 ]]; then
     if [[ -z $(find /usr -maxdepth 2 -name libgc.so 2>/dev/null) ]]; then
         echo "Guile requires Boehm garbage collector. Please install libgc-dev."
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        exit 1
     fi
 elif [[ "$IS_FEDORA" -ne 0 ]]; then
     if [[ -z $(find /usr -maxdepth 2 -name libgc.so 2>/dev/null) ]]; then
         echo "Guile requires Boehm garbage collector. Please install gc-devel."
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        exit 1
     fi
 fi
 
@@ -47,7 +47,7 @@ if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # The password should die when this subshell goes out of scope
@@ -60,7 +60,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -68,7 +68,7 @@ fi
 if ! ./build-gmp.sh
 then
     echo "Failed to build GMP"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -78,7 +78,7 @@ if [[ "$IS_SOLARIS" -eq 1 ]]; then
     if ! ./build-boehm-gc.sh
     then
         echo "Failed to build Boehm GC"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        exit 1
     fi
 fi
 
@@ -87,7 +87,7 @@ fi
 if ! ./build-libffi.sh
 then
     echo "Failed to build libffi"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -95,7 +95,7 @@ fi
 if ! ./build-unistr.sh
 then
     echo "Failed to build Unistring"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -103,7 +103,7 @@ fi
 if ! ./build-iconv-gettext.sh
 then
     echo "Failed to build iConv and GetText"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -116,7 +116,7 @@ if ! "$WGET" -O "$GUILE_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "https://ftp.gnu.org/gnu/guile/$GUILE_TAR"
 then
     echo "Failed to download Guile"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$GUILE_DIR" &>/dev/null
@@ -152,7 +152,7 @@ CONFIG_OPTS+=("--with-libintl-prefix=$INSTX_PREFIX")
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Guile"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -163,7 +163,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Guile"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -175,7 +175,7 @@ MAKE_FLAGS=("check" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to test Guile"
-    # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    # exit 1
 fi
 
 echo "Searching for errors hidden in log files"
@@ -183,7 +183,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test Guile"
-    # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    # exit 1
 fi
 
 echo "**********************"
@@ -218,4 +218,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

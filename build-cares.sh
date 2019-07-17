@@ -24,14 +24,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -45,7 +45,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -58,7 +58,7 @@ if ! "$WGET" -O "$CARES_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "https://c-ares.haxx.se/download/$CARES_TAR"
 then
     echo "Failed to download c-ares"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$CARES_DIR" &>/dev/null
@@ -78,7 +78,7 @@ cd "$CARES_DIR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure c-ares"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -89,7 +89,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build c-ares"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -100,7 +100,7 @@ MAKE_FLAGS=("check" "V=1")
 if ! LD_LIBRARY_PATH=./.libs "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to test c-ares"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "Searching for errors hidden in log files"
@@ -108,7 +108,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test c-ares"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -143,4 +143,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

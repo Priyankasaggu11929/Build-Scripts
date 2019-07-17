@@ -24,7 +24,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -38,7 +38,7 @@ fi
 if ! ./setup-cacerts.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -51,7 +51,7 @@ if ! "$WGET" -O "$CMAKE_TAR" --ca-certificate="$CA_ZOO" \
      "https://github.com/Kitware/CMake/releases/download/v$CMAKE_VER/$CMAKE_TAR"
 then
     echo "Failed to download CMake"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$CMAKE_DIR" &>/dev/null
@@ -67,7 +67,7 @@ echo "**********************"
 if ! ./bootstrap
 then
     echo "Failed to bootstrap CMake"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -78,7 +78,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build CMake"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -89,7 +89,7 @@ MAKE_FLAGS=("check" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
    echo "Failed to test CMake"
-   [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+   exit 1
 fi
 
 echo "Searching for errors hidden in log files"
@@ -97,7 +97,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test CMake"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -138,4 +138,4 @@ if true; then
     unset SUDO_PASSWORD
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

@@ -24,14 +24,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -45,7 +45,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -59,7 +59,7 @@ if ! "$WGET" -O "$XZ_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "https://tukaani.org/xz/$XZ_TAR"
 then
     echo "Failed to download xz"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$XZ_DIR" &>/dev/null
@@ -80,7 +80,7 @@ cd "$XZ_DIR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure xz"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -91,7 +91,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build xz"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 #echo "**********************"
@@ -102,7 +102,7 @@ fi
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
 #    echo "Failed to test xz"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 #echo "Searching for errors hidden in log files"
@@ -110,7 +110,7 @@ fi
 #if [[ "${COUNT}" -ne 0 ]];
 #then
 #    echo "Failed to test xz"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 echo "**********************"
@@ -145,4 +145,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

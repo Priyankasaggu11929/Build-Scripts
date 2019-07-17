@@ -23,7 +23,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # The password should die when this subshell goes out of scope
@@ -36,7 +36,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -44,7 +44,7 @@ fi
 if ! ./build-pcre.sh
 then
     echo "Failed to build PCRE"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -53,7 +53,7 @@ fi
 if ! ./build-iconv-gettext.sh
 then
     echo "Failed to build GetText"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -66,7 +66,7 @@ if ! "$WGET" -O "$CORE_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "https://ftp.gnu.org/gnu/coreutils/$CORE_TAR"
 then
     echo "Failed to download Core Utilities"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$CORE_DIR" &>/dev/null
@@ -89,7 +89,7 @@ cd "$CORE_DIR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Core Utilities"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -100,7 +100,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Core Utilities"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -111,7 +111,7 @@ MAKE_FLAGS=("check")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to test Core Utilities"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "Searching for errors hidden in log files"
@@ -119,7 +119,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test Core Utilities"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -158,4 +158,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

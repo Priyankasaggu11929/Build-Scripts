@@ -25,14 +25,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -46,7 +46,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -54,7 +54,7 @@ fi
 if ! ./build-zlib.sh
 then
     echo "Failed to build zLib"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -62,7 +62,7 @@ fi
 if ! ./build-bzip.sh
 then
     echo "Failed to build Bzip2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -70,7 +70,7 @@ fi
 if ! ./build-unistr.sh
 then
     echo "Failed to build Unistring"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -78,7 +78,7 @@ fi
 if ! ./build-iconv-gettext.sh
 then
     echo "Failed to build iConv and GetText"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -86,7 +86,7 @@ fi
 if ! ./build-idn2.sh
 then
     echo "Failed to build IDN2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -94,7 +94,7 @@ fi
 if ! ./build-pcre2.sh
 then
     echo "Failed to build PCRE2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -102,7 +102,7 @@ fi
 if ! ./build-openssl.sh
 then
     echo "Failed to build OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -110,7 +110,7 @@ fi
 if ! ./build-openldap.sh
 then
     echo "Failed to build OpenLDAP"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -123,7 +123,7 @@ if ! "$WGET" -O "$CURL_TAR" --ca-certificate="$CA_ZOO" \
      "https://curl.haxx.se/download/$CURL_TAR"
 then
     echo "Failed to download cURL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$CURL_DIR" &>/dev/null
@@ -183,7 +183,7 @@ CONFIG_OPTS+=("--with-ca-bundle=$SH_CACERT_FILE")
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure cURL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -194,7 +194,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build cURL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -208,7 +208,7 @@ MAKE_FLAGS=("test" "TFLAGS=-n" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
 #    echo "Failed to test cURL"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
     :
 fi
 
@@ -217,7 +217,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test cURL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -261,4 +261,4 @@ if true; then
     unset SUDO_PASSWORD
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

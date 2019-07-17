@@ -20,7 +20,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Perform this action automatically for the user.
@@ -37,7 +37,7 @@ if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     #echo ""
     #echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 ###############################################################################
@@ -104,7 +104,7 @@ if ! "$WGET" -O "$ICANN_BUNDLE" --ca-certificate="$CA_ZOO" \
      "https://data.iana.org/root-anchors/icannbundle.pem"
 then
     echo "Failed to download icannbundle.pem"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -s "$ICANN_BUNDLE" ]]
@@ -140,10 +140,10 @@ echo ""
 ###############################################################################
 
 if [[ "$ANY_FAIL" -ne 0 ]]; then
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Set package status to installed. Delete the file to rebuild the package.
 touch "$INSTX_CACHE/$PKG_NAME"
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

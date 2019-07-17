@@ -24,14 +24,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -45,7 +45,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -53,7 +53,7 @@ fi
 if ! ./build-expat.sh
 then
     echo "Failed to build Expat"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -61,7 +61,7 @@ fi
 if ! ./build-openssl.sh
 then
     echo "Failed to build OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -74,7 +74,7 @@ if ! "$WGET" -O "$HIREDIS_TAR" --ca-certificate="$DIGICERT_ROOT" \
      "https://github.com/redis/hiredis/archive/$HIREDIS_TAR"
 then
     echo "Failed to download Hiredis"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$HIREDIS_DIR" &>/dev/null
@@ -101,7 +101,7 @@ echo "**********************"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to build Hiredis"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -117,7 +117,7 @@ echo
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
 #    echo "Failed to test Hidredis"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 #echo "Searching for errors hidden in log files"
@@ -125,7 +125,7 @@ echo
 #if [[ "${COUNT}" -ne 0 ]];
 #then
 #    echo "Failed to test Hidredis"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 echo "**********************"
@@ -164,4 +164,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

@@ -23,14 +23,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # The password should die when this subshell goes out of scope
@@ -43,7 +43,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -57,7 +57,7 @@ rm -rf "$VALGRIND_DIR" 2>/dev/null
 if ! git clone --depth=3 git://sourceware.org/git/valgrind.git "$VALGRIND_DIR";
 then
     echo "Failed to checkout Valgrind"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 cd "$VALGRIND_DIR"
@@ -66,7 +66,7 @@ cd "$VALGRIND_DIR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to generate Valgrind build files"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
@@ -82,7 +82,7 @@ fi
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Valgrind"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -93,7 +93,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Valgrind"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 #echo "**********************"
@@ -105,7 +105,7 @@ fi
 # if ! "$MAKE" "${MAKE_FLAGS[@]}"
 # then
 #    echo "Failed to test Valgrind"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 # fi
 
 echo "**********************"
@@ -147,4 +147,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

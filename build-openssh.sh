@@ -23,7 +23,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # The password should die when this subshell goes out of scope
@@ -36,7 +36,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -44,7 +44,7 @@ fi
 if ! ./build-zlib.sh
 then
     echo "Failed to build zLib"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -52,7 +52,7 @@ fi
 if ! ./build-openssl.sh
 then
     echo "Failed to build OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -60,7 +60,7 @@ fi
 if ! ./build-ldns.sh
 then
     echo "Failed to build LDNS"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -73,7 +73,7 @@ if ! "$WGET" -O "$OPENSSH_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "http://ftp4.usa.openbsd.org/pub/OpenBSD/OpenSSH/portable/$OPENSSH_TAR"
 then
     echo "Failed to download SSH"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$OPENSSH_DIR" &>/dev/null
@@ -102,7 +102,7 @@ cd "$OPENSSH_DIR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure SSH"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -113,7 +113,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build SSH"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -131,7 +131,7 @@ echo
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
 #    echo "Failed to test SSH"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 #echo "Searching for errors hidden in log files"
@@ -139,7 +139,7 @@ echo
 #if [[ "${COUNT}" -ne 0 ]];
 #then
 #    echo "Failed to test SSH"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 echo "**********************"
@@ -178,4 +178,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

@@ -25,14 +25,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -46,7 +46,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -54,7 +54,7 @@ fi
 if ! ./build-openssl.sh
 then
     echo "Failed to build OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -96,7 +96,7 @@ CONFIG_OPTS+=("--with-tls=openssl")
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure BerkleyDB"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -107,7 +107,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build BerkleyDB"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -121,7 +121,7 @@ echo "Unable to test Berkley DB"
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
 #    echo "Failed to test BerkleyDB"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 #echo "Searching for errors hidden in log files"
@@ -129,7 +129,7 @@ echo "Unable to test Berkley DB"
 #if [[ "${COUNT}" -ne 0 ]];
 #then
 #    echo "Failed to test BerkleyDB"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 echo "**********************"
@@ -184,4 +184,4 @@ if true; then
     unset SUDO_PASSWORD
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

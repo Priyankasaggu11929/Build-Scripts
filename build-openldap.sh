@@ -25,14 +25,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -46,7 +46,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -54,7 +54,7 @@ fi
 if ! ./build-openssl.sh
 then
     echo "Failed to build OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -62,7 +62,7 @@ fi
 if ! ./build-bdb.sh
 then
     echo "Failed to build Berkely DB"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -75,7 +75,7 @@ if ! "$WGET" --ca-certificate="$GO_DADDY_ROOT" -O "$LDAP_TAR" \
      "https://gpl.savoirfairelinux.net/pub/mirrors/openldap/openldap-release/$LDAP_TAR"
 then
     echo "Failed to download OpenLDAP"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$LDAP_DIR" &>/dev/null
@@ -116,7 +116,7 @@ fi
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure OpenLDAP"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -127,7 +127,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build OpenLDAP"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -139,7 +139,7 @@ MAKE_FLAGS=("check" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to test OpenLDAP"
-    # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    # exit 1
 fi
 
 # Too many findings...
@@ -150,7 +150,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test OpenLDAP"
-    # [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    # exit 1
 fi
 
 echo "**********************"
@@ -187,4 +187,4 @@ if true; then
     unset SUDO_PASSWORD
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

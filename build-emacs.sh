@@ -23,7 +23,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # The password should die when this subshell goes out of scope
@@ -36,7 +36,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -44,7 +44,7 @@ fi
 if ! ./build-zlib.sh
 then
     echo "Failed to build zLib"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -52,7 +52,7 @@ fi
 if ! ./build-bzip.sh
 then
     echo "Failed to build Bzip2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -62,7 +62,7 @@ if false; then
 if ! ./build-ncurses.sh
 then
     echo "Failed to build Ncurses"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 fi
@@ -77,7 +77,7 @@ if ! "$WGET" -O "$EMACS_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "https://ftp.gnu.org/gnu/emacs/$EMACS_TAR"
 then
     echo "Failed to download Emacs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$EMACS_DIR" &>/dev/null
@@ -110,7 +110,7 @@ fi
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure emacs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -121,7 +121,7 @@ MAKE_FLAGS=("V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
    echo "Failed to test Emacs"
-   [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+   exit 1
 fi
 
 #echo "**********************"
@@ -132,7 +132,7 @@ fi
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
 #   echo "Failed to test Emacs"
-#   [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#   exit 1
 #fi
 
 #echo "Searching for errors hidden in log files"
@@ -140,7 +140,7 @@ fi
 #if [[ "${COUNT}" -ne 0 ]];
 #then
 #    echo "Failed to test Emacs"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 echo "**********************"
@@ -181,4 +181,4 @@ if true; then
     unset SUDO_PASSWORD
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

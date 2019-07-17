@@ -23,7 +23,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -71,7 +71,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -79,7 +79,7 @@ fi
 if ! ./build-zlib.sh
 then
     echo "Failed to build zLib"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -87,7 +87,7 @@ fi
 if ! ./build-bzip.sh
 then
     echo "Failed to build Bzip"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -95,7 +95,7 @@ fi
 if ! ./build-iconv-gettext.sh
 then
     echo "Failed to build iConv and GetText"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -103,7 +103,7 @@ fi
 if ! ./build-unistr.sh
 then
     echo "Failed to build Unistring"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -111,7 +111,7 @@ fi
 if ! ./build-idn2.sh
 then
     echo "Failed to build IDN2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -119,7 +119,7 @@ fi
 if ! ./build-cares.sh
 then
     echo "Failed to build c-ares"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -127,7 +127,7 @@ fi
 if ! ./build-pcre2.sh
 then
     echo "Failed to build PCRE2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -135,7 +135,7 @@ fi
 if ! ./build-openssl.sh
 then
     echo "Failed to build OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -145,7 +145,7 @@ if [[ "$SKIP_LIBPSL" -eq 0 ]]; then
 if ! ./build-libpsl.sh
 then
     echo "Failed to build Public Suffix List library"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 fi  # SKIP_LIBPSL
@@ -160,7 +160,7 @@ if ! "$WGET" -O "$WGET_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "https://ftp.gnu.org/pub/gnu/wget/$WGET_TAR"
 then
     echo "Failed to download Wget"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$WGET_DIR" &>/dev/null
@@ -204,7 +204,7 @@ done
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Wget"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -215,7 +215,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Wget"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -237,7 +237,7 @@ then
     then
         echo "Failed to test Wget"
         echo "Installing anyways..."
-        #[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        #exit 1
     fi
 
     echo "Searching for errors hidden in log files"
@@ -245,7 +245,7 @@ then
     if [[ "${COUNT}" -ne 0 ]];
     then
         echo "Failed to test Wget"
-        [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+        exit 1
     fi
 else
     echo "Wget not tested."
@@ -306,4 +306,4 @@ if true; then
     unset SUDO_PASSWORD
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

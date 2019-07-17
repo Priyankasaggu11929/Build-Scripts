@@ -24,14 +24,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     echo ""
     echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 # Get a sudo password as needed. The password should die when this
@@ -45,7 +45,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -53,7 +53,7 @@ fi
 if ! ./build-iconv-gettext.sh
 then
     echo "Failed to build iConv and GetText"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -61,7 +61,7 @@ fi
 if ! ./build-unistr.sh
 then
     echo "Failed to build Unistring"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -69,7 +69,7 @@ fi
 if ! ./build-idn2.sh
 then
     echo "Failed to build IDN2"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -82,7 +82,7 @@ if ! "$WGET" -O "$PSL_TAR" --ca-certificate="$CA_ZOO" \
      "https://github.com/rockdaboot/libpsl/releases/download/$PSL_DIR/$PSL_TAR"
 then
     echo "Failed to download libpsl"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$PSL_DIR" &>/dev/null
@@ -117,7 +117,7 @@ fi
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure libpsl"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -132,7 +132,7 @@ if ! "$WGET" -O "list/public_suffix_list.dat" --ca-certificate="$CA_ZOO" \
      "https://raw.githubusercontent.com/publicsuffix/list/master/public_suffix_list.dat"
 then
     echo "Failed to update Public Suffix List (PSL)"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -143,7 +143,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS" "V=1")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build libpsl"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -157,7 +157,7 @@ then
 	echo ""
 	echo "If you have existing libpsl libraries at $LIBDIR"
 	echo "then you should manually delete them and run this script again."
-	# [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+	# exit 1
 fi
 
 echo "Searching for errors hidden in log files"
@@ -165,7 +165,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test libpsl"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -200,4 +200,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

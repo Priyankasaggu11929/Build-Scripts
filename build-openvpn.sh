@@ -26,7 +26,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # The password should die when this subshell goes out of scope
@@ -39,7 +39,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -47,7 +47,7 @@ fi
 if ! ./build-zlib.sh
 then
     echo "Failed to build zLib"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -55,7 +55,7 @@ fi
 if ! ./build-openssl.sh
 then
     echo "Failed to build OpenSSL"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -70,7 +70,7 @@ if ! "$WGET" -O "$TUNTAP_TAR" --ca-certificate="$DIGICERT_ROOT" \
      "https://github.com/kaizawa/tuntap/archive/$TUNTAP_TAR"
 then
     echo "Failed to download TUN/TAP driver"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$TUNTAP_DIR" &>/dev/null
@@ -90,7 +90,7 @@ cd "$TUNTAP_DIR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure TUN/TAP driver"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -101,7 +101,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build TUN/TAP driver"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -129,7 +129,7 @@ if ! "$WGET" -O "$OPENVPN_TAR" --ca-certificate="$ADDTRUST_ROOT" \
      "https://swupdate.openvpn.org/community/releases/$OPENVPN_TAR"
 then
     echo "Failed to download OpenVPN"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$OPENVPN_DIR" &>/dev/null
@@ -151,7 +151,7 @@ patch -u -p0 < openvpn.patch
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure OpenVPN"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -162,7 +162,7 @@ MAKE_FLAGS=("-j" "$INSTX_JOBS")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build OpenVPN"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -173,7 +173,7 @@ MAKE_FLAGS=("check")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build OpenVPN"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "Searching for errors hidden in log files"
@@ -181,7 +181,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test OpenVPN"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -222,4 +222,4 @@ if true; then
     unset SUDO_PASSWORD
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0
