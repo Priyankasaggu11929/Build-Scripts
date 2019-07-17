@@ -14,7 +14,7 @@ cd "bootstrap"
 
 if ! ./bootstrap-wget.sh; then
     echo "Bootstrap failed for Wget"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

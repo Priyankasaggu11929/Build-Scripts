@@ -130,18 +130,17 @@ cd "$BOOTSTRAP_DIR/$UNISTR_DIR"
 
 if [[ "$?" -ne 0 ]]; then
     echo "Failed to configure Unistring"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS")
-if ! make "${MAKE_FLAGS[@]}"
+if ! make -j "$INSTX_JOBS" V=1; then
 then
     echo "Failed to build Unistring"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if ! make install; then
-    echo "Failed to install Wget"
+    echo "Failed to install Unistring"
     exit 1
 fi
 
@@ -184,10 +183,10 @@ fi
 
 if [[ "$?" -ne "0" ]]; then
     echo "Failed to configure Wget"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
-if ! make V=1 -j "$INSTX_JOBS"; then
+if ! make -j "$INSTX_JOBS" V=1; then
     echo "Failed to build Wget"
     exit 1
 fi
