@@ -13,7 +13,7 @@ PKG_NAME=cpuid
 if [[ $(uname -m 2>/dev/null | grep -E -i -c 'i86pc|i.86|amd64|x86_64') -eq 0 ]]
 then
     echo "Failed to build cpuid. The program is only valid for x86 platforms."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -33,7 +33,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # The password should die when this subshell goes out of scope
@@ -46,7 +46,7 @@ fi
 if ! ./build-cacert.sh
 then
     echo "Failed to install CA Certs"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -59,7 +59,7 @@ if ! "$WGET" -O "$CPUID_TAR" --ca-certificate="$LETS_ENCRYPT_ROOT" \
      "http://www.etallen.com/cpuid/$CPUID_TAR"
 then
     echo "Failed to download Cpuid"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 rm -rf "$CPUID_DIR" &>/dev/null
@@ -84,7 +84,7 @@ if ! PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Cpuid"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 #echo "**********************"
@@ -96,7 +96,7 @@ fi
 #if ! "$MAKE" "${MAKE_FLAGS[@]}"
 #then
 #    echo "Failed to test Cpuid"
-#    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+#    exit 1
 #fi
 
 echo "Searching for errors hidden in log files"
@@ -104,7 +104,7 @@ COUNT=$(find . -name '*.log' -exec grep -o 'runtime error:' {} \; | wc -l)
 if [[ "${COUNT}" -ne 0 ]];
 then
     echo "Failed to test Cpuid"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 echo "**********************"
@@ -143,4 +143,4 @@ if true; then
     fi
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0
