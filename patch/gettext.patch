@@ -1,10 +1,9 @@
 --- libtextstyle/lib/libxml/timsort.h
 +++ libtextstyle/lib/libxml/timsort.h
-@@ -73,10 +73,6 @@
- 
+@@ -74,10 +74,6 @@
  static int compute_minrun(const uint64_t);
  
-#ifndef CLZ
+ #ifndef CLZ
 -#ifdef __GNUC__
 -#define CLZ __builtin_clzll
 -#else
@@ -12,22 +11,20 @@
  static int clzll(uint64_t);
  
  /* adapted from Hacker's Delight */
-@@ -123,7 +118,6 @@
- }
+@@ -124,7 +120,6 @@
  
  #define CLZ clzll
-#endif
+ #endif
 -#endif
  
  static __inline int compute_minrun(const uint64_t size) {
    const int top_bit = 64 - CLZ(size);
 --- gettext-tools/gnulib-lib/libxml/timsort.h
 +++ gettext-tools/gnulib-lib/libxml/timsort.h
-@@ -73,10 +73,6 @@
- 
+@@ -74,10 +74,6 @@
  static int compute_minrun(const uint64_t);
  
-#ifndef CLZ
+ #ifndef CLZ
 -#ifdef __GNUC__
 -#define CLZ __builtin_clzll
 -#else
@@ -35,11 +32,10 @@
  static int clzll(uint64_t);
  
  /* adapted from Hacker's Delight */
-@@ -123,7 +118,6 @@
- }
+@@ -124,7 +120,6 @@
  
  #define CLZ clzll
-#endif
+ #endif
 -#endif
  
  static __inline int compute_minrun(const uint64_t size) {
