@@ -134,7 +134,6 @@ if [[ "$?" -ne 0 ]]; then
 fi
 
 if ! make -j "$INSTX_JOBS" V=1; then
-then
     echo "Failed to build Unistring"
     exit 1
 fi
