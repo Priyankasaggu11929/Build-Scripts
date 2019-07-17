@@ -78,6 +78,17 @@ echo ""
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
+for file in $(find "$PWD" -name '*.h')
+do
+    if [[ ! -f "$file" ]]
+    then
+        continue
+    fi
+
+    sed -e 's|__GNUC_PREREQ (3, 3)|__GNUC_PREREQ (3, 4)|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+done
+
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
     CFLAGS="${BUILD_CFLAGS[*]}" \
