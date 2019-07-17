@@ -85,7 +85,7 @@ do
         continue
     fi
 
-    sed -e 's|__GNUC_PREREQ (3, 3)|__GNUC_PREREQ (3, 4)|g' "$file" > "$file.fixed"
+    sed -e 's|__GNUC_PREREQ (3, 3)|__GNUC_PREREQ (4, 0)|g' "$file" > "$file.fixed"
     mv "$file.fixed" "$file"
 done
 
