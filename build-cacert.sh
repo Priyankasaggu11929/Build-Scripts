@@ -20,7 +20,7 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 # Perform this action automatically for the user.
@@ -37,7 +37,7 @@ if [[ -e "$INSTX_CACHE/$PKG_NAME" ]]; then
     # Already installed, return success
     #echo ""
     #echo "$PKG_NAME is already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 ###############################################################################
@@ -54,7 +54,7 @@ if ! "$WGET" -O "$CACERT_FILE" --ca-certificate="$GLOBALSIGN_ROOT" \
      "https://curl.haxx.se/ca/cacert.pem"
 then
     echo "Failed to download $CACERT_FILE"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -d /private/etc ]]
@@ -87,4 +87,4 @@ fi
 touch "$INSTX_CACHE/$PKG_NAME"
 echo ""
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0

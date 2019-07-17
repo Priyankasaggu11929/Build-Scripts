@@ -147,9 +147,9 @@ IS_FEDORA=$(grep -i -c 'fedora' /etc/fedora-release 2>/dev/null)
 
 if [[ "$IS_REDHAT" -ne 0 ]] || [[ "$IS_CENTOS" -ne 0 ]] || [[ "$IS_FEDORA" -ne 0 ]]
 then
-	IS_RH_FAMILY=1
+    IS_RH_FAMILY=1
 else
-	IS_RH_FAMILY=0
+    IS_RH_FAMILY=0
 fi
 
 # Fix decades old compile and link errors on early Darwin.
@@ -415,25 +415,36 @@ BUILD_LIBS=()
 
 if [[ -n "$CFLAGS64" ]]
 then
-    BUILD_CFLAGS+=("$CFLAGS64")
-    BUILD_CXXFLAGS+=("$CFLAGS64")
-    BUILD_LDFLAGS+=("$CFLAGS64")
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="$CFLAGS64"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="$CFLAGS64"
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="$CFLAGS64"
 fi
 
 # -fno-sanitize-recover causes an abort(). Useful for test
 # programs that swallow UBsan output and pretty print "OK"
 if [[ -n "$INSTX_UBSAN" ]]; then
-    BUILD_CFLAGS+=("-fsanitize=undefined -fno-sanitize-recover")
-    BUILD_CXXFLAGS+=("-fsanitize=undefined -fno-sanitize-recover")
-    BUILD_LDFLAGS+=("-fsanitize=undefined -fno-sanitize-recover")
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="-fsanitize=undefined"
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="-fno-sanitize-recover"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="-fsanitize=undefined"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="-fno-sanitize-recover"
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="-fsanitize=undefined"
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="-fno-sanitize-recover"
+
 elif [[ -n "$INSTX_ASAN" ]]; then
-    BUILD_CFLAGS+=("-fsanitize=address -fno-omit-frame-pointer")
-    BUILD_CXXFLAGS+=("-fsanitize=address -fno-omit-frame-pointer")
-    BUILD_LDFLAGS+=("-fsanitize=address")
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="-fsanitize=address"
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="-fno-omit-frame-pointer"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="-fsanitize=address"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="-fno-omit-frame-pointer"
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="-fsanitize=address"
 elif [[ -n "$INSTX_MSAN" ]]; then
-    BUILD_CFLAGS+=("-fsanitize=memory -fsanitize-memory-track-origins -fno-omit-frame-pointer")
-    BUILD_CXXFLAGS+=("-fsanitize=memory -fsanitize-memory-track-origins -fno-omit-frame-pointer")
-    BUILD_LDFLAGS+=("-fsanitize=memory -fsanitize-memory-track-origins")
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="-fsanitize=address"
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="-fsanitize-memory-track-origins"
+    BUILD_CFLAGS[${#BUILD_CFLAGS[@]}]="-fno-omit-frame-pointer"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="-fsanitize=address"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="-fsanitize-memory-track-origins"
+    BUILD_CXXFLAGS[${#BUILD_CXXFLAGS[@]}]="-fno-omit-frame-pointer"
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="-fsanitize=address"
+    BUILD_LDFLAGS[${#BUILD_LDFLAGS[@]}]="-fno-omit-frame-pointer"
 fi
 
 if [[ -n "$SH_ARMV8" ]]; then
@@ -474,7 +485,6 @@ if [[ -n "$SH_DL" ]]; then
 fi
 
 if [[ -n "$SH_LIBPTHREAD" ]]; then
-    #BUILD_LIBS+=("$SH_LIBPTHREAD")
     BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_LIBPTHREAD"
 fi
 
