@@ -24,14 +24,14 @@ trap finish EXIT
 if ! source ./setup-environ.sh
 then
     echo "Failed to set environment"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 if [[ -e "$INSTX_CACHE/iconv" ]] && [[ -e "$INSTX_CACHE/gettext" ]]; then
     # Already installed, return success
     echo ""
     echo "iConv and GetText already installed."
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+    exit 0
 fi
 
 ###############################################################################
@@ -45,7 +45,7 @@ rm -rf "$INSTX_CACHE/gettext"
 if ! ./build-iconv.sh
 then
     echo "Failed to build iConv and GetText (1st time)"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -53,7 +53,7 @@ fi
 if ! ./build-gettext.sh
 then
     echo "Failed to build GetText"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
 ###############################################################################
@@ -65,7 +65,7 @@ rm "$INSTX_CACHE/iconv"
 if ! ./build-iconv.sh
 then
     echo "Failed to build iConv and GetText (2nd time)"
-    [[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 1 || return 1
+    exit 1
 fi
 
-[[ "$0" = "${BASH_SOURCE[0]}" ]] && exit 0 || return 0
+exit 0
