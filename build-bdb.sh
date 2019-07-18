@@ -83,9 +83,9 @@ cd "$CURR_DIR"
 cd "$BDB_DIR/build_unix"
 
 CONFIG_OPTS=()
-CONFIG_OPTS+=("--prefix=$INSTX_PREFIX")
-CONFIG_OPTS+=("--libdir=$INSTX_LIBDIR")
-CONFIG_OPTS+=("--with-tls=openssl")
+CONFIG_OPTS[${#CONFIG_OPTS[@]}]="--prefix=$INSTX_PREFIX"
+CONFIG_OPTS[${#CONFIG_OPTS[@]}]="--libdir=$INSTX_LIBDIR"
+CONFIG_OPTS[${#CONFIG_OPTS[@]}]="--with-tls=openssl"
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
     CPPFLAGS="${BUILD_CPPFLAGS[*]}" \
