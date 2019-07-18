@@ -82,7 +82,7 @@ echo ""
 
 # https://bugs.launchpad.net/ubuntu/+source/binutils/+bug/1340250
 if [[ -n "$SH_NO_AS_NEEDED" ]]; then
-    BUILD_LIBS+=("$SH_NO_AS_NEEDED")
+    BUILD_LIBS[${#BUILD_LIBS[@]}]="$SH_NO_AS_NEEDED"
 fi
 
     PKG_CONFIG_PATH="${BUILD_PKGCONFIG[*]}" \
@@ -91,7 +91,9 @@ fi
     CXXFLAGS="${BUILD_CXXFLAGS[*]}" \
     LDFLAGS="${BUILD_LDFLAGS[*]}" \
     LIBS="${BUILD_LIBS[*]}" \
-./configure --prefix="$INSTX_PREFIX" --libdir="$INSTX_LIBDIR" \
+./configure \
+    --prefix="$INSTX_PREFIX" \
+    --libdir="$INSTX_LIBDIR" \
     --enable-shared
 
 if [[ "$?" -ne 0 ]]; then
