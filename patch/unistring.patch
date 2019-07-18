@@ -1387,3 +1387,43 @@
    return 0;
  }
  
+--- tests/test-intprops.c
++++ tests/test-intprops.c
+@@ -52,6 +52,17 @@
+ 
+ #define DONTCARE __LINE__
+ 
++/* Early versions of GCC don't define these */
++#ifndef LLONG_MIN
++#  define LLONG_MIN    LONG_LONG_MIN
++#endif
++#ifndef LLONG_MAX
++#  define LLONG_MAX    LONG_LONG_MAX
++#endif
++#ifndef ULLONG_MAX
++#  define ULLONG_MAX   ULONG_LONG_MAX
++#endif
++
+ int
+ main (void)
+ {
+--- tests/test-limits-h.c
++++ tests/test-limits-h.c
+@@ -26,6 +26,17 @@
+ # pragma GCC diagnostic ignored "-Woverlength-strings"
+ #endif
+ 
++/* Early versions of GCC don't define these */
++#ifndef LLONG_MIN
++#  define LLONG_MIN    LONG_LONG_MIN
++#endif
++#ifndef LLONG_MAX
++#  define LLONG_MAX    LONG_LONG_MAX
++#endif
++#ifndef ULLONG_MAX
++#  define ULLONG_MAX   ULONG_LONG_MAX
++#endif
++
+ /* Macros specified by ISO/IEC TS 18661-1:2014.  */
+ 
+ #define verify_width(width, min, max) \
