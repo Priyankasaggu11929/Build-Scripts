@@ -56,7 +56,16 @@ fi
 
 rm -rf "$B2SUM_DIR" &>/dev/null
 gzip -d < "$B2SUM_TAR" | tar xf -
-cd "$B2SUM_DIR/b2sum"
+cd "$B2SUM_DIR"
+
+cp sse/blake2s-load-sse2.h sse/blake2s-load-sse2.h.orig
+cp sse/blake2b-load-sse2.h sse/blake2b-load-sse2.h.orig
+
+cp ../patch/b2sum.patch .
+patch -u -p0 < b2sum.patch
+echo ""
+
+cd "b2sum"
 
 B2SUM_CFLAGS="${BUILD_CPPFLAGS[@]} ${BUILD_CFLAGS[@]} -std=c99 -I."
 
@@ -74,7 +83,7 @@ mv makefile.fixed makefile
 
 # Either use the SSE files, or remove the SSE source files
 if [[ "$IS_IA32" -ne 0 ]]; then
-    B2SUM_CFLAGS="$B2SUM_CFLAGS -I../sse"
+    B2SUM_CFLAGS="$B2SUM_CFLAGS -I../sse -msse2"
     sed "/^#FILES=/d" makefile > makefile.fixed
     mv makefile.fixed makefile
 else
