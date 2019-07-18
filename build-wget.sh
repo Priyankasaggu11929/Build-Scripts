@@ -178,6 +178,17 @@ sed -e 's|$(LTLIBICONV)|$(LIBICONV)|g' fuzz/Makefile.am > fuzz/Makefile.am.fixed
 mv fuzz/Makefile.am.fixed fuzz/Makefile.am
 touch -t 197001010000 fuzz/Makefile.am
 
+for file in $(find "$PWD" -name '*.h')
+do
+    if [[ ! -f "$file" ]]
+    then
+        continue
+    fi
+
+    sed -e 's|__GNUC_PREREQ (3, 3)|__GNUC_PREREQ (4, 0)|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file"
+done
+
 # https://lists.gnu.org/archive/html/bug-wget/2019-05/msg00064.html
 for file in $(find "$PWD" -name '*.px')
 do
