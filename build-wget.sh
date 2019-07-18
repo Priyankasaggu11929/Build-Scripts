@@ -178,10 +178,10 @@ sed -e 's|$(LTLIBICONV)|$(LIBICONV)|g' fuzz/Makefile.am > fuzz/Makefile.am.fixed
 mv fuzz/Makefile.am.fixed fuzz/Makefile.am
 touch -t 197001010000 fuzz/Makefile.am
 
+# https://lists.gnu.org/archive/html/bug-gnulib/2019-07/msg00058.html
 for file in $(find "$PWD" -name '*.h')
 do
-    if [[ ! -f "$file" ]]
-    then
+    if [[ ! -f "$file" ]]; then
         continue
     fi
 

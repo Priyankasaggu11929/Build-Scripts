@@ -78,10 +78,10 @@ echo ""
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
 
+# # https://lists.gnu.org/archive/html/bug-gnulib/2019-07/msg00058.html
 for file in $(find "$PWD" -name '*.h')
 do
-    if [[ ! -f "$file" ]]
-    then
+    if [[ ! -f "$file" ]]; then
         continue
     fi
 
