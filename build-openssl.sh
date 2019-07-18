@@ -121,29 +121,32 @@ do
 done
 
 CONFIG_FLAGS=("no-ssl2" "no-ssl3" "no-comp" "shared" "$SH_SYM" "$SH_OPT")
-CONFIG_FLAGS+=("${BUILD_CPPFLAGS[*]}")
-CONFIG_FLAGS+=("${BUILD_CFLAGS[*]}")
-CONFIG_FLAGS+=("${BUILD_LIBS[*]} ${BUILD_LDFLAGS[*]}")
+CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="${BUILD_CPPFLAGS[*]}"
+CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="${BUILD_CFLAGS[*]}"
+CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="${BUILD_LIBS[*]}"
+CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="${BUILD_LDFLAGS[*]}"
 
 # This clears a fair amount of UBsan findings
-CONFIG_FLAGS+=("-DPEDANTIC")
+CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="-DPEDANTIC"
 
 if [[ "$IS_X86_64" -eq 1 ]]; then
-    CONFIG_FLAGS+=("enable-ec_nistp_64_gcc_128")
+    CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="ec_nistp_64_gcc_128"
 fi
 if [[ "$IS_FREEBSD" -eq 1 ]]; then
-    CONFIG_FLAGS+=("-Wno-error")
+    CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="-Wno-error"
 fi
 
 if [[ -n "$SH_RPATH" ]]; then
-    CONFIG_FLAGS+=("$SH_RPATH")
+    CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="$SH_RPATH"
 fi
 if [[ -n "$SH_DTAGS" ]]; then
-    CONFIG_FLAGS+=("$SH_DTAGS")
+    CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="$SH_DTAGS"
 fi
 
 # Configure the library
-CONFIG_FLAGS+=("--prefix=$INSTX_PREFIX" "--libdir=$INSTX_LIBDIR")
+CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="--prefix=$INSTX_PREFIX"
+CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="--libdir=$INSTX_LIBDIR"
+
 KERNEL_BITS="$INSTX_BITNESS" ./config "${CONFIG_FLAGS[*]}"
 
 if [[ "$?" -ne 0 ]]; then
