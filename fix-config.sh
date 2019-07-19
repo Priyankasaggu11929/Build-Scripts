@@ -21,9 +21,9 @@ echo "patching sys_lib_dlsearch_path_spec..."
 for file in $(find "$PWD" -iname 'configure')
 do
     cp -p "$file" "$file.fixed"
-    mv "$file.fixed" "$file" && chmod +x "$file"
-    sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' "$file" > "$file.fixed"
     chmod +w "$file" && chmod +w "$file.fixed"
+    sed -e 's|sys_lib_dlsearch_path_spec="/lib /usr/lib|sys_lib_dlsearch_path_spec="/lib %{_libdir} /usr/lib|g' "$file" > "$file.fixed"
+    mv "$file.fixed" "$file" && chmod +x "$file"
     touch -t 197001010000 "$file"
 done
 
