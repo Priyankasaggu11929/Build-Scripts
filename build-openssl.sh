@@ -130,7 +130,7 @@ CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="${BUILD_LDFLAGS[*]}"
 CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="-DPEDANTIC"
 
 if [[ "$IS_X86_64" -eq 1 ]]; then
-    CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="ec_nistp_64_gcc_128"
+    CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="enable-ec_nistp_64_gcc_128"
 fi
 if [[ "$IS_FREEBSD" -eq 1 ]]; then
     CONFIG_FLAGS[${#CONFIG_FLAGS[@]}]="-Wno-error"

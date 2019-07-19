@@ -3,8 +3,8 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Nettle from sources.
 
-NETTLE_TAR=nettle-3.4.1.tar.gz
-NETTLE_DIR=nettle-3.4.1
+NETTLE_TAR=nettle-3.5.1.tar.gz
+NETTLE_DIR=nettle-3.5.1
 PKG_NAME=nettle
 
 ###############################################################################
@@ -79,10 +79,6 @@ fi
 rm -rf "$NETTLE_DIR" &>/dev/null
 gzip -d < "$NETTLE_TAR" | tar xf -
 cd "$NETTLE_DIR"
-
-cp ../patch/nettle.patch .
-patch -u -p0 < nettle.patch
-echo ""
 
 # Fix sys_lib_dlsearch_path_spec and keep the file time in the past
 ../fix-config.sh
