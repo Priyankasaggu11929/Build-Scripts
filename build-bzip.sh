@@ -3,11 +3,10 @@
 # Written and placed in public domain by Jeffrey Walton
 # This script builds Bzip2 from sources.
 
-# Bzip lost its website. This build of Bzip is based on the last known
-# release bzip-1.0.6. Also see https://github.com/noloader/bzip2-noloader.
+# Bzip lost its website. It is now located on Sourceware.
 
-BZIP2_TAR=BZIP2_1_0_7_1.tar.gz
-BZIP2_DIR=BZIP2_1_0_7_1
+BZIP2_TAR=bzip2-1.0.8.tar.gz
+BZIP2_DIR=bzip2-1.0.8
 PKG_NAME=bzip2
 
 ###############################################################################
@@ -57,10 +56,8 @@ echo
 echo "********** Bzip **********"
 echo
 
-# https://github.com/noloader/bzip2-noloader/archive/BZIP2_1_0_6_1.tar.gz
-
-if ! "$WGET" -O "$BZIP2_TAR" --ca-certificate="$DIGICERT_ROOT" \
-     "https://github.com/noloader/bzip2-noloader/archive/$BZIP2_TAR"
+if ! "$WGET" -O "$BZIP2_TAR" \
+     "ftp://sourceware.org/pub/bzip2/$BZIP2_TAR"
 then
     echo "Failed to download Bzip"
     exit 1
@@ -68,8 +65,15 @@ fi
 
 rm -rf "$BZIP2_DIR" &>/dev/null
 gzip -d < "$BZIP2_TAR" | tar xf -
-mv "bzip2-noloader-${BZIP2_DIR}" "${BZIP2_DIR}"
 cd "$BZIP2_DIR"
+
+#cp Makefile Makefile.orig
+#cp Makefile-libbz2_so Makefile-libbz2_so.orig
+#exit 1
+
+cp ../patch/bzip.patch .
+patch -u -p0 < bzip.patch
+echo ""
 
 # Fix format specifier.
 # TODO: fix this in the source code.

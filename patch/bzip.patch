@@ -1,0 +1,222 @@
+--- Makefile
++++ Makefile
+@@ -15,17 +15,16 @@
+ SHELL=/bin/sh
+ 
+ # To assist in cross-compiling
+-CC=gcc
+ AR=ar
+ RANLIB=ranlib
+-LDFLAGS=
+ 
+ BIGFILES=-D_FILE_OFFSET_BITS=64
+-CFLAGS=-Wall -Winline -O2 -g $(BIGFILES)
++BZIP_CFLAGS=-Wall $(BIGFILES)
+ 
+ # Where you want it installed when you do 'make install'
+ PREFIX=/usr/local
+-
++BINDIR=$(PREFIX)/bin
++LIBDIR=$(PREFIX)/lib
+ 
+ OBJS= blocksort.o  \
+       huffman.o    \
+@@ -38,10 +37,10 @@
+ all: libbz2.a bzip2 bzip2recover test
+ 
+ bzip2: libbz2.a bzip2.o
+-	$(CC) $(CFLAGS) $(LDFLAGS) -o bzip2 bzip2.o -L. -lbz2
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) $(LDFLAGS) -o bzip2 bzip2.o -L. -lbz2
+ 
+ bzip2recover: bzip2recover.o
+-	$(CC) $(CFLAGS) $(LDFLAGS) -o bzip2recover bzip2recover.o
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) $(LDFLAGS) -o bzip2recover bzip2recover.o
+ 
+ libbz2.a: $(OBJS)
+ 	rm -f libbz2.a
+@@ -54,7 +53,6 @@
+ 
+ check: test
+ test: bzip2
+-	@cat words1
+ 	./bzip2 -1  < sample1.ref > sample1.rb2
+ 	./bzip2 -2  < sample2.ref > sample2.rb2
+ 	./bzip2 -3  < sample3.ref > sample3.rb2
+@@ -67,38 +65,37 @@
+ 	cmp sample1.tst sample1.ref
+ 	cmp sample2.tst sample2.ref
+ 	cmp sample3.tst sample3.ref
+-	@cat words3
+ 
+ install: bzip2 bzip2recover
+-	if ( test ! -d $(PREFIX)/bin ) ; then mkdir -p $(PREFIX)/bin ; fi
+-	if ( test ! -d $(PREFIX)/lib ) ; then mkdir -p $(PREFIX)/lib ; fi
++	if ( test ! -d $(BINDIR) ) ; then mkdir -p $(BINDIR) ; fi
++	if ( test ! -d $(LIBDIR) ) ; then mkdir -p $(LIBDIR) ; fi
+ 	if ( test ! -d $(PREFIX)/man ) ; then mkdir -p $(PREFIX)/man ; fi
+ 	if ( test ! -d $(PREFIX)/man/man1 ) ; then mkdir -p $(PREFIX)/man/man1 ; fi
+ 	if ( test ! -d $(PREFIX)/include ) ; then mkdir -p $(PREFIX)/include ; fi
+-	cp -f bzip2 $(PREFIX)/bin/bzip2
+-	cp -f bzip2 $(PREFIX)/bin/bunzip2
+-	cp -f bzip2 $(PREFIX)/bin/bzcat
+-	cp -f bzip2recover $(PREFIX)/bin/bzip2recover
+-	chmod a+x $(PREFIX)/bin/bzip2
+-	chmod a+x $(PREFIX)/bin/bunzip2
+-	chmod a+x $(PREFIX)/bin/bzcat
+-	chmod a+x $(PREFIX)/bin/bzip2recover
++	cp -f bzip2 $(BINDIR)/bzip2
++	cp -f bzip2 $(BINDIR)/bunzip2
++	cp -f bzip2 $(BINDIR)/bzcat
++	cp -f bzip2recover $(BINDIR)/bzip2recover
++	chmod a+x $(BINDIR)/bzip2
++	chmod a+x $(BINDIR)/bunzip2
++	chmod a+x $(BINDIR)/bzcat
++	chmod a+x $(BINDIR)/bzip2recover
+ 	cp -f bzip2.1 $(PREFIX)/man/man1
+ 	chmod a+r $(PREFIX)/man/man1/bzip2.1
+ 	cp -f bzlib.h $(PREFIX)/include
+ 	chmod a+r $(PREFIX)/include/bzlib.h
+-	cp -f libbz2.a $(PREFIX)/lib
+-	chmod a+r $(PREFIX)/lib/libbz2.a
+-	cp -f bzgrep $(PREFIX)/bin/bzgrep
+-	ln -s -f $(PREFIX)/bin/bzgrep $(PREFIX)/bin/bzegrep
+-	ln -s -f $(PREFIX)/bin/bzgrep $(PREFIX)/bin/bzfgrep
+-	chmod a+x $(PREFIX)/bin/bzgrep
+-	cp -f bzmore $(PREFIX)/bin/bzmore
+-	ln -s -f $(PREFIX)/bin/bzmore $(PREFIX)/bin/bzless
+-	chmod a+x $(PREFIX)/bin/bzmore
+-	cp -f bzdiff $(PREFIX)/bin/bzdiff
+-	ln -s -f $(PREFIX)/bin/bzdiff $(PREFIX)/bin/bzcmp
+-	chmod a+x $(PREFIX)/bin/bzdiff
++	cp -f libbz2.a $(LIBDIR)
++	chmod a+r $(LIBDIR)/libbz2.a
++	cp -f bzgrep $(BINDIR)/bzgrep
++	ln -s -f $(BINDIR)/bzgrep $(BINDIR)/bzegrep
++	ln -s -f $(BINDIR)/bzgrep $(BINDIR)/bzfgrep
++	chmod a+x $(BINDIR)/bzgrep
++	cp -f bzmore $(BINDIR)/bzmore
++	ln -s -f $(BINDIR)/bzmore $(BINDIR)/bzless
++	chmod a+x $(BINDIR)/bzmore
++	cp -f bzdiff $(BINDIR)/bzdiff
++	ln -s -f $(BINDIR)/bzdiff $(BINDIR)/bzcmp
++	chmod a+x $(BINDIR)/bzdiff
+ 	cp -f bzgrep.1 bzmore.1 bzdiff.1 $(PREFIX)/man/man1
+ 	chmod a+r $(PREFIX)/man/man1/bzgrep.1
+ 	chmod a+r $(PREFIX)/man/man1/bzmore.1
+@@ -114,24 +111,23 @@
+ 	sample1.tst sample2.tst sample3.tst
+ 
+ blocksort.o: blocksort.c
+-	@cat words0
+-	$(CC) $(CFLAGS) -c blocksort.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c blocksort.c
+ huffman.o: huffman.c
+-	$(CC) $(CFLAGS) -c huffman.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c huffman.c
+ crctable.o: crctable.c
+-	$(CC) $(CFLAGS) -c crctable.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c crctable.c
+ randtable.o: randtable.c
+-	$(CC) $(CFLAGS) -c randtable.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c randtable.c
+ compress.o: compress.c
+-	$(CC) $(CFLAGS) -c compress.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c compress.c
+ decompress.o: decompress.c
+-	$(CC) $(CFLAGS) -c decompress.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c decompress.c
+ bzlib.o: bzlib.c
+-	$(CC) $(CFLAGS) -c bzlib.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c bzlib.c
+ bzip2.o: bzip2.c
+-	$(CC) $(CFLAGS) -c bzip2.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c bzip2.c
+ bzip2recover.o: bzip2recover.c
+-	$(CC) $(CFLAGS) -c bzip2recover.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c bzip2recover.c
+ 
+ 
+ distclean: clean
+@@ -158,10 +154,6 @@
+ 	   $(DISTNAME)/bzip2.1 \
+ 	   $(DISTNAME)/bzip2.1.preformatted \
+ 	   $(DISTNAME)/bzip2.txt \
+-	   $(DISTNAME)/words0 \
+-	   $(DISTNAME)/words1 \
+-	   $(DISTNAME)/words2 \
+-	   $(DISTNAME)/words3 \
+ 	   $(DISTNAME)/sample1.ref \
+ 	   $(DISTNAME)/sample2.ref \
+ 	   $(DISTNAME)/sample3.ref \
+--- Makefile-libbz2_so
++++ Makefile-libbz2_so
+@@ -22,9 +22,17 @@
+ 
+ 
+ SHELL=/bin/sh
+-CC=gcc
+ BIGFILES=-D_FILE_OFFSET_BITS=64
+-CFLAGS=-fpic -fPIC -Wall -Winline -O2 -g $(BIGFILES)
++BZIP_CFLAGS=-fpic -fPIC -Wall $(BIGFILES)
++
++# Overridden on OS X and Solaris
++BZIP_SONAME=libbz2.so.1.0.8
++BZIP_SONAME_OPT=-Wl,-soname,libbz2.so.1.0
++
++# Where you want it installed when you do 'make install'
++PREFIX=/usr/local
++BINDIR=$(PREFIX)/bin
++LIBDIR=$(PREFIX)/lib
+ 
+ OBJS= blocksort.o  \
+       huffman.o    \
+@@ -34,26 +42,37 @@
+       decompress.o \
+       bzlib.o
+ 
+-all: $(OBJS)
+-	$(CC) -shared -Wl,-soname -Wl,libbz2.so.1.0 -o libbz2.so.1.0.8 $(OBJS)
+-	$(CC) $(CFLAGS) -o bzip2-shared bzip2.c libbz2.so.1.0.8
++bzip2-shared: $(BZIP_SONAME)
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) $(LDFLAGS) -o bzip2-shared bzip2.c $(BZIP_SONAME)
++
++$(BZIP_SONAME): $(OBJS)
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -shared $(BZIP_SONAME_OPT) $(LDFLAGS) -o $(BZIP_SONAME) $(OBJS)
+ 	rm -f libbz2.so.1.0
+-	ln -s libbz2.so.1.0.8 libbz2.so.1.0
++	ln -s $(BZIP_SONAME) libbz2.so.1.0
++
++install: bzip2-shared $(BZIP_SONAME)
++	if ( test ! -d $(LIBDIR) ) ; then mkdir -p $(LIBDIR) ; fi
++	cp -f bzip2-shared $(BINDIR)/bzip2-shared
++	chmod a+rx $(BINDIR)/bzip2-shared
++	cp -f $(BZIP_SONAME) $(LIBDIR)
++	chmod a+r $(LIBDIR)/$(BZIP_SONAME)
++	rm -f $(LIBDIR)/libbz2.so.1.0
++	ln -s $(LIBDIR)/$(BZIP_SONAME) $(LIBDIR)/libbz2.so.1.0
+ 
+ clean: 
+-	rm -f $(OBJS) bzip2.o libbz2.so.1.0.8 libbz2.so.1.0 bzip2-shared
++	rm -f $(OBJS) bzip2.o $(BZIP_SONAME) libbz2.so.1.0 bzip2-shared
+ 
+ blocksort.o: blocksort.c
+-	$(CC) $(CFLAGS) -c blocksort.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c blocksort.c
+ huffman.o: huffman.c
+-	$(CC) $(CFLAGS) -c huffman.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c huffman.c
+ crctable.o: crctable.c
+-	$(CC) $(CFLAGS) -c crctable.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c crctable.c
+ randtable.o: randtable.c
+-	$(CC) $(CFLAGS) -c randtable.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c randtable.c
+ compress.o: compress.c
+-	$(CC) $(CFLAGS) -c compress.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c compress.c
+ decompress.o: decompress.c
+-	$(CC) $(CFLAGS) -c decompress.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c decompress.c
+ bzlib.o: bzlib.c
+-	$(CC) $(CFLAGS) -c bzlib.c
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -c bzlib.c
