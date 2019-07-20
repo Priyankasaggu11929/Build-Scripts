@@ -150,7 +150,7 @@
  	   $(DISTNAME)/sample3.ref \
 --- Makefile-libbz2_so
 +++ Makefile-libbz2_so
-@@ -22,9 +22,17 @@
+@@ -22,9 +22,18 @@
  
  
  SHELL=/bin/sh
@@ -160,8 +160,9 @@
 +BZIP_CFLAGS=-fpic -fPIC -Wall $(BIGFILES)
 +
 +# Overridden on OS X and Solaris
-+BZIP_SONAME=libbz2.so.1.0.8
-+BZIP_SONAME_OPT=-Wl,-soname,libbz2.so.1.0
++BZIP_SONAME_SHRT=libbz2.so.1.0
++BZIP_SONAME_LONG=libbz2.so.1.0.8
++BZIP_SONAME_OPT=-Wl,-soname,$(BZIP_SONAME_SHRT)
 +
 +# Where you want it installed when you do 'make install'
 +PREFIX=/usr/local
@@ -170,34 +171,35 @@
  
  OBJS= blocksort.o  \
        huffman.o    \
-@@ -34,26 +42,37 @@
+@@ -34,26 +43,37 @@
        decompress.o \
        bzlib.o
  
 -all: $(OBJS)
 -	$(CC) -shared -Wl,-soname -Wl,libbz2.so.1.0 -o libbz2.so.1.0.8 $(OBJS)
 -	$(CC) $(CFLAGS) -o bzip2-shared bzip2.c libbz2.so.1.0.8
-+bzip2-shared: $(BZIP_SONAME)
-+	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) $(LDFLAGS) -o bzip2-shared bzip2.c $(BZIP_SONAME)
-+
-+$(BZIP_SONAME): $(OBJS)
-+	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -shared $(BZIP_SONAME_OPT) $(LDFLAGS) -o $(BZIP_SONAME) $(OBJS)
- 	rm -f libbz2.so.1.0
+-	rm -f libbz2.so.1.0
 -	ln -s libbz2.so.1.0.8 libbz2.so.1.0
-+	ln -s $(BZIP_SONAME) libbz2.so.1.0
++bzip2-shared: $(BZIP_SONAME_LONG)
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) $(LDFLAGS) -o bzip2-shared bzip2.c $(BZIP_SONAME_LONG)
 +
-+install: bzip2-shared $(BZIP_SONAME)
++$(BZIP_SONAME_LONG): $(OBJS)
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -shared $(BZIP_SONAME_OPT) $(LDFLAGS) -o $(BZIP_SONAME_LONG) $(OBJS)
++	rm -f $(BZIP_SONAME_SHRT)
++	ln -s $(BZIP_SONAME_LONG) $(BZIP_SONAME_SHRT)
++
++install: bzip2-shared $(BZIP_SONAME_LONG)
 +	if ( test ! -d $(LIBDIR) ) ; then mkdir -p $(LIBDIR) ; fi
 +	cp -f bzip2-shared $(BINDIR)/bzip2-shared
 +	chmod a+rx $(BINDIR)/bzip2-shared
-+	cp -f $(BZIP_SONAME) $(LIBDIR)
-+	chmod a+r $(LIBDIR)/$(BZIP_SONAME)
-+	rm -f $(LIBDIR)/libbz2.so.1.0
-+	ln -s $(LIBDIR)/$(BZIP_SONAME) $(LIBDIR)/libbz2.so.1.0
++	cp -f $(BZIP_SONAME_LONG) $(LIBDIR)
++	chmod a+r $(LIBDIR)/$(BZIP_SONAME_LONG)
++	rm -f $(LIBDIR)/$(BZIP_SONAME_SHRT)
++	ln -s $(LIBDIR)/$(BZIP_SONAME_LONG) $(LIBDIR)/$(BZIP_SONAME_SHRT)
  
  clean: 
 -	rm -f $(OBJS) bzip2.o libbz2.so.1.0.8 libbz2.so.1.0 bzip2-shared
-+	rm -f $(OBJS) bzip2.o $(BZIP_SONAME) libbz2.so.1.0 bzip2-shared
++	rm -f $(OBJS) bzip2.o $(BZIP_SONAME_LONG) $(BZIP_SONAME_SHRT) bzip2-shared
  
  blocksort.o: blocksort.c
 -	$(CC) $(CFLAGS) -c blocksort.c
