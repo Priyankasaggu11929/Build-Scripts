@@ -88,17 +88,39 @@ echo "**********************"
 echo "Building package"
 echo "**********************"
 
-MAKE_FLAGS=("-j" "$INSTX_JOBS")
-if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." \
-     LDFLAGS="${BUILD_LDFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
+if [[ "$IS_DARWIN" -ne 0 ]]; then
+    BZIP_SONAME_SHRT="libbz2.1.0.dylib"
+    BZIP_SONAME_LONG="libbz2.1.0.8.dylib"
+    BZIP_SONAME_OPT="-Wl,-install_name,$BZIP_SONAME_SHRT"
+else
+    BZIP_SONAME_SHRT="libbz2.1.0.so"
+    BZIP_SONAME_LONG="libbz2.1.0.8.so"
+    BZIP_SONAME_OPT="-Wl,-soname,libbz2.so.1.0"
+fi
+
+MAKE_FLAGS=("-f" "Makefile"
+            "-j" "$INSTX_JOBS"
+            CC="${CC}"
+            CFLAGS="${BUILD_CFLAGS[*]} -I."
+            LDFLAGS="${BUILD_LDFLAGS[*]}"
+            BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
+            BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+            BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bzip"
     exit 1
 fi
 
-MAKE_FLAGS=("-f" "Makefile-libbz2_so" "-j" "$INSTX_JOBS")
-if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." \
-     LDFLAGS="${BUILD_LDFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
+MAKE_FLAGS=("-f" "Makefile-libbz2_so"
+            "-j" "$INSTX_JOBS"
+            CC="${CC}"
+            CFLAGS="${BUILD_CFLAGS[*]} -I."
+            LDFLAGS="${BUILD_LDFLAGS[*]}"
+            BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
+            BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+            BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bzip"
     exit 1
@@ -108,9 +130,13 @@ echo "**********************"
 echo "Testing package"
 echo "**********************"
 
-MAKE_FLAGS=("check")
-if ! CC="${CC}" CFLAGS="${BUILD_CFLAGS[*]} -I." \
-     LDFLAGS="${BUILD_LDFLAGS[*]}" "$MAKE" "${MAKE_FLAGS[@]}"
+MAKE_FLAGS=("-f" "Makefile"
+            "check"
+            "-j" "$INSTX_JOBS"
+            CC="${CC}"
+            CFLAGS="${BUILD_CFLAGS[*]} -I."
+            LDFLAGS="${BUILD_LDFLAGS[*]}")
+if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
     echo "Failed to build Bzip"
     exit 1
@@ -129,14 +155,40 @@ echo "Installing package"
 echo "**********************"
 
 if [[ -n "$SUDO_PASSWORD" ]]; then
-    MAKE_FLAGS=(install "BINDIR=$INSTX_PREFIX/bin" "LIBDIR=$INSTX_LIBDIR")
+    MAKE_FLAGS=("-f" "Makefile"
+                install
+                "BINDIR=$INSTX_PREFIX/bin"
+                "LIBDIR=$INSTX_LIBDIR"
+                BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
+                BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+                BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
-    MAKE_FLAGS=("-f" "Makefile-libbz2_so" install "BINDIR=$INSTX_PREFIX/bin" "LIBDIR=$INSTX_LIBDIR")
+
+    MAKE_FLAGS=("-f" "Makefile-libbz2_so"
+                install
+                "BINDIR=$INSTX_PREFIX/bin"
+                "LIBDIR=$INSTX_LIBDIR"
+                BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
+                BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+                BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
-    MAKE_FLAGS=(install "BINDIR=$INSTX_PREFIX/bin" "LIBDIR=$INSTX_LIBDIR")
+    MAKE_FLAGS=("-f" "Makefile"
+                install
+                "BINDIR=$INSTX_PREFIX/bin"
+                "LIBDIR=$INSTX_LIBDIR"
+                BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
+                BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+                BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
     "$MAKE" "${MAKE_FLAGS[@]}"
-    MAKE_FLAGS=("-f" "Makefile-libbz2_so" install "BINDIR=$INSTX_PREFIX/bin" "LIBDIR=$INSTX_LIBDIR")
+
+    MAKE_FLAGS=("-f" "Makefile-libbz2_so"
+                install
+                "BINDIR=$INSTX_PREFIX/bin"
+                "LIBDIR=$INSTX_LIBDIR"
+                BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
+                BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+                BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
     "$MAKE" "${MAKE_FLAGS[@]}"
 fi
 
