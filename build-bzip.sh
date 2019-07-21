@@ -91,11 +91,13 @@ echo "**********************"
 if [[ "$IS_DARWIN" -ne 0 ]]; then
     BZIP_SONAME_SHRT="libbz2.1.0.dylib"
     BZIP_SONAME_LONG="libbz2.1.0.8.dylib"
-    BZIP_SONAME_OPT="-Wl,-install_name,$BZIP_SONAME_SHRT"
+    BZIP_SHARED_OPT="-dynamiclib"
+    BZIP_SONAME_OPT="-Wl,-install_name,$BZIP_SONAME_LONG"
 else
     BZIP_SONAME_SHRT="libbz2.1.0.so"
     BZIP_SONAME_LONG="libbz2.1.0.8.so"
-    BZIP_SONAME_OPT="-Wl,-soname,libbz2.so.1.0"
+    BZIP_SHARED_OPT="-shared"
+    BZIP_SONAME_OPT="-Wl,-soname,$BZIP_SONAME_SHRT"
 fi
 
 MAKE_FLAGS=("-f" "Makefile"
@@ -105,6 +107,7 @@ MAKE_FLAGS=("-f" "Makefile"
             LDFLAGS="${BUILD_LDFLAGS[*]}"
             BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
             BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+            BZIP_SHARED_OPT="$BZIP_SHARED_OPT"
             BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
@@ -119,6 +122,7 @@ MAKE_FLAGS=("-f" "Makefile-libbz2_so"
             LDFLAGS="${BUILD_LDFLAGS[*]}"
             BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
             BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+            BZIP_SHARED_OPT="$BZIP_SHARED_OPT"
             BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
 if ! "$MAKE" "${MAKE_FLAGS[@]}"
 then
@@ -157,26 +161,28 @@ echo "**********************"
 if [[ -n "$SUDO_PASSWORD" ]]; then
     MAKE_FLAGS=("-f" "Makefile"
                 install
-                "BINDIR=$INSTX_PREFIX/bin"
-                "LIBDIR=$INSTX_LIBDIR"
+                BINDIR="$INSTX_PREFIX/bin"
+                LIBDIR="$INSTX_LIBDIR"
                 BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
                 BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+                BZIP_SHARED_OPT="$BZIP_SHARED_OPT"
                 BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 
     MAKE_FLAGS=("-f" "Makefile-libbz2_so"
                 install
-                "BINDIR=$INSTX_PREFIX/bin"
-                "LIBDIR=$INSTX_LIBDIR"
+                BINDIR="$INSTX_PREFIX/bin"
+                LIBDIR="$INSTX_LIBDIR"
                 BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
                 BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+                BZIP_SHARED_OPT="$BZIP_SHARED_OPT"
                 BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
     echo "$SUDO_PASSWORD" | sudo -S "$MAKE" "${MAKE_FLAGS[@]}"
 else
     MAKE_FLAGS=("-f" "Makefile"
                 install
-                "BINDIR=$INSTX_PREFIX/bin"
-                "LIBDIR=$INSTX_LIBDIR"
+                BINDIR="$INSTX_PREFIX/bin"
+                LIBDIR="$INSTX_LIBDIR"
                 BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
                 BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
                 BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
@@ -184,10 +190,11 @@ else
 
     MAKE_FLAGS=("-f" "Makefile-libbz2_so"
                 install
-                "BINDIR=$INSTX_PREFIX/bin"
-                "LIBDIR=$INSTX_LIBDIR"
+                BINDIR="$INSTX_PREFIX/bin"
+                LIBDIR="$INSTX_LIBDIR"
                 BZIP_SONAME_SHRT="$BZIP_SONAME_SHRT"
                 BZIP_SONAME_LONG="$BZIP_SONAME_LONG"
+                BZIP_SHARED_OPT="$BZIP_SHARED_OPT"
                 BZIP_SONAME_OPT="$BZIP_SONAME_OPT")
     "$MAKE" "${MAKE_FLAGS[@]}"
 fi

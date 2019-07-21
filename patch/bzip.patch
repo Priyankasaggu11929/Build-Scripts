@@ -150,7 +150,7 @@
  	   $(DISTNAME)/sample3.ref \
 --- Makefile-libbz2_so
 +++ Makefile-libbz2_so
-@@ -22,9 +22,18 @@
+@@ -22,9 +22,19 @@
  
  
  SHELL=/bin/sh
@@ -162,6 +162,7 @@
 +# Overridden on OS X and Solaris
 +BZIP_SONAME_SHRT=libbz2.so.1.0
 +BZIP_SONAME_LONG=libbz2.so.1.0.8
++BZIP_SHARED_OPT=-shared
 +BZIP_SONAME_OPT=-Wl,-soname,$(BZIP_SONAME_SHRT)
 +
 +# Where you want it installed when you do 'make install'
@@ -184,7 +185,7 @@
 +	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) $(LDFLAGS) -o bzip2-shared bzip2.c $(BZIP_SONAME_LONG)
 +
 +$(BZIP_SONAME_LONG): $(OBJS)
-+	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) -shared $(BZIP_SONAME_OPT) $(LDFLAGS) -o $(BZIP_SONAME_LONG) $(OBJS)
++	$(CC) $(CPPFLAGS) $(BZIP_CFLAGS) $(CFLAGS) $(BZIP_SHARED_OPT) $(BZIP_SONAME_OPT) $(LDFLAGS) -o $(BZIP_SONAME_LONG) $(OBJS)
 +	rm -f $(BZIP_SONAME_SHRT)
 +	ln -s $(BZIP_SONAME_LONG) $(BZIP_SONAME_SHRT)
 +
